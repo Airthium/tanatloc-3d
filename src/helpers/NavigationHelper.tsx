@@ -1,16 +1,16 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { OrthographicCamera, Text } from '@react-three/drei'
 import { Vector3, Shape } from 'three'
 
-import ArrowHelper from './ArrowHelper'
+import Arrow from './Arrow'
 
 import { numberArraytoVector3 } from '../tools'
 
 /**
  * Props
  */
-export interface NavigationHelperProps {
+export interface NavigationProps {
   mainViewCamera?: THREE.PerspectiveCamera
   rotation?: THREE.Euler
 }
@@ -22,6 +22,12 @@ export interface AxisProps {
   text?: string
 }
 
+export interface IFace {
+  text: string
+  normal: THREE.Vector3
+  up: THREE.Vector3
+}
+
 export interface ShapeGeometryProps {
   width: number
   height: number
@@ -29,13 +35,41 @@ export interface ShapeGeometryProps {
 }
 
 export interface FaceProps {
+  face: IFace
   mainViewCamera?: THREE.PerspectiveCamera
-  origin?: number[]
-  normal?: number[]
-  up?: number[]
-  color?: string | number
-  text?: string
 }
+
+// Base color
+const color = 0xd3d3d3
+
+// Hover color
+const hoverColor = 0xfad114
+
+// Text color
+const textColor = 0x000000
+
+// Size
+const size = 100
+
+// Font size
+const fontSize = 20
+
+// Corner
+const corner = 0.25
+
+// Faces
+const faces: IFace[] = [
+  { text: 'FRONT', normal: new Vector3(0, 0, 1), up: new Vector3(0, 1, 0) },
+  { text: 'BACK', normal: new Vector3(0, 0, -1), up: new Vector3(0, 1, 0) },
+  { text: 'RIGHT', normal: new Vector3(1, 0, 0), up: new Vector3(0, 1, 0) },
+  { text: 'LEFT', normal: new Vector3(-1, 0, 0), up: new Vector3(0, 1, 0) },
+  { text: 'UP', normal: new Vector3(0, 1, 0), up: new Vector3(0, 0, -1) },
+  { text: 'DOWN', normal: new Vector3(0, -1, 0), up: new Vector3(0, 0, 1) },
+]
+
+// Variables
+const faceSize = size * (1 - corner)
+const faceRadius = size * corner
 
 /**
  * Axis
@@ -64,10 +98,10 @@ const Axis = ({
    * Render
    */
   return (
-    <ArrowHelper
+    <Arrow
       direction={direction3}
       origin={origin3}
-      length={2}
+      length={100}
       color={color}
       text={text}
     />
@@ -128,134 +162,113 @@ ShapeGeometry.defaultProps = {
  * @param props Props
  * @returns Face
  */
-const Face = ({
-  mainViewCamera,
-  origin,
-  normal,
-  up,
-  color,
-  text,
-}: FaceProps): React.JSX.Element => {
+const Face = ({ face, mainViewCamera }: FaceProps): React.JSX.Element => {
   // Ref
-  const meshRef = useRef<THREE.Mesh>(null!)
-  const textRef = useRef<THREE.Mesh>(null!)
+  const ref = useRef<THREE.Group>(null!)
 
   // State
   const [hover, setHover] = useState<boolean>(false)
 
-  // Origin
-  const origin3 = useMemo(
-    () => numberArraytoVector3(origin ?? [0, 0, 0]),
-    [origin]
+  // Shape
+  const shape = useMemo(
+    () => (
+      <ShapeGeometry width={faceSize} height={faceSize} radius={faceRadius} />
+    ),
+    []
   )
 
-  // Normal
-  const normal3 = useMemo(
-    () => numberArraytoVector3(normal ?? [1, 0, 0]),
-    [normal]
-  )
-
-  // Look at
-  const lookAt = useMemo(() => {
-    const lookAt = new Vector3()
-    return lookAt.copy(normal3).multiplyScalar(100)
-  }, [normal3])
-
-  // Up
-  const up3 = useMemo(() => numberArraytoVector3(up ?? [0, 0, 1]), [up])
-
-  // Text position
-  const textPosition = useMemo(() => {
-    const textPosition = new Vector3()
-    return textPosition
-      .copy(origin3)
-      .add(normal3.clone().normalize().multiplyScalar(0.01))
-  }, [origin3, normal3])
-
-  // Frame
-  useFrame(() => {
-    meshRef.current.lookAt(lookAt)
-    meshRef.current.up = up3
-    textRef.current.lookAt(lookAt)
-    if (mainViewCamera) textRef.current.up = mainViewCamera.up
-  })
+  // Initialize
+  useLayoutEffect(() => {
+    ref.current.lookAt(face.normal)
+    ref.current.translateZ(size / 2)
+    ref.current.up = face.up
+  }, [face])
 
   /**
    * Set hover true
+   * @returns
    */
   const setHoverTrue = useCallback(() => setHover(true), [])
 
   /**
    * Set hover false
+   * @returns
    */
   const setHoverFalse = useCallback(() => setHover(false), [])
 
   /**
    * On click
-   * @param event Event
    */
   const onClick = useCallback(() => {
     if (!mainViewCamera) return
 
-    // Update camera position
-    const center = new Vector3(0, 0, 0) // TODO
+    const center = new Vector3(0, 0, 0) //TODO
+
     const distance = mainViewCamera.position.distanceTo(center)
-    const interval = normal3.clone().normalize().multiplyScalar(distance)
+
+    const interval = face.normal.clone().multiplyScalar(distance)
+
     const newPosition = center.add(interval)
 
     mainViewCamera.position.copy(newPosition)
-    mainViewCamera.up.copy(up3)
-  }, [mainViewCamera, normal3, up3])
+    mainViewCamera.up = face.up
+  }, [face, mainViewCamera])
 
   /**
    * Render
    */
   return (
-    <>
-      <mesh
-        ref={meshRef}
-        position={origin3}
-        onPointerOver={setHoverTrue}
-        onPointerOut={setHoverFalse}
-        onClick={onClick}
-      >
-        <ShapeGeometry />
+    <group
+      ref={ref}
+      onPointerEnter={setHoverTrue}
+      onPointerLeave={setHoverFalse}
+      onClick={onClick}
+    >
+      <mesh>
+        {shape}
         <meshBasicMaterial
-          color={color}
-          side={2}
-          transparent={!hover}
-          opacity={hover ? 1 : 0.75}
+          color={hover ? hoverColor : color}
+          transparent
+          opacity={0.75}
         />
       </mesh>
-      <mesh ref={textRef} position={textPosition}>
-        {text ? (
-          <Text fontSize={0.3} color={'black'}>
-            {text}
-          </Text>
-        ) : null}
+      <mesh rotation={[0, Math.PI, 0]}>
+        {shape}
+        <meshBasicMaterial
+          color={hover ? hoverColor : color}
+          transparent
+          opacity={0.75}
+        />
       </mesh>
-    </>
+      <mesh>
+        <sphereGeometry args={[faceSize / 2, 10, 10, 0, Math.PI, 0]} />
+        <meshBasicMaterial
+          color={hover ? hoverColor : color}
+          transparent
+          opacity={0.2}
+        />
+      </mesh>
+      <Text position={[0, 0, 1]} color={textColor} fontSize={fontSize}>
+        {face.text}
+      </Text>
+    </group>
   )
 }
 
 /**
- * Navigation helper
- * @returns NavigationHelper
+ * Navigation
+ * @returns Navigation
  */
-const NavigationHelper = ({
+const Navigation = ({
   mainViewCamera,
   rotation,
-}: NavigationHelperProps): React.JSX.Element => {
+}: NavigationProps): React.JSX.Element => {
   // Origin
-  const origin = useMemo(() => [-1, -1, -1], [])
+  const origin = useMemo(() => [-size / 2, -size / 2, -size / 2], [])
 
   // Directions
   const directions = useMemo(
-    () => ({
-      x: [1, 0, 0],
-      y: [0, 1, 0],
-      z: [0, 0, 1],
-    }),
+    () => ({ x: [1, 0, 0], y: [0, 1, 0], z: [0, 0, 1] }),
     []
   )
 
@@ -268,16 +281,18 @@ const NavigationHelper = ({
    * Render
    */
   return (
-    <>
+    <mesh type='Navigation'>
+      {faces.map((face) => (
+        <Face key={face.text} face={face} mainViewCamera={mainViewCamera} />
+      ))}
       <OrthographicCamera
         makeDefault
-        top={5}
-        bottom={-5}
-        left={-5}
-        right={5}
-        near={-5}
-        far={5}
-        zoom={60}
+        left={-size}
+        right={size}
+        top={size}
+        bottom={-size}
+        near={-size}
+        far={size}
       />
       <Axis
         origin={origin}
@@ -297,59 +312,8 @@ const NavigationHelper = ({
         color={0x0000ff}
         text='z'
       />
-
-      <Face
-        mainViewCamera={mainViewCamera}
-        origin={[0.6, 0, 0]}
-        normal={[1, 0, 0]}
-        up={[0, 0, 1]}
-        color={0xff0000}
-        text='Front'
-      />
-      <Face
-        mainViewCamera={mainViewCamera}
-        origin={[-0.6, 0, 0]}
-        normal={[-1, 0, 0]}
-        up={[0, 0, 1]}
-        color={0xff0000}
-        text='Back'
-      />
-
-      <Face
-        mainViewCamera={mainViewCamera}
-        origin={[0, 0.6, 0]}
-        normal={[0, 1, 0]}
-        up={[0, 0, 1]}
-        color={0x00ff00}
-        text='Right'
-      />
-      <Face
-        mainViewCamera={mainViewCamera}
-        origin={[0, -0.6, 0]}
-        normal={[0, -1, 0]}
-        up={[0, 0, 1]}
-        color={0x00ff00}
-        text='Left'
-      />
-
-      <Face
-        mainViewCamera={mainViewCamera}
-        origin={[0, 0, 0.6]}
-        normal={[0, 0, 1]}
-        up={[0, 1, 0]}
-        color={0x0000ff}
-        text='Top'
-      />
-      <Face
-        mainViewCamera={mainViewCamera}
-        origin={[0, 0, -0.6]}
-        normal={[0, 0, -1]}
-        up={[0, -1, 0]}
-        color={0x0000ff}
-        text='Bottom'
-      />
-    </>
+    </mesh>
   )
 }
 
-export default NavigationHelper
+export default Navigation
