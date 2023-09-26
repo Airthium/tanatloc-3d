@@ -1,18 +1,26 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useFrame } from '@react-three/fiber'
-import { OrthographicCamera, Text } from '@react-three/drei'
+import { ThreeEvent, useFrame } from '@react-three/fiber'
+import {
+  OrthographicCamera,
+  Text,
+  TrackballControlsProps,
+} from '@react-three/drei'
 import { Vector3, Shape } from 'three'
 
-import Arrow from './Arrow'
+import { computeSceneBoundingBox, numberArraytoVector3 } from '../tools'
 
-import { numberArraytoVector3 } from '../tools'
+import Arrow from './Arrow'
 
 /**
  * Props
  */
 export interface NavigationProps {
-  mainViewCamera?: THREE.PerspectiveCamera
-  rotation?: THREE.Euler
+  mainView?: {
+    scene: THREE.Scene
+    camera: THREE.PerspectiveCamera
+  }
+  mainViewControls: TrackballControlsProps
+  update?: number
 }
 
 export interface AxisProps {
@@ -35,8 +43,12 @@ export interface ShapeGeometryProps {
 }
 
 export interface FaceProps {
+  index: number
   face: IFace
-  mainViewCamera?: THREE.PerspectiveCamera
+  hover?: boolean
+  onPointerOver: (index: number, event: ThreeEvent<PointerEvent>) => void
+  onPointerLeave: (index: number) => void
+  onClick: () => void
 }
 
 // Base color
@@ -162,12 +174,16 @@ ShapeGeometry.defaultProps = {
  * @param props Props
  * @returns Face
  */
-const Face = ({ face, mainViewCamera }: FaceProps): React.JSX.Element => {
+const Face = ({
+  index,
+  face,
+  hover,
+  onPointerOver,
+  onPointerLeave,
+  onClick,
+}: FaceProps): React.JSX.Element => {
   // Ref
   const ref = useRef<THREE.Group>(null!)
-
-  // State
-  const [hover, setHover] = useState<boolean>(false)
 
   // Shape
   const shape = useMemo(
@@ -185,34 +201,20 @@ const Face = ({ face, mainViewCamera }: FaceProps): React.JSX.Element => {
   }, [face])
 
   /**
-   * Set hover true
-   * @returns
+   * On pointer enter (internal)
    */
-  const setHoverTrue = useCallback(() => setHover(true), [])
+  const onInternalPointerOver = useCallback(
+    (event: ThreeEvent<PointerEvent>) => onPointerOver(index, event),
+    [index, onPointerOver]
+  )
 
   /**
-   * Set hover false
-   * @returns
+   * On pointer leave (internal)
    */
-  const setHoverFalse = useCallback(() => setHover(false), [])
-
-  /**
-   * On click
-   */
-  const onClick = useCallback(() => {
-    if (!mainViewCamera) return
-
-    const center = new Vector3(0, 0, 0) //TODO
-
-    const distance = mainViewCamera.position.distanceTo(center)
-
-    const interval = face.normal.clone().multiplyScalar(distance)
-
-    const newPosition = center.add(interval)
-
-    mainViewCamera.position.copy(newPosition)
-    mainViewCamera.up = face.up
-  }, [face, mainViewCamera])
+  const onInternalPointerLeave = useCallback(
+    (event: any) => onPointerLeave(index),
+    [index, onPointerLeave]
+  )
 
   /**
    * Render
@@ -220,8 +222,8 @@ const Face = ({ face, mainViewCamera }: FaceProps): React.JSX.Element => {
   return (
     <group
       ref={ref}
-      onPointerEnter={setHoverTrue}
-      onPointerLeave={setHoverFalse}
+      onPointerEnter={onInternalPointerOver}
+      onPointerLeave={onInternalPointerLeave}
       onClick={onClick}
     >
       <mesh>
@@ -242,11 +244,7 @@ const Face = ({ face, mainViewCamera }: FaceProps): React.JSX.Element => {
       </mesh>
       <mesh>
         <sphereGeometry args={[faceSize / 2, 10, 10, 0, Math.PI, 0]} />
-        <meshBasicMaterial
-          color={hover ? hoverColor : color}
-          transparent
-          opacity={0.2}
-        />
+        <meshBasicMaterial transparent opacity={hover ? 0.2 : 0} />
       </mesh>
       <Text position={[0, 0, 1]} color={textColor} fontSize={fontSize}>
         {face.text}
@@ -260,11 +258,20 @@ const Face = ({ face, mainViewCamera }: FaceProps): React.JSX.Element => {
  * @returns Navigation
  */
 const Navigation = ({
-  mainViewCamera,
-  rotation,
+  mainView,
+  mainViewControls,
 }: NavigationProps): React.JSX.Element => {
-  // Origin
-  const origin = useMemo(() => [-size / 2, -size / 2, -size / 2], [])
+  // State
+  const [hover, setHover] = useState<{ index: number; distance: number }>({
+    index: -1,
+    distance: Number.MAX_VALUE,
+  })
+
+  // Camera position
+  const cameraPosition = useMemo(() => new Vector3(0, 0, size), [])
+
+  // Axis origin
+  const axisOrigin = useMemo(() => [-size / 2, -size / 2, -size / 2], [])
 
   // Directions
   const directions = useMemo(
@@ -274,40 +281,109 @@ const Navigation = ({
 
   // Frame
   useFrame(({ camera }) => {
-    if (rotation) camera.rotation.copy(rotation)
+    if (mainView?.camera && mainViewControls) {
+      camera.translateZ(-size)
+      camera.rotation.copy(mainView.camera.rotation)
+      camera.translateZ(size)
+    }
   })
+
+  /**
+   * On pointer over
+   * @param index Index
+   */
+  const onPointerOver = useCallback(
+    (index: number, event: ThreeEvent<PointerEvent>): void => {
+      const distance = event.distance
+      if (distance < hover.distance) setHover({ index, distance })
+    },
+    [hover]
+  )
+
+  /**
+   * On pointer leave
+   * @param index Index
+   */
+  const onPointerLeave = useCallback(
+    (index: number): void => {
+      if (index === hover.index)
+        setHover({ index: -1, distance: Number.MAX_VALUE })
+    },
+    [hover]
+  )
+
+  /**
+   * On click
+   */
+  const onClick = useCallback((): void => {
+    // Checks
+    if (!mainView?.camera) return
+    if (!mainView?.scene) return
+    if (!mainViewControls) return
+
+    const currentFace = faces[hover.index]
+    if (!currentFace) return
+
+    // Center
+    const boundingBox = computeSceneBoundingBox(mainView.scene)
+    const center = new Vector3()
+    boundingBox.getCenter(center)
+
+    // Distance
+    const target = mainViewControls.target as THREE.Vector3
+    const distance = mainView.camera.position.distanceTo(target)
+
+    // Position change
+    const interval = currentFace.normal.clone().multiplyScalar(distance)
+
+    // New position
+    const newPosition = center.add(interval).add(target)
+
+    // Update
+    mainView.camera.position.copy(newPosition)
+    mainView.camera.up = currentFace.up
+  }, [mainView?.camera, mainView?.scene, mainViewControls, hover])
 
   /**
    * Render
    */
   return (
     <mesh type='Navigation'>
-      {faces.map((face) => (
-        <Face key={face.text} face={face} mainViewCamera={mainViewCamera} />
+      {faces.map((face, index) => (
+        <Face
+          key={face.text}
+          index={index}
+          face={face}
+          hover={hover.index === index}
+          onPointerOver={onPointerOver}
+          onPointerLeave={onPointerLeave}
+          onClick={onClick}
+        />
       ))}
       <OrthographicCamera
         makeDefault
-        left={-size}
-        right={size}
-        top={size}
-        bottom={-size}
-        near={-size}
-        far={size}
+        left={-2 * size}
+        right={2 * size}
+        top={2 * size}
+        bottom={-2 * size}
+        near={-2 * size}
+        far={2 * size}
+        position={cameraPosition}
       />
       <Axis
-        origin={origin}
+        origin={axisOrigin}
         direction={directions.x}
         color={0xff0000}
         text='x'
       />
       <Axis
-        origin={origin}
+        origin={axisOrigin}
         direction={directions.y}
         color={0x00ff00}
         text='y'
       />
       <Axis
-        origin={origin}
+        origin={axisOrigin}
         direction={directions.z}
         color={0x0000ff}
         text='z'
