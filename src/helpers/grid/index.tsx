@@ -1,9 +1,11 @@
 import { Line } from '@react-three/drei'
 import { useEffect, useState } from 'react'
-import { computeSceneBoundingBox } from '../tools'
 import { useThree } from '@react-three/fiber'
 import { Vector3 } from 'three'
-import StaticText from './StaticText'
+
+import { computeSceneBoundingBox } from '../../tools'
+
+import StaticText from '../staticText'
 
 export interface GridProps {
   visible?: boolean
@@ -37,10 +39,10 @@ const buildXGrid = (
     lines.push(
       <Line
         key={'lineX_' + i}
-        type='GridX'
+        type="GridX"
         points={[
           [x, yMin, zMin - offset],
-          [x, yMax, zMin - offset],
+          [x, yMax, zMin - offset]
         ]}
         color={'gray'}
         transparent
@@ -59,10 +61,10 @@ const buildXGrid = (
     lines.push(
       <Line
         key={'lineX_' + (numberOfWidthDivisions + i)}
-        type='GridX'
+        type="GridX"
         points={[
           [xMin, y, zMin - offset],
-          [xMax, y, zMin - offset],
+          [xMax, y, zMin - offset]
         ]}
         color={'gray'}
         transparent
@@ -92,10 +94,10 @@ const buildYGrid = (
     lines.push(
       <Line
         key={'lineY_' + i}
-        type='GridY'
+        type="GridY"
         points={[
           [xMin - offset, yMin, z],
-          [xMin - offset, yMax, z],
+          [xMin - offset, yMax, z]
         ]}
         color={'gray'}
         transparent
@@ -108,10 +110,10 @@ const buildYGrid = (
     lines.push(
       <Line
         key={'lineY_' + (numberOfWidthDivisions + i)}
-        type='GridY'
+        type="GridY"
         points={[
           [xMin - offset, y, zMin],
-          [xMin - offset, y, zMax],
+          [xMin - offset, y, zMax]
         ]}
         color={'gray'}
         transparent
@@ -147,10 +149,10 @@ const buildZGrid = (
     lines.push(
       <Line
         key={'lineZ_' + i}
-        type='GridZ'
+        type="GridZ"
         points={[
           [x, yMin - offset, zMin],
-          [x, yMin - offset, zMax],
+          [x, yMin - offset, zMax]
         ]}
         color={'gray'}
         transparent
@@ -163,10 +165,10 @@ const buildZGrid = (
     lines.push(
       <Line
         key={'lineZ_' + (numberOfWidthDivisions + i)}
-        type='GridZ'
+        type="GridZ"
         points={[
           [xMin, yMin - offset, z],
-          [xMax, yMin - offset, z],
+          [xMax, yMin - offset, z]
         ]}
         color={'gray'}
         transparent
@@ -211,7 +213,7 @@ const Grid = ({ visible }: GridProps) => {
    * Render
    */
   return (
-    <mesh visible={visible ?? true} type='Grid'>
+    <mesh visible={visible ?? true} type="Grid">
       {lines}
     </mesh>
   )

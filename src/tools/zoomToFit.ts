@@ -2,11 +2,19 @@ import { TrackballControlsProps } from '@react-three/drei'
 import { computeSceneBoundingBox } from '.'
 import { Sphere, Vector3 } from 'three'
 
+/**
+ * Zoom to fit
+ * @param scene Scene
+ * @param camera Camera
+ * @param controls Controls
+ */
 const zoomToFit = (
-  scene: THREE.Scene,
-  camera: THREE.PerspectiveCamera,
-  controls: TrackballControlsProps
-) => {
+  scene: THREE.Scene | undefined,
+  camera: THREE.PerspectiveCamera | undefined,
+  controls: TrackballControlsProps | undefined
+): void => {
+  if (!scene || !camera || !controls) return
+
   // Center
   const boundingBox = computeSceneBoundingBox(scene)
   const center = new Vector3()

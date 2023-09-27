@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { Vector3 } from 'three'
 
-import StaticText from './StaticText'
+import StaticText from '../staticText'
 
 /**
  * Props
@@ -24,7 +24,7 @@ const Arrow = ({
   direction,
   length,
   color,
-  text,
+  text
 }: ArrowProps): React.JSX.Element => {
   // Ref
   const ref = useRef<THREE.Mesh>(null!)
@@ -75,7 +75,7 @@ const Arrow = ({
 Arrow.defaultProps = {
   origin: new Vector3(0, 0, 0),
   direction: new Vector3(1, 0, 0),
-  length: 1,
+  length: 1
 }
 
 export default Arrow

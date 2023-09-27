@@ -20,7 +20,7 @@ export interface StaticTextProps {
 const StaticText = ({
   position,
   fontSize,
-  children,
+  children
 }: StaticTextProps): React.JSX.Element => {
   // Ref
   const ref = useRef<THREE.Mesh>(null!)
@@ -41,7 +41,7 @@ const StaticText = ({
 }
 StaticText.defaultProps = {
   position: new Vector3(0, 0, 0),
-  children: '',
+  children: ''
 }
 
 export default StaticText

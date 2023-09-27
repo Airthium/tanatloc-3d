@@ -1,25 +1,25 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { ThreeEvent, useFrame } from '@react-three/fiber'
 import {
-  OrthographicCamera,
-  Text,
-  TrackballControlsProps,
-} from '@react-three/drei'
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
+import { ThreeEvent, useFrame } from '@react-three/fiber'
+import { OrthographicCamera, Text } from '@react-three/drei'
 import { Vector3, Shape } from 'three'
 
-import { computeSceneBoundingBox, numberArraytoVector3 } from '../tools'
+import { Context } from '../../context'
 
-import Arrow from './Arrow'
+import { numberArraytoVector3 } from '../../tools'
+
+import Arrow from '../arrow'
 
 /**
  * Props
  */
 export interface NavigationProps {
-  mainView?: {
-    scene: THREE.Scene
-    camera: THREE.PerspectiveCamera
-  }
-  mainViewControls: TrackballControlsProps
   update?: number
 }
 
@@ -76,7 +76,7 @@ const faces: IFace[] = [
   { text: 'RIGHT', normal: new Vector3(1, 0, 0), up: new Vector3(0, 1, 0) },
   { text: 'LEFT', normal: new Vector3(-1, 0, 0), up: new Vector3(0, 1, 0) },
   { text: 'UP', normal: new Vector3(0, 1, 0), up: new Vector3(0, 0, -1) },
-  { text: 'DOWN', normal: new Vector3(0, -1, 0), up: new Vector3(0, 0, 1) },
+  { text: 'DOWN', normal: new Vector3(0, -1, 0), up: new Vector3(0, 0, 1) }
 ]
 
 // Variables
@@ -92,7 +92,7 @@ const Axis = ({
   origin,
   direction,
   color,
-  text,
+  text
 }: AxisProps): React.JSX.Element => {
   // Direction
   const direction3 = useMemo(
@@ -128,7 +128,7 @@ const Axis = ({
 const ShapeGeometry = ({
   width,
   height,
-  radius,
+  radius
 }: ShapeGeometryProps): React.JSX.Element => {
   // X
   const x = useMemo(() => -width / 2, [width])
@@ -166,7 +166,7 @@ const ShapeGeometry = ({
 ShapeGeometry.defaultProps = {
   width: 1,
   height: 1,
-  radius: 0.2,
+  radius: 0.2
 }
 
 /**
@@ -180,7 +180,7 @@ const Face = ({
   hover,
   onPointerOver,
   onPointerLeave,
-  onClick,
+  onClick
 }: FaceProps): React.JSX.Element => {
   // Ref
   const ref = useRef<THREE.Group>(null!)
@@ -194,10 +194,10 @@ const Face = ({
   )
 
   // Initialize
-  useLayoutEffect(() => {
+  useEffect(() => {
     ref.current.lookAt(face.normal)
     ref.current.translateZ(size / 2)
-    ref.current.up = face.up
+    ref.current.up.copy(face.up)
   }, [face])
 
   /**
@@ -255,16 +255,17 @@ const Face = ({
 
 /**
  * Navigation
+ * @param props Props
  * @returns Navigation
  */
-const Navigation = ({
-  mainView,
-  mainViewControls,
-}: NavigationProps): React.JSX.Element => {
+const Navigation = (_props: NavigationProps): React.JSX.Element => {
+  // Context
+  const { mainView } = useContext(Context)
+
   // State
   const [hover, setHover] = useState<{ index: number; distance: number }>({
     index: -1,
-    distance: Number.MAX_VALUE,
+    distance: Number.MAX_VALUE
   })
 
   // Camera position
@@ -279,13 +280,13 @@ const Navigation = ({
     []
   )
 
-  // Frame
+  // Rotation
   useFrame(({ camera }) => {
-    if (mainView?.camera && mainViewControls) {
-      camera.translateZ(-size)
-      camera.rotation.copy(mainView.camera.rotation)
-      camera.translateZ(size)
-    }
+    if (!mainView?.camera) return
+
+    camera.translateZ(-size)
+    camera.rotation.copy(mainView.camera.rotation)
+    camera.translateZ(size)
   })
 
   /**
@@ -318,37 +319,31 @@ const Navigation = ({
   const onClick = useCallback((): void => {
     // Checks
     if (!mainView?.camera) return
-    if (!mainView?.scene) return
-    if (!mainViewControls) return
+    if (!mainView.controls) return
 
     const currentFace = faces[hover.index]
     if (!currentFace) return
 
-    // Center
-    const boundingBox = computeSceneBoundingBox(mainView.scene)
-    const center = new Vector3()
-    boundingBox.getCenter(center)
-
     // Distance
-    const target = mainViewControls.target as THREE.Vector3
+    const target = mainView.controls.target as THREE.Vector3
     const distance = mainView.camera.position.distanceTo(target)
 
     // Position change
     const interval = currentFace.normal.clone().multiplyScalar(distance)
 
     // New position
-    const newPosition = center.add(interval).add(target)
+    const newPosition = target.clone().add(interval)
 
     // Update
     mainView.camera.position.copy(newPosition)
-    mainView.camera.up = currentFace.up
-  }, [mainView?.camera, mainView?.scene, mainViewControls, hover])
+    mainView.camera.up.copy(currentFace.up)
+  }, [mainView?.camera, mainView.controls, hover])
 
   /**
    * Render
    */
   return (
-    <mesh type='Navigation'>
+    <mesh type="Navigation">
       {faces.map((face, index) => (
         <Face
           key={face.text}
@@ -374,19 +369,19 @@ const Navigation = ({
         origin={axisOrigin}
         direction={directions.x}
         color={0xff0000}
-        text='x'
+        text="x"
       />
       <Axis
         origin={axisOrigin}
         direction={directions.y}
         color={0x00ff00}
-        text='y'
+        text="y"
       />
       <Axis
         origin={axisOrigin}
         direction={directions.z}
         color={0x0000ff}
-        text='z'
+        text="z"
       />
     </mesh>
   )
