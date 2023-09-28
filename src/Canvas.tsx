@@ -55,7 +55,7 @@ const MyCanvas = (): React.JSX.Element => {
           <View index={1} track={mainViewDiv}>
             <ContextFiller controls={mainViewControls.current} />
             <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-            <Grid visible={grid.visible} />
+            <Grid visible={grid.visible} update={controlsUpdate} />
             <TrackballControls
               ref={mainViewControls}
               onChange={onMainViewControls}
@@ -65,7 +65,7 @@ const MyCanvas = (): React.JSX.Element => {
               position={mainView.current?.camera.position}
               decay={0}
             />
-            <mesh position={[3, 0, 0]}>
+            <mesh position={[13, 0, 0]}>
               <coneGeometry />
               <meshStandardMaterial
                 color={'blue'}
@@ -73,7 +73,7 @@ const MyCanvas = (): React.JSX.Element => {
                 opacity={parts.transparent ? 0.5 : 1}
               />
             </mesh>
-            <mesh>
+            <mesh position={[-1, -5, 0]}>
               <torusKnotGeometry />
               <meshPhysicalMaterial
                 color={'blue'}

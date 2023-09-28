@@ -1,222 +1,468 @@
 import { Line } from '@react-three/drei'
-import { useEffect, useState } from 'react'
-import { useThree } from '@react-three/fiber'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Vector3 } from 'three'
 
-import { computeSceneBoundingBox } from '../../tools'
+import { Context } from '../../context'
+
+import {
+  computeSceneBoundingBox,
+  numberArraytoEuler,
+  numberArraytoVector3
+} from '../../tools'
 
 import StaticText from '../staticText'
 
+/**
+ * Props
+ */
 export interface GridProps {
   visible?: boolean
+  update: number
 }
 
-const numberOfHeightDivisions = 4
-const numberOfWidthDivisions = 5
-const offsetPercent = 10 / 100
-
-const toReadableString = (num: number): string => {
-  if (num === 0) return '0'
-  if (Math.abs(num) <= 0.001 || Math.abs(num) >= 999) return num.toExponential()
-  else return num.toFixed(2)
+export interface AxisGridProps {
+  axis: 'xy' | 'xz' | 'yz'
+  center: [number, number, number]
+  size: [number, number, number]
+  divisions: [number, number]
+  offset: Offset
 }
 
-const buildXGrid = (
-  center: THREE.Vector3,
-  size: THREE.Vector3,
-  offset: number
-): React.JSX.Element[] => {
-  const lines = []
-
-  const xMin = center.x - size.x
-  const xMax = center.x + size.x
-  const yMin = center.y - size.y
-  const yMax = center.y + size.y
-  const zMin = center.z - size.z
-
-  for (let i = 0; i < numberOfWidthDivisions; ++i) {
-    const x = xMin + (i * (xMax - xMin)) / (numberOfWidthDivisions - 1)
-    lines.push(
-      <Line
-        key={'lineX_' + i}
-        type="GridX"
-        points={[
-          [x, yMin, zMin - offset],
-          [x, yMax, zMin - offset]
-        ]}
-        color={'gray'}
-        transparent
-        opacity={0.5}
-      />
-    )
-    const textPosition = new Vector3(x, yMax + 2 * offset, zMin - offset)
-    lines.push(
-      <StaticText key={'textX_' + i} position={textPosition} fontSize={offset}>
-        {toReadableString(x)}
-      </StaticText>
-    )
-  }
-  for (let i = 0; i < numberOfHeightDivisions; ++i) {
-    const y = yMin + (i * (yMax - yMin)) / (numberOfHeightDivisions - 1)
-    lines.push(
-      <Line
-        key={'lineX_' + (numberOfWidthDivisions + i)}
-        type="GridX"
-        points={[
-          [xMin, y, zMin - offset],
-          [xMax, y, zMin - offset]
-        ]}
-        color={'gray'}
-        transparent
-        opacity={0.5}
-      />
-    )
-  }
-
-  return lines
+export interface AxisLabelsProps {
+  axis: 'xy' | 'xz' | 'yz'
+  center: [number, number, number]
+  size: [number, number, number]
+  range: [number, number]
+  division: number
+  offset: Offset
 }
 
-const buildYGrid = (
-  center: THREE.Vector3,
-  size: THREE.Vector3,
-  offset: number
-): React.JSX.Element[] => {
-  const lines = []
-
-  const xMin = center.x - size.x
-  const yMin = center.y - size.y
-  const yMax = center.y + size.y
-  const zMin = center.z - size.z
-  const zMax = center.z + size.z
-
-  for (let i = 0; i < numberOfWidthDivisions; ++i) {
-    const z = zMin + (i * (zMax - zMin)) / (numberOfWidthDivisions - 1)
-    lines.push(
-      <Line
-        key={'lineY_' + i}
-        type="GridY"
-        points={[
-          [xMin - offset, yMin, z],
-          [xMin - offset, yMax, z]
-        ]}
-        color={'gray'}
-        transparent
-        opacity={0.5}
-      />
-    )
-  }
-  for (let i = 0; i < numberOfHeightDivisions; ++i) {
-    const y = yMin + (i * (yMax - yMin)) / (numberOfHeightDivisions - 1)
-    lines.push(
-      <Line
-        key={'lineY_' + (numberOfWidthDivisions + i)}
-        type="GridY"
-        points={[
-          [xMin - offset, y, zMin],
-          [xMin - offset, y, zMax]
-        ]}
-        color={'gray'}
-        transparent
-        opacity={0.5}
-      />
-    )
-    const textPosition = new Vector3(xMin, y, zMax + 3 * offset)
-    lines.push(
-      <StaticText key={'textY' + i} position={textPosition} fontSize={offset}>
-        {toReadableString(y)}
-      </StaticText>
-    )
-  }
-
-  return lines
+export interface AxisLineProps {
+  start: [number, number, number]
+  stop: [number, number, number]
 }
 
-const buildZGrid = (
-  center: THREE.Vector3,
-  size: THREE.Vector3,
-  offset: number
-): React.JSX.Element[] => {
-  const lines = []
-
-  const xMin = center.x - size.x
-  const xMax = center.x + size.x
-  const yMin = center.y - size.y
-  const zMin = center.z - size.z
-  const zMax = center.z + size.z
-
-  for (let i = 0; i < numberOfWidthDivisions; ++i) {
-    const x = xMin + (i * (xMax - xMin)) / (numberOfWidthDivisions - 1)
-    lines.push(
-      <Line
-        key={'lineZ_' + i}
-        type="GridZ"
-        points={[
-          [x, yMin - offset, zMin],
-          [x, yMin - offset, zMax]
-        ]}
-        color={'gray'}
-        transparent
-        opacity={0.5}
-      />
-    )
-  }
-  for (let i = 0; i < numberOfWidthDivisions; ++i) {
-    const z = zMin + (i * (zMax - zMin)) / (numberOfWidthDivisions - 1)
-    lines.push(
-      <Line
-        key={'lineZ_' + (numberOfWidthDivisions + i)}
-        type="GridZ"
-        points={[
-          [xMin, yMin - offset, z],
-          [xMax, yMin - offset, z]
-        ]}
-        color={'gray'}
-        transparent
-        opacity={0.5}
-      />
-    )
-    const textPosition = new Vector3(xMax + 3 * offset, yMin, z)
-    lines.push(
-      <StaticText key={'textZ_' + i} position={textPosition} fontSize={offset}>
-        {toReadableString(z)}
-      </StaticText>
-    )
-  }
-
-  return lines
+export interface Offset {
+  value: number
+  direction: number
+  depth?: number
 }
 
-const Grid = ({ visible }: GridProps) => {
-  // State
-  const [lines, setLines] = useState<React.JSX.Element[]>()
-  // Data
-  const { scene } = useThree()
+/**
+ * Base offset
+ */
+const baseOffset = 0.1
 
-  // Scene update
-  useEffect(() => {
-    const boundingBox = computeSceneBoundingBox(scene)
-    const center = new Vector3()
-    const size = new Vector3()
-    boundingBox.getCenter(center)
-    boundingBox.getSize(size)
+/**
+ * Minimum divisions number
+ */
+const minDivisions = 2
 
-    const offset = Math.max(size.x, size.y, size.y) * offsetPercent
+/**
+ * Maximum divisions number
+ */
+const maxDivisions = 5
 
-    const xGrid = buildXGrid(center, size, offset)
-    const yGrid = buildYGrid(center, size, offset)
-    const zGrid = buildZGrid(center, size, offset)
+/**
+ * Line color
+ */
+const lineColor = 0x888888
 
-    setLines([...xGrid, ...yGrid, ...zGrid])
-  }, [scene])
+/**
+ * Get number of divisions
+ * @param size Size
+ * @returns Number of divisions
+ */
+const getNumberOfDivisions = (
+  size: [number, number, number]
+): [number, number, number] => {
+  const maxSize = Math.max(...size)
+  const xDivisions = Math.max(
+    Math.ceil((size[0] / maxSize) * maxDivisions),
+    minDivisions
+  )
+  const yDivisions = Math.max(
+    Math.ceil((size[1] / maxSize) * maxDivisions),
+    minDivisions
+  )
+  const zDivisions = Math.max(
+    Math.ceil((size[2] / maxSize) * maxDivisions),
+    minDivisions
+  )
+  return [xDivisions, yDivisions, zDivisions]
+}
+
+const toReadable = (number: number): string => {
+  if (Math.abs(number) < 1e-12) return '0'
+  if (Math.abs(number) < 0.001 || Math.abs(number) > 1000)
+    return number.toExponential(2)
+  return number.toFixed(3)
+}
+
+/**
+ * AxisLine
+ * @param props Props
+ * @returns AxisLine
+ */
+const AxisLine = ({ start, stop }: AxisLineProps): React.JSX.Element => {
+  return <Line points={[start, stop]} color={lineColor} />
+}
+
+/**
+ * AxisGrid
+ * @param props Props
+ * @returns AxisGrid
+ */
+const AxisGrid = ({
+  axis,
+  center,
+  size,
+  divisions,
+  offset
+}: AxisGridProps): React.JSX.Element => {
+  // Width
+  const width = useMemo(() => {
+    switch (axis) {
+      case 'xy':
+        return size[0]
+      case 'xz':
+        return size[0]
+      case 'yz':
+        return size[1]
+    }
+  }, [axis, size])
+
+  // Height
+  const height = useMemo(() => {
+    switch (axis) {
+      case 'xy':
+        return size[1]
+      case 'xz':
+        return size[2]
+      case 'yz':
+        return size[2]
+    }
+  }, [axis, size])
+
+  // Depth
+  const depth = useMemo(() => {
+    switch (axis) {
+      case 'xy':
+        return size[2]
+      case 'xz':
+        return size[1]
+      case 'yz':
+        return size[0]
+    }
+  }, [axis, size])
+
+  // Rotation
+  const rotation = useMemo(
+    () =>
+      numberArraytoEuler([
+        axis === 'xy' ? Math.PI / 2 : 0,
+        0,
+        axis === 'yz' ? -Math.PI / 2 : 0
+      ]),
+    [axis]
+  )
+
+  // Position
+  const position = useMemo(() => {
+    switch (axis) {
+      case 'xy':
+        return numberArraytoVector3([
+          center[0],
+          center[1],
+          center[2] + offset.direction * (depth / 2 + offset.value)
+        ])
+      case 'xz':
+        return numberArraytoVector3([
+          center[0],
+          center[1] + offset.direction * (depth / 2 + offset.value),
+          center[2]
+        ])
+      case 'yz':
+        return numberArraytoVector3([
+          center[0] + offset.direction * (depth / 2 + offset.value),
+          center[1],
+          center[2]
+        ])
+    }
+  }, [depth, axis, center, offset])
+
+  // Lines
+  const lines = useMemo(() => {
+    const lines = []
+
+    const origin = [-width / 2, -height / 2]
+
+    const step0 = width / (divisions[0] - 1)
+    const step1 = height / (divisions[1] - 1)
+
+    for (let i = 0; i < divisions[0]; ++i) {
+      lines.push(
+        <AxisLine
+          // key={'line_' + i}//TODO
+          start={[origin[0] + i * step0, 0, origin[1]]}
+          stop={[origin[0] + i * step0, 0, origin[1] + height]}
+        />
+      )
+    }
+
+    for (let i = 0; i < divisions[1]; ++i) {
+      lines.push(
+        <AxisLine
+          // key={'line_' + i}//TODO
+          start={[origin[0], 0, origin[1] + i * step1]}
+          stop={[origin[0] + width, 0, origin[1] + i * step1]}
+        />
+      )
+    }
+
+    return lines
+  }, [width, height, divisions])
 
   /**
    * Render
    */
   return (
-    <mesh visible={visible ?? true} type="Grid">
+    <group position={position} rotation={rotation}>
       {lines}
-    </mesh>
+    </group>
   )
+}
+
+const AxisLabels = ({
+  axis,
+  center,
+  size,
+  range,
+  division,
+  offset
+}: AxisLabelsProps): React.JSX.Element => {
+  // Width
+  const width = useMemo(() => {
+    switch (axis) {
+      case 'xy':
+        return size[0]
+      case 'xz':
+        return size[0]
+      case 'yz':
+        return size[1]
+    }
+  }, [axis, size])
+
+  // Height
+  const height = useMemo(() => {
+    switch (axis) {
+      case 'xy':
+        return size[1]
+      case 'xz':
+        return size[2]
+      case 'yz':
+        return size[2]
+    }
+  }, [axis, size])
+
+  // Depth
+  const depth = useMemo(() => {
+    switch (axis) {
+      case 'xy':
+        return size[2]
+      case 'xz':
+        return size[1]
+      case 'yz':
+        return size[0]
+    }
+  }, [axis, size])
+
+  // Position
+  const position = useMemo(() => {
+    switch (axis) {
+      case 'xy':
+        return numberArraytoVector3([
+          center[0],
+          center[1] - offset.depth! * (height / 2 + offset.value),
+          center[2] + offset.direction * (depth / 2 + offset.value)
+        ])
+      case 'xz':
+        return numberArraytoVector3([
+          center[0] - offset.depth! * (width / 2 + offset.value),
+          center[1] + offset.direction * (depth / 2 + offset.value),
+          center[2]
+        ])
+      case 'yz':
+        return numberArraytoVector3([
+          center[0] + offset.direction * (depth / 2 + offset.value),
+          center[1],
+          center[2] - offset.depth! * (height / 2 + offset.value)
+        ])
+    }
+  }, [width, height, depth, axis, center, offset])
+
+  const labels = useMemo(() => {
+    const labels = []
+
+    const length = Math.abs(range[1] - range[0])
+    const step = length / (division - 1)
+
+    for (let i = 0; i < division; ++i) {
+      const value = range[0] + (i / division - 1) * range[1]
+      let textPosition
+      switch (axis) {
+        case 'xy':
+          textPosition = numberArraytoVector3([-length / 2 + i * step, 0, 0])
+          break
+        case 'xz':
+          textPosition = numberArraytoVector3([0, 0, -length / 2 + i * step])
+          break
+        case 'yz':
+          textPosition = numberArraytoVector3([0, -length / 2 + i * step, 0])
+          break
+      }
+
+      labels.push(
+        <StaticText
+          // key={'label_' + i}//TODO
+          position={textPosition}
+          fontSize={0.5} //TODO
+        >
+          {toReadable(value)}
+        </StaticText>
+      )
+    }
+
+    return labels
+  }, [axis, range, division])
+
+  return <group position={position}>{labels}</group>
+}
+
+const Grid = ({ visible, update }: GridProps): React.JSX.Element | null => {
+  // Context
+  const { mainView } = useContext(Context)
+
+  // State
+  const [center, setCenter] = useState<[number, number, number]>([0, 0, 0])
+  const [size, setSize] = useState<[number, number, number]>([0, 0, 0])
+  const [range, setRange] = useState<{
+    x: [number, number]
+    y: [number, number]
+    z: [number, number]
+  }>({ x: [0, 0], y: [0, 0], z: [0, 0] })
+  const [offset, setOffset] = useState<number>(0)
+  const [numberOfDivisions, setNumberOfDivisions] = useState<
+    [number, number, number]
+  >([minDivisions, minDivisions, minDivisions])
+  const [cameraDirection, setCameraDirection] = useState<
+    [number, number, number]
+  >([0, 0, 0])
+
+  // Scene update
+  useEffect(() => {
+    if (!mainView.scene) return
+
+    const boundingBox = computeSceneBoundingBox(mainView.scene)
+    const center = new Vector3()
+    boundingBox.getCenter(center)
+    const size = [
+      boundingBox.max.x - boundingBox.min.x,
+      boundingBox.max.y - boundingBox.min.y,
+      boundingBox.max.z - boundingBox.min.z
+    ] as [number, number, number]
+    const range = {
+      x: [boundingBox.min.x, boundingBox.max.x] as [number, number],
+      y: [boundingBox.min.y, boundingBox.max.y] as [number, number],
+      z: [boundingBox.min.z, boundingBox.max.z] as [number, number]
+    }
+    const offset = Math.max(...size) * baseOffset
+    const numberOfDivisions = getNumberOfDivisions(size)
+
+    setCenter([center.x, center.y, center.z])
+    setSize(size)
+    setRange(range)
+    setOffset(offset)
+    setNumberOfDivisions(numberOfDivisions)
+  }, [mainView.scene])
+
+  // Camera udpate
+  useEffect(() => {
+    if (!mainView.camera) return
+
+    const cameraDirection = new Vector3()
+    mainView.camera.getWorldDirection(cameraDirection)
+    setCameraDirection([
+      cameraDirection.x,
+      cameraDirection.y,
+      cameraDirection.z
+    ])
+  }, [mainView.camera, update])
+
+  /**
+   * Render
+   */
+  return visible ? (
+    <group type="Grid">
+      <AxisGrid
+        axis="xy"
+        center={center}
+        size={size}
+        divisions={[numberOfDivisions[0], numberOfDivisions[1]]}
+        offset={{ value: offset, direction: Math.sign(cameraDirection[2]) }}
+      />
+      <AxisLabels
+        axis="xy"
+        center={center}
+        size={size}
+        range={range.x}
+        division={numberOfDivisions[0]}
+        offset={{
+          value: offset,
+          direction: Math.sign(cameraDirection[2]),
+          depth: Math.sign(cameraDirection[1])
+        }}
+      />
+      <AxisGrid
+        axis="xz"
+        center={center}
+        size={size}
+        divisions={[numberOfDivisions[0], numberOfDivisions[2]]}
+        offset={{ value: offset, direction: Math.sign(cameraDirection[1]) }}
+      />
+      <AxisLabels
+        axis="xz"
+        center={center}
+        size={size}
+        range={range.z}
+        division={numberOfDivisions[2]}
+        offset={{
+          value: offset,
+          direction: Math.sign(cameraDirection[1]),
+          depth: Math.sign(cameraDirection[0])
+        }}
+      />
+      <AxisGrid
+        axis="yz"
+        center={center}
+        size={size}
+        divisions={[numberOfDivisions[1], numberOfDivisions[2]]}
+        offset={{ value: offset, direction: Math.sign(cameraDirection[0]) }}
+      />
+      <AxisLabels
+        axis="yz"
+        center={center}
+        size={size}
+        range={range.y}
+        division={numberOfDivisions[1]}
+        offset={{
+          value: offset,
+          direction: Math.sign(cameraDirection[0]),
+          depth: Math.sign(cameraDirection[2])
+        }}
+      />
+    </group>
+  ) : null
 }
 
 export default Grid

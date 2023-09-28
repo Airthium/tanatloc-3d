@@ -1,4 +1,4 @@
-import { Box3, Vector3 } from 'three'
+import { Box3, Euler, Vector3 } from 'three'
 
 /**
  * Number array to Vector3
@@ -7,6 +7,9 @@ import { Box3, Vector3 } from 'three'
  */
 export const numberArraytoVector3 = (array: number[]): THREE.Vector3 =>
   new Vector3(array[0], array[1], array[2])
+
+export const numberArraytoEuler = (array: number[]): THREE.Euler =>
+  new Euler(array[0], array[1], array[2], 'XYZ')
 
 /**
  * Compute scene bounding box
