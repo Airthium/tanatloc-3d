@@ -6,30 +6,36 @@ import { Context } from '.'
 import {
   setMainViewCamera,
   setMainViewControls,
+  setMainViewGl,
   setMainViewScene
 } from './actions'
 
-export interface ContextFillerProps {
+export interface MainContextFillerProps {
   controls?: TrackballControlsProps
 }
 
 /**
- * Context filler
- * @returns ContextFiller
+ * Main context filler
+ * @returns MainContextFiller
  */
-const ContextFiller = ({ controls }: ContextFillerProps): null => {
+const MainContextFiller = ({ controls }: MainContextFillerProps): null => {
   // Data
-  const { scene, camera } = useThree()
+  const { gl, scene, camera } = useThree()
 
   // Context
   const { dispatch } = useContext(Context)
 
-  // Set context
+  // Set renderer
+  useEffect(() => {
+    dispatch(setMainViewGl(gl))
+  }, [gl, dispatch])
+
+  // Set scene
   useEffect(() => {
     dispatch(setMainViewScene(scene))
   }, [scene, dispatch])
 
-  // Set context
+  // Set camera
   useEffect(() => {
     dispatch(setMainViewCamera(camera as THREE.PerspectiveCamera))
   }, [camera, dispatch])
@@ -45,4 +51,4 @@ const ContextFiller = ({ controls }: ContextFillerProps): null => {
   return null
 }
 
-export default ContextFiller
+export default MainContextFiller

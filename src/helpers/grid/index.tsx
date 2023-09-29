@@ -44,8 +44,8 @@ export interface AxisLineProps {
 
 export interface Offset {
   value: number
-  direction: number
-  depth?: number
+  direction: -1 | 1
+  depth?: -1 | 1
 }
 
 /**
@@ -92,6 +92,21 @@ const getNumberOfDivisions = (
   return [xDivisions, yDivisions, zDivisions]
 }
 
+/**
+ * Sign
+ * @param number Number
+ * @returns Sign
+ */
+const sign = (number: number): -1 | 1 => {
+  if (number < 0) return -1
+  return 1
+}
+
+/**
+ * To readable
+ * @param number Number
+ * @returns Readable number
+ */
 const toReadable = (number: number): string => {
   if (Math.abs(number) < 1e-12) return '0'
   if (Math.abs(number) < 0.001 || Math.abs(number) > 1000)
@@ -203,7 +218,7 @@ const AxisGrid = ({
     for (let i = 0; i < divisions[0]; ++i) {
       lines.push(
         <AxisLine
-          // key={'line_' + i}//TODO
+          key={'line_' + axis + '_' + i}
           start={[origin[0] + i * step0, 0, origin[1]]}
           stop={[origin[0] + i * step0, 0, origin[1] + height]}
         />
@@ -213,7 +228,7 @@ const AxisGrid = ({
     for (let i = 0; i < divisions[1]; ++i) {
       lines.push(
         <AxisLine
-          // key={'line_' + i}//TODO
+          key={'line_' + axis + '_' + (i + divisions[0])}
           start={[origin[0], 0, origin[1] + i * step1]}
           stop={[origin[0] + width, 0, origin[1] + i * step1]}
         />
@@ -221,7 +236,7 @@ const AxisGrid = ({
     }
 
     return lines
-  }, [width, height, divisions])
+  }, [width, height, axis, divisions])
 
   /**
    * Render
@@ -324,9 +339,9 @@ const AxisLabels = ({
 
       labels.push(
         <StaticText
-          // key={'label_' + i}//TODO
+          key={'label_' + axis + '_' + i}
           position={textPosition}
-          fontSize={0.5} //TODO
+          fontSize={offset.value / 3}
         >
           {toReadable(value)}
         </StaticText>
@@ -334,7 +349,7 @@ const AxisLabels = ({
     }
 
     return labels
-  }, [axis, range, division])
+  }, [axis, range, division, offset])
 
   return <group position={position}>{labels}</group>
 }
@@ -409,7 +424,7 @@ const Grid = ({ visible, update }: GridProps): React.JSX.Element | null => {
         center={center}
         size={size}
         divisions={[numberOfDivisions[0], numberOfDivisions[1]]}
-        offset={{ value: offset, direction: Math.sign(cameraDirection[2]) }}
+        offset={{ value: offset, direction: sign(cameraDirection[2]) }}
       />
       <AxisLabels
         axis="xy"
@@ -419,8 +434,8 @@ const Grid = ({ visible, update }: GridProps): React.JSX.Element | null => {
         division={numberOfDivisions[0]}
         offset={{
           value: offset,
-          direction: Math.sign(cameraDirection[2]),
-          depth: Math.sign(cameraDirection[1])
+          direction: sign(cameraDirection[2]),
+          depth: sign(cameraDirection[1])
         }}
       />
       <AxisGrid
@@ -428,7 +443,7 @@ const Grid = ({ visible, update }: GridProps): React.JSX.Element | null => {
         center={center}
         size={size}
         divisions={[numberOfDivisions[0], numberOfDivisions[2]]}
-        offset={{ value: offset, direction: Math.sign(cameraDirection[1]) }}
+        offset={{ value: offset, direction: sign(cameraDirection[1]) }}
       />
       <AxisLabels
         axis="xz"
@@ -438,8 +453,8 @@ const Grid = ({ visible, update }: GridProps): React.JSX.Element | null => {
         division={numberOfDivisions[2]}
         offset={{
           value: offset,
-          direction: Math.sign(cameraDirection[1]),
-          depth: Math.sign(cameraDirection[0])
+          direction: sign(cameraDirection[1]),
+          depth: sign(cameraDirection[0])
         }}
       />
       <AxisGrid
@@ -447,7 +462,7 @@ const Grid = ({ visible, update }: GridProps): React.JSX.Element | null => {
         center={center}
         size={size}
         divisions={[numberOfDivisions[1], numberOfDivisions[2]]}
-        offset={{ value: offset, direction: Math.sign(cameraDirection[0]) }}
+        offset={{ value: offset, direction: sign(cameraDirection[0]) }}
       />
       <AxisLabels
         axis="yz"
@@ -457,8 +472,8 @@ const Grid = ({ visible, update }: GridProps): React.JSX.Element | null => {
         division={numberOfDivisions[1]}
         offset={{
           value: offset,
-          direction: Math.sign(cameraDirection[0]),
-          depth: Math.sign(cameraDirection[2])
+          direction: sign(cameraDirection[0]),
+          depth: sign(cameraDirection[2])
         }}
       />
     </group>

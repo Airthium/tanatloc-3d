@@ -1,5 +1,27 @@
 import { TrackballControlsProps } from '@react-three/drei'
-import { actionTypes } from '.'
+import { MyCanvasPropsSnapshot, actionTypes } from '.'
+
+/**
+ * Set props snapshot project
+ * @param gl GL
+ * @returns Action
+ */
+export const setPropsSnapshotProject = (
+  project: MyCanvasPropsSnapshot['project']
+) => ({
+  type: actionTypes.SETPROPSSNAPSHOTPROJECT,
+  value: project
+})
+
+/**
+ * Set main view gl
+ * @param gl GL
+ * @returns Action
+ */
+export const setMainViewGl = (gl: THREE.WebGLRenderer) => ({
+  type: actionTypes.SETMAINVIEWGL,
+  value: gl
+})
 
 /**
  * Set main view scene
@@ -8,7 +30,7 @@ import { actionTypes } from '.'
  */
 export const setMainViewScene = (scene: THREE.Scene) => ({
   type: actionTypes.SETMAINVIEWSCENE,
-  value: scene,
+  value: scene
 })
 
 /**
@@ -18,7 +40,7 @@ export const setMainViewScene = (scene: THREE.Scene) => ({
  */
 export const setMainViewCamera = (camera: THREE.PerspectiveCamera) => ({
   type: actionTypes.SETMAINVIEWCAMERA,
-  value: camera,
+  value: camera
 })
 
 /**
@@ -28,7 +50,7 @@ export const setMainViewCamera = (camera: THREE.PerspectiveCamera) => ({
  */
 export const setMainViewControls = (controls: TrackballControlsProps) => ({
   type: actionTypes.SETMAINVIEWCONTROLS,
-  value: controls,
+  value: controls
 })
 
 /**
@@ -38,7 +60,7 @@ export const setMainViewControls = (controls: TrackballControlsProps) => ({
  */
 export const setPartsTransparent = (transparent: boolean) => ({
   type: actionTypes.SETPARTSTRANSPARENT,
-  value: transparent,
+  value: transparent
 })
 
 /**
@@ -48,5 +70,5 @@ export const setPartsTransparent = (transparent: boolean) => ({
  */
 export const setGridVisible = (visible: boolean) => ({
   type: actionTypes.SETGRIDVISIBLE,
-  value: visible,
+  value: visible
 })

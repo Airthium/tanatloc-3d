@@ -5,7 +5,9 @@ import { TrackballControlsProps } from '@react-three/drei'
  * Context state interface
  */
 export interface ContextState {
+  props: MyCanvasProps
   mainView: {
+    gl?: THREE.WebGLRenderer
     scene?: THREE.Scene
     camera?: THREE.PerspectiveCamera
     controls?: TrackballControlsProps
@@ -35,10 +37,28 @@ export interface ProviderProps {
 }
 
 /**
+ * MyCanvas props
+ */
+export interface MyCanvasProps {
+  snapshot?: MyCanvasPropsSnapshot
+}
+
+export interface MyCanvasPropsSnapshot {
+  project?: {
+    apiRoute: (image: string) => Promise<void>
+    size?: { width: number; height: number }
+  }
+}
+
+/**
  * Initial context state
  */
 export const initialContextState: ContextState = {
+  props: {
+    snapshot: undefined
+  },
   mainView: {
+    gl: undefined,
     scene: undefined,
     camera: undefined,
     controls: undefined
@@ -56,6 +76,8 @@ export const initialContextState: ContextState = {
  * Action types
  */
 export const actionTypes = {
+  SETPROPSSNAPSHOTPROJECT: 'SETPROPSSNAPSHOTPROJECT',
+  SETMAINVIEWGL: 'SETMAINVIEWGL',
   SETMAINVIEWSCENE: 'SETMAINVIEWSCENE',
   SETMAINVIEWCAMERA: 'SETMAINVIEWCAMERA',
   SETMAINVIEWCONTROLS: 'SETMAINVIEWCONTROLS',
@@ -79,6 +101,25 @@ export const reducer = (
   action: ContextAction
 ): ContextState => {
   switch (action.type) {
+    case actionTypes.SETPROPSSNAPSHOTPROJECT:
+      return {
+        ...state,
+        props: {
+          ...state.props,
+          snapshot: {
+            ...state.props.snapshot,
+            project: action.value
+          }
+        }
+      }
+    case actionTypes.SETMAINVIEWGL:
+      return {
+        ...state,
+        mainView: {
+          ...state.mainView,
+          gl: action.value
+        }
+      }
     case actionTypes.SETMAINVIEWSCENE:
       return {
         ...state,

@@ -3,8 +3,9 @@ import { Layout } from 'antd'
 import { Canvas } from '@react-three/fiber'
 import { PerspectiveCamera, TrackballControls, View } from '@react-three/drei'
 
-import Provider, { Context } from './context'
-import ContextFiller from './context/ContextFiller'
+import Provider, { Context, MyCanvasProps } from './context'
+import MainContextFiller from './context/MainContextFiller'
+import PropsContextFiller from './context/PropsContextFiller'
 
 import Navigation from './helpers/navigation'
 import Grid from './helpers/grid'
@@ -51,9 +52,9 @@ const MyCanvas = (): React.JSX.Element => {
       <div ref={containerDiv} className={style.container}>
         <div ref={mainViewDiv} className={style.mainView} />
         <div ref={navigationViewDiv} className={style.navigationView} />
-        <Canvas eventSource={containerDiv}>
-          <View index={1} track={mainViewDiv}>
-            <ContextFiller controls={mainViewControls.current} />
+        <Canvas eventSource={containerDiv} gl={{ preserveDrawingBuffer: true }}>
+          <View index={1} track={mainViewDiv} frames={1}>
+            <MainContextFiller controls={mainViewControls.current} />
             <PerspectiveCamera makeDefault position={[0, 0, 5]} />
             <Grid visible={grid.visible} update={controlsUpdate} />
             <TrackballControls
@@ -84,7 +85,7 @@ const MyCanvas = (): React.JSX.Element => {
               />
             </mesh>
           </View>
-          <View index={2} track={navigationViewDiv}>
+          <View index={2} track={navigationViewDiv} frames={1}>
             <Navigation update={controlsUpdate} />
           </View>
         </Canvas>
@@ -97,12 +98,13 @@ const MyCanvas = (): React.JSX.Element => {
  * MyCanvasWithContext
  * @returns MyCanvasWithContext
  */
-const MyCanvasWithContext = () => {
+const MyCanvasWithContext = (props: MyCanvasProps) => {
   /**
    * Render
    */
   return (
     <Provider>
+      <PropsContextFiller {...props} />
       <MyCanvas />
     </Provider>
   )
