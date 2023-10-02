@@ -3,21 +3,6 @@
   height: 100%;
 }
 
-.header {
-  position: absolute;
-  background: none;
-  background-color: transparent;
-  height: unset;
-  padding: 20px;
-  line-height: unset;
-  z-index: 10;
-  top: 250px;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
 .container {
   position: relative;
   width: 100%;
@@ -32,7 +17,7 @@
 
 .navigationView {
   position: absolute;
-  width: 250px;
-  height: 250px;
+  width: 200px;
+  height: 200px;
   right: 0;
 }

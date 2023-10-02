@@ -34,7 +34,7 @@ const StaticText = ({
    * Render
    */
   return (
-    <Text ref={ref} position={position} fontSize={fontSize}>
+    <Text ref={ref} position={position} fontSize={fontSize} type="StaticText">
       {children}
     </Text>
   )

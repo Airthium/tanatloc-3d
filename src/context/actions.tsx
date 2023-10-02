@@ -72,3 +72,18 @@ export const setGridVisible = (visible: boolean) => ({
   type: actionTypes.SETGRIDVISIBLE,
   value: visible
 })
+
+/**
+ * Set zoom to selection enabled
+ * @param visible Visible
+ * @returns Action
+ */
+export const setZoomToSelectionEnabled = (enabled: boolean) => ({
+  type: actionTypes.SETZOOMTOSELECTIONENABLED,
+  value: enabled
+})
+
+export const setSectionViewClippingPlane = (clippingPlane: THREE.Plane) => ({
+  type: actionTypes.SETSECTIONVIEWCLIPPINGPLANE,
+  value: clippingPlane
+})

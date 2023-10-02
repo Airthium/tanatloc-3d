@@ -15,16 +15,21 @@ import {
   DownOutlined,
   FundProjectionScreenOutlined,
   RadiusUprightOutlined,
+  SelectOutlined,
   ToolOutlined,
   ZoomInOutlined,
   ZoomOutOutlined
 } from '@ant-design/icons'
 
 import { Context, MyCanvasPropsSnapshot } from '../context'
-import { setGridVisible, setPartsTransparent } from '../context/actions'
+import {
+  setGridVisible,
+  setPartsTransparent,
+  setZoomToSelectionEnabled
+} from '../context/actions'
 
-import _zoomToFit from '../tools/zoomToFit'
-import _zoom from '../tools/zoom'
+import zoomToFit from '../tools/zoomToFit'
+import zoom from '../tools/zoom'
 
 import style from './index.module.css'
 
@@ -131,7 +136,8 @@ const CollapseIcon = () => (
  */
 const Header = () => {
   // Context
-  const { props, mainView, parts, grid, dispatch } = useContext(Context)
+  const { props, mainView, parts, grid, zoomToSelection, dispatch } =
+    useContext(Context)
 
   /**
    * On Snapshot
@@ -191,34 +197,41 @@ const Header = () => {
   /**
    * Zoom in
    */
-  const zoomIn = useCallback(() => {
-    _zoom(mainView.camera, mainView.controls, 1)
-    zoomInProgress = requestAnimationFrame(() => zoomIn())
+  const onZoomIn = useCallback(() => {
+    zoom(mainView.camera, mainView.controls, 1)
+    zoomInProgress = requestAnimationFrame(() => onZoomIn())
   }, [mainView.camera, mainView.controls])
 
   /**
    * Zoom to fit
    */
-  const zoomToFit = useCallback(
-    () => _zoomToFit(mainView.scene, mainView.camera, mainView.controls),
+  const onZoomToFit = useCallback(
+    () => zoomToFit(mainView.scene, mainView.camera, mainView.controls),
     [mainView.scene, mainView.camera, mainView.controls]
   )
 
   /**
    * Zoom out
    */
-  const zoomOut = useCallback(() => {
-    _zoom(mainView.camera, mainView.controls, -1)
-    zoomInProgress = requestAnimationFrame(() => zoomOut())
+  const onZoomOut = useCallback(() => {
+    zoom(mainView.camera, mainView.controls, -1)
+    zoomInProgress = requestAnimationFrame(() => onZoomOut())
   }, [mainView.camera, mainView.controls])
 
   /**
    * Zoom stop
    */
-  const zoomStop = useCallback(() => {
+  const onZoomStop = useCallback(() => {
     if (zoomInProgress) cancelAnimationFrame(zoomInProgress)
     zoomInProgress = undefined
   }, [])
+
+  /**
+   * On zoom to selection
+   */
+  const onZoomToSelection = useCallback(() => {
+    dispatch(setZoomToSelectionEnabled(!zoomToSelection.enabled))
+  }, [zoomToSelection.enabled, dispatch])
 
   /**
    * Render
@@ -282,22 +295,34 @@ const Header = () => {
               <Tooltip key="zoom-in" title="Zoom in" placement="left">
                 <Button
                   icon={<ZoomInOutlined />}
-                  onMouseDown={zoomIn}
-                  onMouseUp={zoomStop}
-                  onMouseOut={zoomStop}
+                  onMouseDown={onZoomIn}
+                  onMouseUp={onZoomStop}
+                  onMouseOut={onZoomStop}
                 />
               </Tooltip>,
               <Tooltip key="zoom-to-fit" title="Zoom to fit" placement="left">
-                <Button icon={<CompressOutlined />} onClick={zoomToFit} />
+                <Button icon={<CompressOutlined />} onClick={onZoomToFit} />
               </Tooltip>,
               <Tooltip key="zoom-out" title="Zoom out" placement="left">
                 <Button
                   icon={<ZoomOutOutlined />}
-                  onMouseDown={zoomOut}
-                  onMouseUp={zoomStop}
-                  onMouseOut={zoomStop}
+                  onMouseDown={onZoomOut}
+                  onMouseUp={onZoomStop}
+                  onMouseOut={onZoomStop}
                 />
-              </Tooltip>
+              </Tooltip>,
+              <Tooltip
+                key="zoom-to-selection"
+                title="Zoom to selection"
+                placement="left"
+              >
+                <Button
+                  type={zoomToSelection.enabled ? 'primary' : 'default'}
+                  icon={<SelectOutlined />}
+                  onClick={onZoomToSelection}
+                />
+              </Tooltip>,
+              <Divider key="divider-3" />
             ]
           }
         ]}

@@ -53,7 +53,7 @@ const Arrow = ({
    * Render
    */
   return (
-    <>
+    <group type="Arrow">
       <mesh ref={ref} position={origin}>
         <mesh position={[0, length / 2, 0]}>
           <cylinderGeometry args={[length * 0.02, length * 0.02, length]} />
@@ -69,7 +69,7 @@ const Arrow = ({
           {text}
         </StaticText>
       ) : null}
-    </>
+    </group>
   )
 }
 Arrow.defaultProps = {

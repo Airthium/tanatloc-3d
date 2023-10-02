@@ -16,7 +16,6 @@ import StaticText from '../staticText'
  * Props
  */
 export interface GridProps {
-  visible?: boolean
   update: number
 }
 
@@ -354,9 +353,9 @@ const AxisLabels = ({
   return <group position={position}>{labels}</group>
 }
 
-const Grid = ({ visible, update }: GridProps): React.JSX.Element | null => {
+const Grid = ({ update }: GridProps): React.JSX.Element | null => {
   // Context
-  const { mainView } = useContext(Context)
+  const { mainView, grid } = useContext(Context)
 
   // State
   const [center, setCenter] = useState<[number, number, number]>([0, 0, 0])
@@ -417,7 +416,7 @@ const Grid = ({ visible, update }: GridProps): React.JSX.Element | null => {
   /**
    * Render
    */
-  return visible ? (
+  return grid.visible ? (
     <group type="Grid">
       <AxisGrid
         axis="xy"

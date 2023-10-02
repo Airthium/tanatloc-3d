@@ -9,10 +9,12 @@ import PropsContextFiller from './context/PropsContextFiller'
 
 import Navigation from './helpers/navigation'
 import Grid from './helpers/grid'
+import ZoomToSelection from './helpers/zoomToSelection'
 
 import Header from './header'
 
 import style from './Canvas.module.css'
+import SectionView from './helpers/sectionView'
 
 /**
  * MyCanvas
@@ -31,7 +33,7 @@ const MyCanvas = (): React.JSX.Element => {
   const mainViewControls = useRef(null!)
 
   // Context
-  const { parts, grid } = useContext(Context)
+  const { parts, sectionView } = useContext(Context)
 
   // State
   const [controlsUpdate, setControlsUpdate] = useState<number>(0)
@@ -56,7 +58,9 @@ const MyCanvas = (): React.JSX.Element => {
           <View index={1} track={mainViewDiv} frames={1}>
             <MainContextFiller controls={mainViewControls.current} />
             <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-            <Grid visible={grid.visible} update={controlsUpdate} />
+            <Grid update={controlsUpdate} />
+            <ZoomToSelection />
+            <SectionView />
             <TrackballControls
               ref={mainViewControls}
               onChange={onMainViewControls}
@@ -66,15 +70,20 @@ const MyCanvas = (): React.JSX.Element => {
               position={mainView.current?.camera.position}
               decay={0}
             />
-            <mesh position={[13, 0, 0]}>
+            <mesh position={[13, 0, 0]} type="Part">
               <coneGeometry />
               <meshStandardMaterial
                 color={'blue'}
                 transparent
                 opacity={parts.transparent ? 0.5 : 1}
+                clippingPlanes={
+                  sectionView.clippingPlane
+                    ? [sectionView.clippingPlane]
+                    : undefined
+                }
               />
             </mesh>
-            <mesh position={[-1, -5, 0]}>
+            <mesh position={[-1, -5, 0]} type="Part">
               <torusKnotGeometry />
               <meshPhysicalMaterial
                 color={'blue'}
@@ -82,6 +91,11 @@ const MyCanvas = (): React.JSX.Element => {
                 opacity={parts.transparent ? 0.5 : 1}
                 metalness={0.5}
                 roughness={0.5}
+                clippingPlanes={
+                  sectionView.clippingPlane
+                    ? [sectionView.clippingPlane]
+                    : undefined
+                }
               />
             </mesh>
           </View>

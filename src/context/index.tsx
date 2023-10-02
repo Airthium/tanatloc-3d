@@ -18,6 +18,12 @@ export interface ContextState {
   grid: {
     visible: boolean
   }
+  zoomToSelection: {
+    enabled: boolean
+  }
+  sectionView: {
+    clippingPlane?: THREE.Plane
+  }
   dispatch: Dispatch<ContextAction>
 }
 
@@ -69,6 +75,12 @@ export const initialContextState: ContextState = {
   grid: {
     visible: true
   },
+  zoomToSelection: {
+    enabled: false
+  },
+  sectionView: {
+    clippingPlane: undefined
+  },
   dispatch: () => undefined
 }
 
@@ -82,7 +94,9 @@ export const actionTypes = {
   SETMAINVIEWCAMERA: 'SETMAINVIEWCAMERA',
   SETMAINVIEWCONTROLS: 'SETMAINVIEWCONTROLS',
   SETPARTSTRANSPARENT: 'SETPARTSTRANSPARENT',
-  SETGRIDVISIBLE: 'SETGRIDVISIBLE'
+  SETGRIDVISIBLE: 'SETGRIDVISIBLE',
+  SETZOOMTOSELECTIONENABLED: 'SETZOOMTOSELECTIONENABLED',
+  SETSECTIONVIEWCLIPPINGPLANE: 'SETSECTIONVIEWCLIPPINGPLANE'
 }
 
 /**
@@ -158,6 +172,22 @@ export const reducer = (
         grid: {
           ...state.grid,
           visible: action.value
+        }
+      }
+    case actionTypes.SETZOOMTOSELECTIONENABLED:
+      return {
+        ...state,
+        zoomToSelection: {
+          ...state.zoomToSelection,
+          enabled: action.value
+        }
+      }
+    case actionTypes.SETSECTIONVIEWCLIPPINGPLANE:
+      return {
+        ...state,
+        sectionView: {
+          ...state.sectionView,
+          clippingPlane: action.value
         }
       }
     default:

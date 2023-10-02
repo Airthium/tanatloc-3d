@@ -20,7 +20,7 @@ export const computeSceneBoundingBox = (scene: THREE.Scene): THREE.Box3 => {
   const box = new Box3()
 
   scene.children.forEach((child) => {
-    if (child.type === 'Mesh') {
+    if (child.type === 'Part') {
       const mesh = child as THREE.Mesh
       mesh.geometry.computeBoundingBox()
       box.expandByObject(mesh)
