@@ -22,7 +22,11 @@ export interface ContextState {
     enabled: boolean
   }
   sectionView: {
+    enabled: boolean
     clippingPlane?: THREE.Plane
+    hidePlane: boolean
+    snap?: THREE.Vector3
+    flip?: number
   }
   dispatch: Dispatch<ContextAction>
 }
@@ -79,7 +83,11 @@ export const initialContextState: ContextState = {
     enabled: false
   },
   sectionView: {
-    clippingPlane: undefined
+    enabled: false,
+    clippingPlane: undefined,
+    hidePlane: false,
+    snap: undefined,
+    flip: undefined
   },
   dispatch: () => undefined
 }
@@ -96,7 +104,11 @@ export const actionTypes = {
   SETPARTSTRANSPARENT: 'SETPARTSTRANSPARENT',
   SETGRIDVISIBLE: 'SETGRIDVISIBLE',
   SETZOOMTOSELECTIONENABLED: 'SETZOOMTOSELECTIONENABLED',
-  SETSECTIONVIEWCLIPPINGPLANE: 'SETSECTIONVIEWCLIPPINGPLANE'
+  SETSECTIONVIEWENABLED: 'SETSECTIONVIEWENABLED',
+  SETSECTIONVIEWCLIPPINGPLANE: 'SETSECTIONVIEWCLIPPINGPLANE',
+  SETSECTIONVIEWHIDEPLANE: 'SETSECTIONVIEWHIDEPLANE',
+  SETSECTIONVIEWSNAP: 'SETSECTIONVIEWSNAP',
+  SETSECTIONVIEWFLIP: 'SETSECTIONVIEWFLIP'
 }
 
 /**
@@ -182,12 +194,44 @@ export const reducer = (
           enabled: action.value
         }
       }
+    case actionTypes.SETSECTIONVIEWENABLED:
+      return {
+        ...state,
+        sectionView: {
+          ...state.sectionView,
+          enabled: action.value
+        }
+      }
     case actionTypes.SETSECTIONVIEWCLIPPINGPLANE:
       return {
         ...state,
         sectionView: {
           ...state.sectionView,
           clippingPlane: action.value
+        }
+      }
+    case actionTypes.SETSECTIONVIEWHIDEPLANE:
+      return {
+        ...state,
+        sectionView: {
+          ...state.sectionView,
+          hidePlane: action.value
+        }
+      }
+    case actionTypes.SETSECTIONVIEWSNAP:
+      return {
+        ...state,
+        sectionView: {
+          ...state.sectionView,
+          snap: action.value
+        }
+      }
+    case actionTypes.SETSECTIONVIEWFLIP:
+      return {
+        ...state,
+        sectionView: {
+          ...state.sectionView,
+          flip: action.value
         }
       }
     default:

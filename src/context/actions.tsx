@@ -75,7 +75,7 @@ export const setGridVisible = (visible: boolean) => ({
 
 /**
  * Set zoom to selection enabled
- * @param visible Visible
+ * @param enabled Enabled
  * @returns Action
  */
 export const setZoomToSelectionEnabled = (enabled: boolean) => ({
@@ -83,7 +83,52 @@ export const setZoomToSelectionEnabled = (enabled: boolean) => ({
   value: enabled
 })
 
+/**
+ * Set section view clipping enabled
+ * @param enabled Enabled
+ * @returns Action
+ */
+export const setSectionViewEnabled = (enabled: boolean) => ({
+  type: actionTypes.SETSECTIONVIEWENABLED,
+  value: enabled
+})
+
+/**
+ * Set section view clipping plane
+ * @param clippingPlane Clipping plane
+ * @returns Action
+ */
 export const setSectionViewClippingPlane = (clippingPlane: THREE.Plane) => ({
   type: actionTypes.SETSECTIONVIEWCLIPPINGPLANE,
   value: clippingPlane
+})
+
+/**
+ * Set section view hide plane
+ * @param hidden Hidden
+ * @returns Action
+ */
+export const setSectionViewHidePlane = (hidden: boolean) => ({
+  type: actionTypes.SETSECTIONVIEWHIDEPLANE,
+  value: hidden
+})
+
+/**
+ * Set section view snap
+ * @param hidden Hidden
+ * @returns Action
+ */
+export const setSectionViewSnap = (axis: THREE.Vector3) => ({
+  type: actionTypes.SETSECTIONVIEWSNAP,
+  value: axis
+})
+
+/**
+ * Set section viex flip
+ * @param hidden Hidden
+ * @returns Action
+ */
+export const setSectionViewFlip = (number: number) => ({
+  type: actionTypes.SETSECTIONVIEWFLIP,
+  value: number
 })

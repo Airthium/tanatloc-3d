@@ -54,7 +54,10 @@ const MyCanvas = (): React.JSX.Element => {
       <div ref={containerDiv} className={style.container}>
         <div ref={mainViewDiv} className={style.mainView} />
         <div ref={navigationViewDiv} className={style.navigationView} />
-        <Canvas eventSource={containerDiv} gl={{ preserveDrawingBuffer: true }}>
+        <Canvas
+          eventSource={containerDiv}
+          gl={{ preserveDrawingBuffer: true, localClippingEnabled: true }}
+        >
           <View index={1} track={mainViewDiv} frames={1}>
             <MainContextFiller controls={mainViewControls.current} />
             <PerspectiveCamera makeDefault position={[0, 0, 5]} />
@@ -74,12 +77,14 @@ const MyCanvas = (): React.JSX.Element => {
               <coneGeometry />
               <meshStandardMaterial
                 color={'blue'}
+                metalness={0.5}
+                roughness={0.5}
                 transparent
                 opacity={parts.transparent ? 0.5 : 1}
                 clippingPlanes={
-                  sectionView.clippingPlane
+                  sectionView.enabled && sectionView.clippingPlane
                     ? [sectionView.clippingPlane]
-                    : undefined
+                    : []
                 }
               />
             </mesh>
@@ -87,14 +92,14 @@ const MyCanvas = (): React.JSX.Element => {
               <torusKnotGeometry />
               <meshPhysicalMaterial
                 color={'blue'}
-                transparent
-                opacity={parts.transparent ? 0.5 : 1}
                 metalness={0.5}
                 roughness={0.5}
+                transparent
+                opacity={parts.transparent ? 0.5 : 1}
                 clippingPlanes={
-                  sectionView.clippingPlane
+                  sectionView.enabled && sectionView.clippingPlane
                     ? [sectionView.clippingPlane]
-                    : undefined
+                    : []
                 }
               />
             </mesh>
