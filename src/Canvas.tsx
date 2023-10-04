@@ -10,11 +10,12 @@ import PropsContextFiller from './context/PropsContextFiller'
 import Navigation from './helpers/navigation'
 import Grid from './helpers/grid'
 import ZoomToSelection from './helpers/zoomToSelection'
+import SectionView from './helpers/sectionView'
 
 import Header from './header'
+import Parts from './Parts'
 
 import style from './Canvas.module.css'
-import SectionView from './helpers/sectionView'
 
 /**
  * MyCanvas
@@ -33,7 +34,7 @@ const MyCanvas = (): React.JSX.Element => {
   const mainViewControls = useRef(null!)
 
   // Context
-  const { parts, sectionView } = useContext(Context)
+  const { display, sectionView } = useContext(Context)
 
   // State
   const [controlsUpdate, setControlsUpdate] = useState<number>(0)
@@ -73,6 +74,7 @@ const MyCanvas = (): React.JSX.Element => {
               position={mainView.current?.camera.position}
               decay={0}
             />
+            <Parts />
             <mesh position={[13, 0, 0]} type="Part">
               <coneGeometry />
               <meshStandardMaterial
@@ -80,7 +82,7 @@ const MyCanvas = (): React.JSX.Element => {
                 metalness={0.5}
                 roughness={0.5}
                 transparent
-                opacity={parts.transparent ? 0.5 : 1}
+                opacity={display.transparent ? 0.5 : 1}
                 clippingPlanes={
                   sectionView.enabled && sectionView.clippingPlane
                     ? [sectionView.clippingPlane]
@@ -95,7 +97,7 @@ const MyCanvas = (): React.JSX.Element => {
                 metalness={0.5}
                 roughness={0.5}
                 transparent
-                opacity={parts.transparent ? 0.5 : 1}
+                opacity={display.transparent ? 0.5 : 1}
                 clippingPlanes={
                   sectionView.enabled && sectionView.clippingPlane
                     ? [sectionView.clippingPlane]

@@ -1,20 +1,5 @@
-import {
-  Button,
-  Collapse,
-  Divider,
-  Dropdown,
-  Layout,
-  Switch,
-  Tooltip
-} from 'antd'
-import {
-  ArrowsAltOutlined,
-  BgColorsOutlined,
-  ColumnWidthOutlined,
-  DownOutlined,
-  TableOutlined,
-  ToolOutlined
-} from '@ant-design/icons'
+import { Collapse, Divider, Layout, Tooltip } from 'antd'
+import { DownOutlined, ToolOutlined } from '@ant-design/icons'
 
 import Snapshot from './snapshot'
 import Display from './display'
@@ -22,6 +7,8 @@ import Zoom from './zoom'
 import SectionView from './sectionView'
 
 import style from './index.module.css'
+import Colorbar from './colorbar'
+import Results from './results'
 
 /**
  * CollapseIcon
@@ -59,64 +46,9 @@ const Header = () => {
               <Divider key="divider-3" />,
               <SectionView key="section-view" />,
               <Divider key="divider-4" />,
-              <Tooltip
-                key="display-result-mesh"
-                title="Display result mesh"
-                placement="left"
-              >
-                <Switch
-                  checked={true}
-                  checkedChildren={<TableOutlined />}
-                  unCheckedChildren={<TableOutlined />}
-                />
-              </Tooltip>,
+              <Results key="results" />,
               <Divider key="divider-5" />,
-              <Tooltip
-                key="result-colormap"
-                title="Result colormap"
-                placement="left"
-              >
-                <Dropdown
-                  placement="bottom"
-                  menu={{
-                    onClick: console.log,
-                    items: [
-                      {
-                        key: 'rainbow',
-                        label: 'Rainbow'
-                      },
-                      {
-                        key: 'cooltowarm',
-                        label: 'Cool to warm'
-                      },
-                      {
-                        key: 'blackbody',
-                        label: 'Black body'
-                      },
-                      {
-                        key: 'grayscale',
-                        label: 'Gray scale'
-                      }
-                    ]
-                  }}
-                >
-                  <Button icon={<BgColorsOutlined />} />
-                </Dropdown>
-              </Tooltip>,
-              <Tooltip
-                key="result-custom-range"
-                title="Result custom range"
-                placement="left"
-              >
-                <Button icon={<ColumnWidthOutlined />} />
-              </Tooltip>,
-              <Tooltip
-                key="result-automaic-range"
-                title="Results automatic range"
-                placement="left"
-              >
-                <Button icon={<ArrowsAltOutlined />} />
-              </Tooltip>
+              <Colorbar key="colorbar" />
             ]
           }
         ]}

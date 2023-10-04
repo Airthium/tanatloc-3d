@@ -12,11 +12,9 @@ export interface ContextState {
     camera?: THREE.PerspectiveCamera
     controls?: TrackballControlsProps
   }
-  parts: {
+  display: {
     transparent: boolean
-  }
-  grid: {
-    visible: boolean
+    grid: boolean
   }
   zoomToSelection: {
     enabled: boolean
@@ -50,7 +48,51 @@ export interface ProviderProps {
  * MyCanvas props
  */
 export interface MyCanvasProps {
+  parts?: MyCanvasPart[]
   snapshot?: MyCanvasPropsSnapshot
+}
+
+export interface MyCanvasPart {
+  summary: MyCanvasPartSummary
+  buffer: Buffer
+  extra?: {
+    name?: string
+    id?: string
+    glb?: string
+    fields?: {
+      name: string
+      units?: MyCanvasPart[]
+      unit?: MyCanvasPart
+    }[]
+  }
+}
+
+export interface MyCanvasPartSummary {
+  uuid: string
+  type: string
+  dimension: number
+  solids?: MyCanvasPropsSummaryElement[]
+  faces?: MyCanvasPropsSummaryElement[]
+  edges?: MyCanvasPropsSummaryElement[]
+}
+
+export interface MyCanvasPropsSummaryElement {
+  name: string
+  uuid: string
+  label: number
+  color?: MyCanvasPartSummaryColor
+}
+
+export interface MyCanvasPartSummaryColor {
+  r: number
+  g: number
+  b: number
+}
+
+export interface MyCanvasPartUnit {
+  label: string
+  multiplicator?: number
+  adder?: number
 }
 
 export interface MyCanvasPropsSnapshot {
@@ -65,6 +107,7 @@ export interface MyCanvasPropsSnapshot {
  */
 export const initialContextState: ContextState = {
   props: {
+    parts: undefined,
     snapshot: undefined
   },
   mainView: {
@@ -73,11 +116,9 @@ export const initialContextState: ContextState = {
     camera: undefined,
     controls: undefined
   },
-  parts: {
-    transparent: false
-  },
-  grid: {
-    visible: true
+  display: {
+    transparent: false,
+    grid: true
   },
   zoomToSelection: {
     enabled: false
@@ -96,13 +137,14 @@ export const initialContextState: ContextState = {
  * Action types
  */
 export const actionTypes = {
+  SETPROPSPARTS: 'SETPROPSPARTS',
   SETPROPSSNAPSHOTPROJECT: 'SETPROPSSNAPSHOTPROJECT',
   SETMAINVIEWGL: 'SETMAINVIEWGL',
   SETMAINVIEWSCENE: 'SETMAINVIEWSCENE',
   SETMAINVIEWCAMERA: 'SETMAINVIEWCAMERA',
   SETMAINVIEWCONTROLS: 'SETMAINVIEWCONTROLS',
-  SETPARTSTRANSPARENT: 'SETPARTSTRANSPARENT',
-  SETGRIDVISIBLE: 'SETGRIDVISIBLE',
+  SETDISPLAYTRANSPARENT: 'SETDISPLAYTRANSPARENT',
+  SETDISPLAYGRID: 'SETDISPLAYGRID',
   SETZOOMTOSELECTIONENABLED: 'SETZOOMTOSELECTIONENABLED',
   SETSECTIONVIEWENABLED: 'SETSECTIONVIEWENABLED',
   SETSECTIONVIEWCLIPPINGPLANE: 'SETSECTIONVIEWCLIPPINGPLANE',
@@ -127,6 +169,14 @@ export const reducer = (
   action: ContextAction
 ): ContextState => {
   switch (action.type) {
+    case actionTypes.SETPROPSPARTS:
+      return {
+        ...state,
+        props: {
+          ...state.props,
+          parts: action.value
+        }
+      }
     case actionTypes.SETPROPSSNAPSHOTPROJECT:
       return {
         ...state,
@@ -170,20 +220,20 @@ export const reducer = (
           controls: action.value
         }
       }
-    case actionTypes.SETPARTSTRANSPARENT:
+    case actionTypes.SETDISPLAYTRANSPARENT:
       return {
         ...state,
-        parts: {
-          ...state.parts,
+        display: {
+          ...state.display,
           transparent: action.value
         }
       }
-    case actionTypes.SETGRIDVISIBLE:
+    case actionTypes.SETDISPLAYGRID:
       return {
         ...state,
-        grid: {
-          ...state.grid,
-          visible: action.value
+        display: {
+          ...state.display,
+          grid: action.value
         }
       }
     case actionTypes.SETZOOMTOSELECTIONENABLED:

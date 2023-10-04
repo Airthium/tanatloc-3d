@@ -1,5 +1,5 @@
 import { TrackballControlsProps } from '@react-three/drei'
-import { MyCanvasPropsSnapshot, actionTypes } from '.'
+import { MyCanvasPart, MyCanvasPropsSnapshot, actionTypes } from '.'
 
 /**
  * Set props snapshot project
@@ -11,6 +11,16 @@ export const setPropsSnapshotProject = (
 ) => ({
   type: actionTypes.SETPROPSSNAPSHOTPROJECT,
   value: project
+})
+
+/**
+ * Set props parts
+ * @param parts Parts
+ * @returns Action
+ */
+export const setPropsParts = (parts: MyCanvasPart[]) => ({
+  type: actionTypes.SETPROPSPARTS,
+  value: parts
 })
 
 /**
@@ -54,22 +64,22 @@ export const setMainViewControls = (controls: TrackballControlsProps) => ({
 })
 
 /**
- * Set parts transparent
+ * Set display transparent
  * @param transparent Transparent
  * @returns Action
  */
-export const setPartsTransparent = (transparent: boolean) => ({
-  type: actionTypes.SETPARTSTRANSPARENT,
+export const setDisplayTransparent = (transparent: boolean) => ({
+  type: actionTypes.SETDISPLAYTRANSPARENT,
   value: transparent
 })
 
 /**
- * Set grid visible
+ * Set display grid
  * @param visible Visible
  * @returns Action
  */
-export const setGridVisible = (visible: boolean) => ({
-  type: actionTypes.SETGRIDVISIBLE,
+export const setDisplayGrid = (visible: boolean) => ({
+  type: actionTypes.SETDISPLAYGRID,
   value: visible
 })
 

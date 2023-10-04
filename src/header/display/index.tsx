@@ -7,7 +7,7 @@ import {
 import { SwitchChangeEventHandler } from 'antd/es/switch'
 
 import { Context } from '../../context'
-import { setGridVisible, setPartsTransparent } from '../../context/actions'
+import { setDisplayGrid, setDisplayTransparent } from '../../context/actions'
 
 /**
  * Display
@@ -15,7 +15,7 @@ import { setGridVisible, setPartsTransparent } from '../../context/actions'
  */
 const Display = (): React.JSX.Element => {
   // Context
-  const { parts, grid, dispatch } = useContext(Context)
+  const { display, dispatch } = useContext(Context)
 
   /**
    * Toggle grid visibility
@@ -24,7 +24,7 @@ const Display = (): React.JSX.Element => {
   const toggleGridVisible: SwitchChangeEventHandler = useCallback(
     (e): void => {
       const visible = e.valueOf()
-      dispatch(setGridVisible(visible))
+      dispatch(setDisplayGrid(visible))
     },
     [dispatch]
   )
@@ -36,7 +36,7 @@ const Display = (): React.JSX.Element => {
   const toggleTransparency: SwitchChangeEventHandler = useCallback(
     (e): void => {
       const transparent = e.valueOf()
-      dispatch(setPartsTransparent(transparent))
+      dispatch(setDisplayTransparent(transparent))
     },
     [dispatch]
   )
@@ -48,7 +48,7 @@ const Display = (): React.JSX.Element => {
     <>
       <Tooltip title="Display grid" placement="left">
         <Switch
-          checked={grid.visible}
+          checked={display.grid}
           checkedChildren={<BorderlessTableOutlined />}
           unCheckedChildren={<BorderlessTableOutlined />}
           onChange={toggleGridVisible}
@@ -56,7 +56,7 @@ const Display = (): React.JSX.Element => {
       </Tooltip>
       <Tooltip title="Transparency" placement="left">
         <Switch
-          checked={parts.transparent}
+          checked={display.transparent}
           checkedChildren={<RadiusUprightOutlined />}
           unCheckedChildren={<RadiusUprightOutlined />}
           onChange={toggleTransparency}

@@ -1,25 +1,34 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { Plane, Vector3 } from 'three'
+import { Line3, Plane, Vector3 } from 'three'
+import { ThreeEvent } from '@react-three/fiber'
 
 import { Context } from '../../context'
 import { setSectionViewClippingPlane } from '../../context/actions'
 
 import { computeSceneBoundingBox } from '../../tools'
-import { ThreeEvent } from '@react-three/fiber'
+import { Line } from '@react-three/drei'
+
+// TODO does not work
 
 /**
  * Props
  */
 export interface ControlPlaneProps {
   hover?: boolean
+  position: THREE.Vector3
+  scale: number
   onPointerOver: () => void
   onPointerOut: () => void
+  updatePosition: (position: THREE.Vector3) => void
 }
 
 export interface ControlDomeProps {
   hover?: boolean
+  position: THREE.Vector3
+  scale: number
   onPointerOver: () => void
   onPointerOut: () => void
+  updatePosition: (position: THREE.Vector3) => void
 }
 
 // Color
@@ -34,33 +43,113 @@ const defaultNormal = new Vector3(0, 0, 1)
 // Plane
 const clippingPlane = new Plane()
 
+// Start point
+const startPoint = new Vector3()
+
+// Start offset
+const startOffset = new Vector3()
+
+// Camera directions
+const cameraDirections = {
+  up: new Vector3(),
+  forward: new Vector3(),
+  right: new Vector3()
+}
+
+// // Control normal
+// const controlNormal = new Vector3()
+
+const controlPlane = new Plane()
+
+// Control line
+const controlLine = new Line3()
+
+const updateClippingPlane = (controller: THREE.Mesh) => {
+  const normal = new Vector3(0, 0, 1)
+    .applyQuaternion(controller.quaternion)
+    .multiplyScalar(-1)
+  clippingPlane.setFromNormalAndCoplanarPoint(normal, controller.position)
+}
+
 /**
  * Control plane
  * @returns ControlPlane
  */
 const ControlPlane = ({
   hover,
+  position,
+  scale,
   onPointerOver,
-  onPointerOut
+  onPointerOut,
+  updatePosition
 }: ControlPlaneProps) => {
+  // Ref
+  const ref = useRef<THREE.Mesh>(null!)
+
   // State
   const [enabled, setEnabled] = useState<boolean>(false)
 
   // Context
-  const { mainView } = useContext(Context)
+  const { mainView, sectionView } = useContext(Context)
+
+  // Snap
+  useEffect(() => {
+    if (!sectionView.snap) return
+
+    // Control
+    const group = ref.current
+    const position = group.position
+    const lookAt = position.clone().add(sectionView.snap)
+    group.lookAt(lookAt)
+
+    // Clipping plane
+    clippingPlane.setFromNormalAndCoplanarPoint(sectionView.snap, position)
+  }, [sectionView.snap])
+
+  // Flip
+  useEffect(() => {
+    if (!sectionView.flip) return
+
+    // Control
+    const group = ref.current
+    group.rotateX(Math.PI)
+
+    // Clipping plane
+    const normal = clippingPlane.normal.multiplyScalar(-1)
+    clippingPlane.setFromNormalAndCoplanarPoint(normal, group.position)
+  }, [sectionView.flip])
 
   /**
    * On pointer down
+   * @param event Event
    */
-  const onPointerDown = useCallback(() => {
-    if (!mainView.controls) return
+  const onPointerDown = useCallback(
+    (event: ThreeEvent<MouseEvent>) => {
+      if (!mainView.camera || !mainView.controls) return
 
-    // Disable controls
-    mainView.controls.enabled = false
+      // Disable controls
+      mainView.controls.enabled = false
 
-    // Enable move
-    setEnabled(true)
-  }, [mainView.controls])
+      // Enable move
+      setEnabled(true) //TODO if hover
+
+      // Initial data
+      startPoint.copy(event.intersections[0].point)
+
+      mainView.camera.getWorldDirection(cameraDirections.forward)
+      cameraDirections.forward.normalize()
+
+      controlPlane.setFromNormalAndCoplanarPoint(
+        cameraDirections.forward,
+        startPoint
+      )
+
+      startOffset.copy(startPoint).sub(position)
+
+      controlLine.set(position, position.clone().add(clippingPlane.normal))
+    },
+    [mainView.camera, mainView.controls, position]
+  )
 
   /**
    * On pointer up
@@ -85,16 +174,26 @@ const ControlPlane = ({
 
   const onPointerMove = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
+      onPointerOver()
+
       if (!enabled) return
 
+      // New position
       const intersection = event.intersections[0]
-      if (!intersection) return
-
       const point = intersection.point
-      const normal = intersection.normal!
-      // TODO
+      const newPosition = new Vector3()
+      controlLine.closestPointToPoint(point, false, newPosition)
+
+      // Update position
+      updatePosition(newPosition)
+
+      // Update clipping plane
+      clippingPlane.setFromNormalAndCoplanarPoint(
+        clippingPlane.normal,
+        newPosition
+      )
     },
-    [enabled]
+    [enabled, onPointerOver, updatePosition]
   )
 
   /**
@@ -102,7 +201,9 @@ const ControlPlane = ({
    */
   return (
     <mesh
-      onPointerOver={onPointerOver}
+      ref={ref}
+      position={position}
+      scale={scale}
       onPointerOut={internalOnPointerOut}
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
@@ -125,14 +226,55 @@ const ControlPlane = ({
  */
 const ControlDome = ({
   hover,
+  position,
+  scale,
   onPointerOver,
   onPointerOut
 }: ControlDomeProps) => {
+  // Ref
+  const ref = useRef<THREE.Mesh>(null!)
+
+  // Context
+  const { sectionView } = useContext(Context)
+
+  // Snap
+  useEffect(() => {
+    if (!sectionView.snap) return
+
+    // Control
+    const group = ref.current
+    const position = group.position
+    const lookAt = position.clone().add(sectionView.snap)
+    group.lookAt(lookAt)
+
+    // Clipping plane
+    clippingPlane.setFromNormalAndCoplanarPoint(sectionView.snap, position)
+  }, [sectionView.snap])
+
+  // Flip
+  useEffect(() => {
+    if (!sectionView.flip) return
+
+    // Control
+    const group = ref.current
+    group.rotateX(Math.PI)
+
+    // Clipping plane
+    const normal = clippingPlane.normal.multiplyScalar(-1)
+    clippingPlane.setFromNormalAndCoplanarPoint(normal, group.position)
+  }, [sectionView.flip])
+
   /**
    * Render
    */
   return (
-    <mesh onPointerOver={onPointerOver} onPointerOut={onPointerOut}>
+    <mesh
+      ref={ref}
+      position={position}
+      scale={scale}
+      onPointerMove={onPointerOver}
+      onPointerOut={onPointerOut}
+    >
       <sphereGeometry args={[0.2, 32, 32, Math.PI, -Math.PI]} />
       <meshBasicMaterial
         color={hover ? hoverColor : color}
@@ -149,12 +291,9 @@ const ControlDome = ({
  * @returns SectionView
  */
 const SectionView = (): React.JSX.Element | null => {
-  // Ref
-  const ref = useRef<THREE.Group>(null!)
-
   // State
-  const [center, setCenter] = useState<THREE.Vector3>()
-  const [scale, setScale] = useState<number>()
+  const [center, setCenter] = useState<THREE.Vector3>(null!)
+  const [scale, setScale] = useState<number>(null!)
 
   const [hoverPlane, setHoverPlane] = useState<boolean>(false)
   const [hoverDome, setHoverDome] = useState<boolean>(false)
@@ -166,8 +305,8 @@ const SectionView = (): React.JSX.Element | null => {
    * On pointer over plane
    */
   const onPointerOverPlane = useCallback(() => {
-    setHoverPlane(true)
-  }, [])
+    if (!hoverDome) setHoverPlane(true)
+  }, [hoverDome])
 
   /**
    * On pointer out plane
@@ -218,53 +357,39 @@ const SectionView = (): React.JSX.Element | null => {
     clippingPlane.setFromNormalAndCoplanarPoint(defaultNormal, center)
   }, [mainView.scene, sectionView.enabled, dispatch])
 
-  // Snap
+  // Center at snap & flip
   useEffect(() => {
-    if (!sectionView.snap) return
+    if (!sectionView.enabled) return
+    if (!mainView.scene) return
 
-    // Control
-    const group = ref.current
-    const position = group.position
-    const lookAt = position.clone().add(sectionView.snap)
-    group.lookAt(lookAt)
+    const boundingBox = computeSceneBoundingBox(mainView.scene)
 
-    // Clipping plane
-    clippingPlane.setFromNormalAndCoplanarPoint(sectionView.snap, position)
-  }, [sectionView.snap])
-
-  // Flip
-  useEffect(() => {
-    if (!sectionView.flip) return
-
-    // Control
-    const group = ref.current
-    group.rotateX(Math.PI)
-
-    // Clipping plane
-    const normal = clippingPlane.normal.multiplyScalar(-1)
-    clippingPlane.setFromNormalAndCoplanarPoint(normal, group.position)
-  }, [sectionView.flip])
+    // Center
+    const center = new Vector3()
+    boundingBox.getCenter(center)
+    setCenter(center)
+  }, [mainView.scene, sectionView.enabled, sectionView.snap, sectionView.flip])
 
   /**
    * Render
    */
   return sectionView.enabled ? (
-    <group
-      ref={ref}
-      type="SectionView"
-      position={center}
-      scale={scale}
-      visible={!sectionView.hidePlane}
-    >
+    <group type="SectionView" visible={!sectionView.hidePlane}>
       <ControlPlane
         hover={hoverPlane}
+        position={center}
+        scale={scale}
         onPointerOver={onPointerOverPlane}
         onPointerOut={onPointerOutPlane}
+        updatePosition={setCenter}
       />
       <ControlDome
         hover={hoverDome}
+        position={center}
+        scale={scale}
         onPointerOver={onPointerOverDome}
         onPointerOut={onPointerOutDome}
+        updatePosition={setCenter}
       />
     </group>
   ) : null

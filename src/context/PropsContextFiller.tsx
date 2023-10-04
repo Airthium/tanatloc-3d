@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 
 import { Context, MyCanvasProps } from '.'
-import { setPropsSnapshotProject } from './actions'
+import { setPropsParts, setPropsSnapshotProject } from './actions'
 
 /**
  * Props context filler
@@ -16,6 +16,11 @@ const PropsContextFiller = (props: MyCanvasProps): null => {
   useEffect(() => {
     dispatch(setPropsSnapshotProject(props.snapshot?.project))
   }, [props.snapshot?.project, dispatch])
+
+  // Set parts
+  useEffect(() => {
+    dispatch(setPropsParts(props.parts ?? []))
+  }, [props.parts, dispatch])
 
   /**
    * Render

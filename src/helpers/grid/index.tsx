@@ -355,7 +355,7 @@ const AxisLabels = ({
 
 const Grid = ({ update }: GridProps): React.JSX.Element | null => {
   // Context
-  const { mainView, grid } = useContext(Context)
+  const { mainView, display } = useContext(Context)
 
   // State
   const [center, setCenter] = useState<[number, number, number]>([0, 0, 0])
@@ -416,7 +416,7 @@ const Grid = ({ update }: GridProps): React.JSX.Element | null => {
   /**
    * Render
    */
-  return grid.visible ? (
+  return display.grid ? (
     <group type="Grid">
       <AxisGrid
         axis="xy"
