@@ -134,11 +134,41 @@ export const setSectionViewSnap = (axis: THREE.Vector3) => ({
 })
 
 /**
- * Set section viex flip
+ * Set section view flip
  * @param hidden Hidden
  * @returns Action
  */
 export const setSectionViewFlip = (number: number) => ({
   type: actionTypes.SETSECTIONVIEWFLIP,
   value: number
+})
+
+/**
+ * Set lut colormap
+ * @param colormap Colormap
+ * @returns Action
+ */
+export const setLutColormap = (colormap: string) => ({
+  type: actionTypes.SETLUTCOLORMAP,
+  value: colormap
+})
+
+/**
+ * Set lut min
+ * @param min Min
+ * @returns Action
+ */
+export const setLutMin = (min: number) => ({
+  type: actionTypes.SETLUTMIN,
+  value: min
+})
+
+/**
+ * Set lut max
+ * @param max Max
+ * @returns Action
+ */
+export const setLutMax = (max: number) => ({
+  type: actionTypes.SETLUTMAX,
+  value: max
 })

@@ -52,7 +52,13 @@ const Parts = (): React.JSX.Element => {
     // Add
     if (toAdd.length) {
       toAdd.forEach((add) => {
-        newChildren.push(<PartLoader key={add.summary.uuid} part={add} />)
+        newChildren.push(
+          <PartLoader
+            key={add.summary.uuid}
+            part={add}
+            uuid={add.summary.uuid}
+          />
+        )
       })
     }
 

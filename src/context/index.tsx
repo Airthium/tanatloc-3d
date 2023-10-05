@@ -26,6 +26,11 @@ export interface ContextState {
     snap?: THREE.Vector3
     flip?: number
   }
+  lut: {
+    colormap: string
+    min: number
+    max: number
+  }
   dispatch: Dispatch<ContextAction>
 }
 
@@ -130,6 +135,11 @@ export const initialContextState: ContextState = {
     snap: undefined,
     flip: undefined
   },
+  lut: {
+    colormap: 'rainbow',
+    min: -1,
+    max: 1
+  },
   dispatch: () => undefined
 }
 
@@ -150,7 +160,10 @@ export const actionTypes = {
   SETSECTIONVIEWCLIPPINGPLANE: 'SETSECTIONVIEWCLIPPINGPLANE',
   SETSECTIONVIEWHIDEPLANE: 'SETSECTIONVIEWHIDEPLANE',
   SETSECTIONVIEWSNAP: 'SETSECTIONVIEWSNAP',
-  SETSECTIONVIEWFLIP: 'SETSECTIONVIEWFLIP'
+  SETSECTIONVIEWFLIP: 'SETSECTIONVIEWFLIP',
+  SETLUTCOLORMAP: 'SETLUTCOLORMAP',
+  SETLUTMIN: 'SETLUTMIN',
+  SETLUTMAX: 'SETLUTMAX'
 }
 
 /**
@@ -282,6 +295,30 @@ export const reducer = (
         sectionView: {
           ...state.sectionView,
           flip: action.value
+        }
+      }
+    case actionTypes.SETLUTCOLORMAP:
+      return {
+        ...state,
+        lut: {
+          ...state.lut,
+          colormap: action.value
+        }
+      }
+    case actionTypes.SETLUTMIN:
+      return {
+        ...state,
+        lut: {
+          ...state.lut,
+          min: action.value
+        }
+      }
+    case actionTypes.SETLUTMAX:
+      return {
+        ...state,
+        lut: {
+          ...state.lut,
+          max: action.value
         }
       }
     default:

@@ -164,9 +164,9 @@ const ShapeGeometry = ({
 }
 // Default props
 ShapeGeometry.defaultProps = {
-  width: 1,
-  height: 1,
-  radius: 0.2
+  width: size,
+  height: size,
+  radius: size * corner
 }
 
 /**
@@ -344,6 +344,16 @@ const Navigation = (_props: NavigationProps): React.JSX.Element => {
    */
   return (
     <mesh type="Navigation">
+      <OrthographicCamera
+        makeDefault
+        left={-2 * size}
+        right={2 * size}
+        top={2 * size}
+        bottom={-2 * size}
+        near={-2 * size}
+        far={2 * size}
+        position={cameraPosition}
+      />
       {faces.map((face, index) => (
         <Face
           key={face.text}
@@ -355,16 +365,6 @@ const Navigation = (_props: NavigationProps): React.JSX.Element => {
           onClick={onClick}
         />
       ))}
-      <OrthographicCamera
-        makeDefault
-        left={-2 * size}
-        right={2 * size}
-        top={2 * size}
-        bottom={-2 * size}
-        near={-2 * size}
-        far={2 * size}
-        position={cameraPosition}
-      />
       <Axis
         origin={axisOrigin}
         direction={directions.x}

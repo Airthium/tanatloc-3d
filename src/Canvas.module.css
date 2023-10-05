@@ -21,3 +21,11 @@
   height: 200px;
   right: 0;
 }
+
+.colorbarView {
+  position: absolute;
+  width: 50vw;
+  aspect-ratio: 10 / 1;
+  left: calc(25vw);
+  top: 0;
+}

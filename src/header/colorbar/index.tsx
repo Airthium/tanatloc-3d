@@ -4,12 +4,30 @@ import {
   BgColorsOutlined,
   ColumnWidthOutlined
 } from '@ant-design/icons'
+import { useCallback, useContext } from 'react'
+
+import { Context } from '../../context'
+import { setLutColormap } from '../../context/actions'
 
 /**
  * Colorbar
  * @returns Colorbar
  */
 const Colorbar = () => {
+  // Context
+  const { lut, dispatch } = useContext(Context)
+
+  /**
+   * On colormap
+   * @param param { key }
+   */
+  const onColormap = useCallback(
+    ({ key }: { key: string }) => {
+      dispatch(setLutColormap(key))
+    },
+    [dispatch]
+  )
+
   /**
    * Render
    */
@@ -19,7 +37,8 @@ const Colorbar = () => {
         <Dropdown
           placement="bottom"
           menu={{
-            onClick: console.log,
+            onClick: onColormap,
+            selectedKeys: [lut.colormap],
             items: [
               {
                 key: 'rainbow',

@@ -1,9 +1,9 @@
-import { useCallback, useContext, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { Layout } from 'antd'
 import { Canvas } from '@react-three/fiber'
 import { PerspectiveCamera, TrackballControls, View } from '@react-three/drei'
 
-import Provider, { Context, MyCanvasProps } from './context'
+import Provider, { MyCanvasProps } from './context'
 import MainContextFiller from './context/MainContextFiller'
 import PropsContextFiller from './context/PropsContextFiller'
 
@@ -11,11 +11,14 @@ import Navigation from './helpers/navigation'
 import Grid from './helpers/grid'
 import ZoomToSelection from './helpers/zoomToSelection'
 import SectionView from './helpers/sectionView'
+import Colorbar from './helpers/colorbar'
 
 import Header from './header'
 import Parts from './Parts'
 
 import style from './Canvas.module.css'
+
+// TODO view with transparent background ?
 
 /**
  * MyCanvas
@@ -26,15 +29,13 @@ const MyCanvas = (): React.JSX.Element => {
   const containerDiv = useRef(null!)
   const mainViewDiv = useRef(null!)
   const navigationViewDiv = useRef(null!)
+  const colorbarViewDiv = useRef(null!)
 
   const mainView = useRef<{
     scene: THREE.Scene
     camera: THREE.PerspectiveCamera
   }>(null!)
   const mainViewControls = useRef(null!)
-
-  // Context
-  const { display, sectionView } = useContext(Context)
 
   // State
   const [controlsUpdate, setControlsUpdate] = useState<number>(0)
@@ -55,6 +56,7 @@ const MyCanvas = (): React.JSX.Element => {
       <div ref={containerDiv} className={style.container}>
         <div ref={mainViewDiv} className={style.mainView} />
         <div ref={navigationViewDiv} className={style.navigationView} />
+        <div ref={colorbarViewDiv} className={style.colorbarView} />
         <Canvas
           eventSource={containerDiv}
           gl={{ preserveDrawingBuffer: true, localClippingEnabled: true }}
@@ -75,39 +77,12 @@ const MyCanvas = (): React.JSX.Element => {
               decay={0}
             />
             <Parts />
-            <mesh position={[13, 0, 0]} type="Part">
-              <coneGeometry />
-              <meshStandardMaterial
-                color={'blue'}
-                metalness={0.5}
-                roughness={0.5}
-                transparent
-                opacity={display.transparent ? 0.5 : 1}
-                clippingPlanes={
-                  sectionView.enabled && sectionView.clippingPlane
-                    ? [sectionView.clippingPlane]
-                    : []
-                }
-              />
-            </mesh>
-            <mesh position={[-1, -5, 0]} type="Part">
-              <torusKnotGeometry />
-              <meshPhysicalMaterial
-                color={'blue'}
-                metalness={0.5}
-                roughness={0.5}
-                transparent
-                opacity={display.transparent ? 0.5 : 1}
-                clippingPlanes={
-                  sectionView.enabled && sectionView.clippingPlane
-                    ? [sectionView.clippingPlane]
-                    : []
-                }
-              />
-            </mesh>
           </View>
           <View index={2} track={navigationViewDiv} frames={1}>
             <Navigation update={controlsUpdate} />
+          </View>
+          <View index={3} track={colorbarViewDiv} frames={1}>
+            <Colorbar />
           </View>
         </Canvas>
       </div>

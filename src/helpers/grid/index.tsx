@@ -9,6 +9,7 @@ import {
   numberArraytoEuler,
   numberArraytoVector3
 } from '../../tools'
+import toReadable from '../../tools/toReadable'
 
 import StaticText from '../staticText'
 
@@ -99,18 +100,6 @@ const getNumberOfDivisions = (
 const sign = (number: number): -1 | 1 => {
   if (number < 0) return -1
   return 1
-}
-
-/**
- * To readable
- * @param number Number
- * @returns Readable number
- */
-const toReadable = (number: number): string => {
-  if (Math.abs(number) < 1e-12) return '0'
-  if (Math.abs(number) < 0.001 || Math.abs(number) > 1000)
-    return number.toExponential(2)
-  return number.toFixed(3)
 }
 
 /**
