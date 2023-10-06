@@ -26,10 +26,15 @@ export interface ContextState {
     snap?: THREE.Vector3
     flip?: number
   }
+  result: {
+    meshVisible: boolean
+  }
   lut: {
     colormap: string
     min: number
     max: number
+    customMin?: number
+    customMax?: number
   }
   dispatch: Dispatch<ContextAction>
 }
@@ -74,7 +79,7 @@ export interface MyCanvasPart {
 
 export interface MyCanvasPartSummary {
   uuid: string
-  type: string
+  type: 'geometry2D' | 'geometry3D' | 'mesh' | 'result'
   dimension: number
   solids?: MyCanvasPropsSummaryElement[]
   faces?: MyCanvasPropsSummaryElement[]
@@ -135,6 +140,9 @@ export const initialContextState: ContextState = {
     snap: undefined,
     flip: undefined
   },
+  result: {
+    meshVisible: true
+  },
   lut: {
     colormap: 'rainbow',
     min: -1,
@@ -161,9 +169,12 @@ export const actionTypes = {
   SETSECTIONVIEWHIDEPLANE: 'SETSECTIONVIEWHIDEPLANE',
   SETSECTIONVIEWSNAP: 'SETSECTIONVIEWSNAP',
   SETSECTIONVIEWFLIP: 'SETSECTIONVIEWFLIP',
+  SETRESULTMESHVISIBLE: 'SETRESULTMESHVISIBLE',
   SETLUTCOLORMAP: 'SETLUTCOLORMAP',
   SETLUTMIN: 'SETLUTMIN',
-  SETLUTMAX: 'SETLUTMAX'
+  SETLUTMAX: 'SETLUTMAX',
+  SETLUTCUSTOMMIN: 'SETLUTCUSTOMMIN',
+  SETLUTCUSTOMMAX: 'SETLUTCUSTOMMAX'
 }
 
 /**
@@ -297,6 +308,14 @@ export const reducer = (
           flip: action.value
         }
       }
+    case actionTypes.SETRESULTMESHVISIBLE:
+      return {
+        ...state,
+        result: {
+          ...state.result,
+          meshVisible: action.value
+        }
+      }
     case actionTypes.SETLUTCOLORMAP:
       return {
         ...state,
@@ -319,6 +338,22 @@ export const reducer = (
         lut: {
           ...state.lut,
           max: action.value
+        }
+      }
+    case actionTypes.SETLUTCUSTOMMIN:
+      return {
+        ...state,
+        lut: {
+          ...state.lut,
+          customMin: action.value
+        }
+      }
+    case actionTypes.SETLUTCUSTOMMAX:
+      return {
+        ...state,
+        lut: {
+          ...state.lut,
+          customMax: action.value
         }
       }
     default:

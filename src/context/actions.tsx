@@ -94,7 +94,7 @@ export const setZoomToSelectionEnabled = (enabled: boolean) => ({
 })
 
 /**
- * Set section view clipping enabled
+ * Set section view enabled
  * @param enabled Enabled
  * @returns Action
  */
@@ -144,6 +144,16 @@ export const setSectionViewFlip = (number: number) => ({
 })
 
 /**
+ * Set result mesh visible
+ * @param visible Visible
+ * @returns Action
+ */
+export const setResultMeshVisible = (visible: boolean) => ({
+  type: actionTypes.SETRESULTMESHVISIBLE,
+  value: visible
+})
+
+/**
  * Set lut colormap
  * @param colormap Colormap
  * @returns Action
@@ -170,5 +180,25 @@ export const setLutMin = (min: number) => ({
  */
 export const setLutMax = (max: number) => ({
   type: actionTypes.SETLUTMAX,
+  value: max
+})
+
+/**
+ * Set lut custom min
+ * @param min Min
+ * @returns Action
+ */
+export const setLutCustomMin = (min?: number) => ({
+  type: actionTypes.SETLUTCUSTOMMIN,
+  value: min
+})
+
+/**
+ * Set lut custom max
+ * @param max Max
+ * @returns Action
+ */
+export const setLutCustomMax = (max?: number) => ({
+  type: actionTypes.SETLUTCUSTOMMAX,
   value: max
 })

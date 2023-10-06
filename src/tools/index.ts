@@ -8,6 +8,11 @@ import { Box3, Euler, Vector3 } from 'three'
 export const numberArraytoVector3 = (array: number[]): THREE.Vector3 =>
   new Vector3(array[0], array[1], array[2])
 
+/**
+ * Number array to Euler (XYZ)
+ * @param array Number array
+ * @returns Euler
+ */
 export const numberArraytoEuler = (array: number[]): THREE.Euler =>
   new Euler(array[0], array[1], array[2], 'XYZ')
 
@@ -16,10 +21,12 @@ export const numberArraytoEuler = (array: number[]): THREE.Euler =>
  * @param scene Scene
  * @returns Bounding box
  */
-export const computeSceneBoundingBox = (scene: THREE.Scene): THREE.Box3 => {
+export const computeSceneBoundingBox = (
+  children: THREE.Scene['children']
+): THREE.Box3 => {
   const box = new Box3()
 
-  scene.children.forEach((child) => {
+  children.forEach((child) => {
     if (child.type === 'Part') {
       const mesh = child as THREE.Mesh
       mesh.geometry.computeBoundingBox()

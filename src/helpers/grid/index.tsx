@@ -236,6 +236,11 @@ const AxisGrid = ({
   )
 }
 
+/**
+ * AxisLabels
+ * @param props Props
+ * @returns AxisLabels
+ */
 const AxisLabels = ({
   axis,
   center,
@@ -342,6 +347,11 @@ const AxisLabels = ({
   return <group position={position}>{labels}</group>
 }
 
+/**
+ * Grid
+ * @param props Props
+ * @returns Grid
+ */
 const Grid = ({ update }: GridProps): React.JSX.Element | null => {
   // Context
   const { mainView, display } = useContext(Context)
@@ -364,9 +374,9 @@ const Grid = ({ update }: GridProps): React.JSX.Element | null => {
 
   // Scene update
   useEffect(() => {
-    if (!mainView.scene) return
+    if (!mainView.scene?.children) return
 
-    const boundingBox = computeSceneBoundingBox(mainView.scene)
+    const boundingBox = computeSceneBoundingBox(mainView.scene.children)
     const center = new Vector3()
     boundingBox.getCenter(center)
     const size = [
@@ -387,7 +397,7 @@ const Grid = ({ update }: GridProps): React.JSX.Element | null => {
     setRange(range)
     setOffset(offset)
     setNumberOfDivisions(numberOfDivisions)
-  }, [mainView.scene])
+  }, [mainView.scene?.children])
 
   // Camera udpate
   useEffect(() => {

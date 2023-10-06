@@ -8,7 +8,13 @@ import {
 } from 'react'
 import { Buffer } from 'buffer'
 import { Wireframe } from '@react-three/drei'
-import { BufferGeometry, Float32BufferAttribute, Material } from 'three'
+import {
+  BufferGeometry,
+  Float32BufferAttribute,
+  LineBasicMaterial,
+  Material,
+  WireframeGeometry
+} from 'three'
 import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { Lut } from 'three/examples/jsm/math/Lut'
 
@@ -311,8 +317,11 @@ const Mesh = ({ scene }: MeshProps): React.JSX.Element => {
  * @returns Result
  */
 const Result = ({ scene }: ResultProps): React.JSX.Element => {
+  // State
+  const [resultMesh, setResultMesh] = useState<React.JSX.Element>()
+
   // Context
-  const { display, sectionView, lut, dispatch } = useContext(Context)
+  const { display, sectionView, result, lut, dispatch } = useContext(Context)
 
   // Child
   const child = useMemo(
@@ -334,8 +343,8 @@ const Result = ({ scene }: ResultProps): React.JSX.Element => {
     dispatch(setLutMax(max))
 
     const lookUpTable = new Lut(lut.colormap)
-    lookUpTable.setMin(min)
-    lookUpTable.setMax(max)
+    lookUpTable.setMin(lut.customMin ?? min)
+    lookUpTable.setMax(lut.customMax ?? max)
 
     const vertexColors = new Float32Array(data.count * 3)
     for (let i = 0; i < data.count; ++i) {
@@ -349,7 +358,34 @@ const Result = ({ scene }: ResultProps): React.JSX.Element => {
       'color',
       new Float32BufferAttribute(vertexColors, 3)
     )
-  }, [child, lut.colormap, dispatch])
+  }, [child, lut.colormap, lut.customMin, lut.customMax, dispatch])
+
+  // Result mesh
+  useEffect(() => {
+    if (result.meshVisible) {
+      const geometry = new WireframeGeometry(child.geometry)
+      const material = new LineBasicMaterial({
+        linewidth: 2,
+        transparent: true,
+        color: 0x000000,
+        opacity: display.transparent ? 0.5 : 1,
+        clippingPlanes:
+          sectionView.enabled && sectionView.clippingPlane
+            ? [sectionView.clippingPlane]
+            : []
+      })
+      const mesh = <lineSegments args={[geometry, material]} />
+      setResultMesh(mesh)
+    } else {
+      setResultMesh(undefined)
+    }
+  }, [
+    display.transparent,
+    sectionView.enabled,
+    sectionView.clippingPlane,
+    result.meshVisible,
+    child
+  ])
 
   /**
    * Render
@@ -373,6 +409,7 @@ const Result = ({ scene }: ResultProps): React.JSX.Element => {
             : []
         }
       />
+      {resultMesh}
     </mesh>
   )
 }

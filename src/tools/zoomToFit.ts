@@ -16,7 +16,7 @@ const zoomToFit = (
   if (!scene || !camera || !controls) return
 
   // Center
-  const boundingBox = computeSceneBoundingBox(scene)
+  const boundingBox = computeSceneBoundingBox(scene.children)
   const center = new Vector3()
   boundingBox.getCenter(center)
 

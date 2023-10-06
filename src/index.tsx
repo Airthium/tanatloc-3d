@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Buffer } from 'buffer'
@@ -3472,7 +3473,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <App
-      parts={[partOne /*, partTwo, partThree , partFour*/]}
+      parts={[/*partOne, partTwo,*/ partThree /* , partFour*/]}
       snapshot={{
         project: { apiRoute: async () => console.log('Snapshot export') }
       }}

@@ -1,9 +1,9 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { Layout } from 'antd'
 import { Canvas } from '@react-three/fiber'
 import { PerspectiveCamera, TrackballControls, View } from '@react-three/drei'
 
-import Provider, { MyCanvasProps } from './context'
+import Provider, { Context, MyCanvasProps } from './context'
 import MainContextFiller from './context/MainContextFiller'
 import PropsContextFiller from './context/PropsContextFiller'
 
@@ -19,6 +19,7 @@ import Parts from './Parts'
 import style from './Canvas.module.css'
 
 // TODO view with transparent background ?
+// TODO auto zoom to fit at first part loaded
 
 /**
  * MyCanvas
@@ -40,12 +41,23 @@ const MyCanvas = (): React.JSX.Element => {
   // State
   const [controlsUpdate, setControlsUpdate] = useState<number>(0)
 
+  // Context
+  const {
+    props: { parts }
+  } = useContext(Context)
+
   /**
    * On main view controls
    */
   const onMainViewControls = useCallback(() => {
     setControlsUpdate(Math.random())
   }, [])
+
+  // At least one part
+  const oneResult = useMemo(
+    () => parts?.find((part) => part.summary.type === 'result'),
+    [parts]
+  )
 
   /**
    * Render
@@ -81,9 +93,11 @@ const MyCanvas = (): React.JSX.Element => {
           <View index={2} track={navigationViewDiv} frames={1}>
             <Navigation update={controlsUpdate} />
           </View>
-          <View index={3} track={colorbarViewDiv} frames={1}>
-            <Colorbar />
-          </View>
+          {oneResult ? (
+            <View index={3} track={colorbarViewDiv} frames={1}>
+              <Colorbar />
+            </View>
+          ) : null}
         </Canvas>
       </div>
     </Layout>

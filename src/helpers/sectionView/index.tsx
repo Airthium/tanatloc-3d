@@ -338,9 +338,9 @@ const SectionView = (): React.JSX.Element | null => {
   // Start
   useEffect(() => {
     if (!sectionView.enabled) return
-    if (!mainView.scene) return
+    if (!mainView.scene?.children) return
 
-    const boundingBox = computeSceneBoundingBox(mainView.scene)
+    const boundingBox = computeSceneBoundingBox(mainView.scene.children)
 
     // Center
     const center = new Vector3()
@@ -355,20 +355,25 @@ const SectionView = (): React.JSX.Element | null => {
 
     // Clipping plane
     clippingPlane.setFromNormalAndCoplanarPoint(defaultNormal, center)
-  }, [mainView.scene, sectionView.enabled, dispatch])
+  }, [mainView.scene?.children, sectionView.enabled, dispatch])
 
   // Center at snap & flip
   useEffect(() => {
     if (!sectionView.enabled) return
-    if (!mainView.scene) return
+    if (!mainView.scene?.children) return
 
-    const boundingBox = computeSceneBoundingBox(mainView.scene)
+    const boundingBox = computeSceneBoundingBox(mainView.scene.children)
 
     // Center
     const center = new Vector3()
     boundingBox.getCenter(center)
     setCenter(center)
-  }, [mainView.scene, sectionView.enabled, sectionView.snap, sectionView.flip])
+  }, [
+    mainView.scene?.children,
+    sectionView.enabled,
+    sectionView.snap,
+    sectionView.flip
+  ])
 
   /**
    * Render

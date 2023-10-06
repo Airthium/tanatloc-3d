@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect, useMemo, useRef } from 'react'
 import { Line, OrthographicCamera, Text } from '@react-three/drei'
 import { Float32BufferAttribute } from 'three'
 import { Lut } from 'three/examples/jsm/math/Lut'
@@ -25,7 +25,7 @@ const Label = ({ position, value }: LabelProps): React.JSX.Element => {
     <>
       <Text
         position={position}
-        color={'black'}
+        color={'gray'}
         fontSize={0.4}
         anchorX={'center'}
       >
@@ -36,6 +36,7 @@ const Label = ({ position, value }: LabelProps): React.JSX.Element => {
           [position[0], -0.2, 1],
           [position[0], 0.2, 1]
         ]}
+        color={'gray'}
       />
     </>
   )
@@ -76,6 +77,12 @@ const Colorbar = (): React.JSX.Element => {
     )
   }, [lut.colormap])
 
+  // Min
+  const min = useMemo(() => lut.customMin ?? lut.min, [lut.min, lut.customMin])
+
+  // Max
+  const max = useMemo(() => lut.customMax ?? lut.max, [lut.max, lut.customMax])
+
   /**
    * Render
    */
@@ -95,17 +102,14 @@ const Colorbar = (): React.JSX.Element => {
         <boxGeometry args={[size - 1, 1 / 2, 1, 10]} />
         <meshBasicMaterial vertexColors />
       </mesh>
-      <Label position={[-(size - 1) / 2, 0.4, 1]} value={lut.min} />
-      <Label
-        position={[-(size - 1) / 4, 0.4, 1]}
-        value={(lut.max - lut.min) / 4}
-      />
-      <Label position={[0, 0.4, 1]} value={(lut.max - lut.min) / 2} />
+      <Label position={[-(size - 1) / 2, 0.4, 1]} value={min} />
+      <Label position={[-(size - 1) / 4, 0.4, 1]} value={(max - min) / 4} />
+      <Label position={[0, 0.4, 1]} value={(max - min) / 2} />
       <Label
         position={[(size - 1) / 4, 0.4, 1]}
-        value={(3 * (lut.max - lut.min)) / 4}
+        value={(3 * (max - min)) / 4}
       />
-      <Label position={[(size - 1) / 2, 0.4, 1]} value={lut.max} />
+      <Label position={[(size - 1) / 2, 0.4, 1]} value={max} />
     </group>
   )
 }
