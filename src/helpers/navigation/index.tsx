@@ -21,6 +21,7 @@ import Arrow from '../arrow'
  */
 export interface NavigationProps {
   update?: number
+  resize?: number
 }
 
 export interface AxisProps {
@@ -61,13 +62,16 @@ const hoverColor = 0xfad114
 const textColor = 0x000000
 
 // Size
-const size = 100
+const size = 10
 
 // Font size
-const fontSize = 20
+const fontSize = 2
 
 // Corner
 const corner = 0.25
+
+// Zoom
+const zoom = 0.4
 
 // Faces
 const faces: IFace[] = [
@@ -113,7 +117,7 @@ const Axis = ({
     <Arrow
       direction={direction3}
       origin={origin3}
-      length={100}
+      length={size}
       color={color}
       text={text}
     />
@@ -204,7 +208,10 @@ const Face = ({
    * On pointer enter (internal)
    */
   const onInternalPointerOver = useCallback(
-    (event: ThreeEvent<PointerEvent>) => onPointerOver(index, event),
+    (event: ThreeEvent<PointerEvent>) => {
+      console.log('over')
+      onPointerOver(index, event)
+    },
     [index, onPointerOver]
   )
 
@@ -212,7 +219,10 @@ const Face = ({
    * On pointer leave (internal)
    */
   const onInternalPointerLeave = useCallback(
-    (event: any) => onPointerLeave(index),
+    (_event: any) => {
+      console.log('leave')
+      onPointerLeave(index)
+    },
     [index, onPointerLeave]
   )
 
@@ -222,7 +232,7 @@ const Face = ({
   return (
     <group
       ref={ref}
-      onPointerEnter={onInternalPointerOver}
+      onPointerMove={onInternalPointerOver}
       onPointerLeave={onInternalPointerLeave}
       onClick={onClick}
     >
@@ -244,7 +254,11 @@ const Face = ({
       </mesh>
       <mesh>
         <sphereGeometry args={[faceSize / 2, 10, 10, 0, Math.PI, 0]} />
-        <meshBasicMaterial transparent opacity={hover ? 0.2 : 0} />
+        <meshBasicMaterial
+          color={hover ? hoverColor : color}
+          transparent
+          opacity={0.2}
+        />
       </mesh>
       <Text position={[0, 0, 1]} color={textColor} fontSize={fontSize}>
         {face.text}
@@ -258,18 +272,22 @@ const Face = ({
  * @param props Props
  * @returns Navigation
  */
-const Navigation = (_props: NavigationProps): React.JSX.Element => {
+const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
   // Context
   const { mainView } = useContext(Context)
 
   // State
+  const [aspectRatio, setAspectRatio] = useState<number>(1)
   const [hover, setHover] = useState<{ index: number; distance: number }>({
     index: -1,
     distance: Number.MAX_VALUE
   })
 
   // Camera position
-  const cameraPosition = useMemo(() => new Vector3(0, 0, size), [])
+  const cameraPosition: [number, number, number] = useMemo(
+    () => [-5 * aspectRatio * size + size, 5 * size - size, 2 * size],
+    [aspectRatio]
+  )
 
   // Axis origin
   const axisOrigin = useMemo(() => [-size / 2, -size / 2, -size / 2], [])
@@ -280,13 +298,21 @@ const Navigation = (_props: NavigationProps): React.JSX.Element => {
     []
   )
 
+  // Aspect ratio (main camera)
+  useEffect(() => {
+    if (!mainView.camera) return
+    setAspectRatio(mainView.camera.aspect)
+  }, [mainView.camera, resize])
+
   // Rotation
   useFrame(({ camera }) => {
     if (!mainView?.camera) return
 
-    camera.translateZ(-size)
+    camera.position.set(0, 0, 0)
     camera.rotation.copy(mainView.camera.rotation)
-    camera.translateZ(size)
+    camera.translateX(cameraPosition[0])
+    camera.translateY(cameraPosition[1])
+    camera.translateZ(cameraPosition[2])
   })
 
   /**
@@ -343,16 +369,17 @@ const Navigation = (_props: NavigationProps): React.JSX.Element => {
    * Render
    */
   return (
-    <mesh type="Navigation">
+    <group type="Navigation">
       <OrthographicCamera
         makeDefault
-        left={-2 * size}
-        right={2 * size}
-        top={2 * size}
-        bottom={-2 * size}
-        near={-2 * size}
-        far={2 * size}
+        left={-5 * aspectRatio * size}
+        right={5 * aspectRatio * size}
+        top={5 * size}
+        bottom={-5 * size}
+        near={(-5 / zoom) * size}
+        far={(5 / zoom) * size}
         position={cameraPosition}
+        // zoom={zoom}
       />
       {faces.map((face, index) => (
         <Face
@@ -383,7 +410,7 @@ const Navigation = (_props: NavigationProps): React.JSX.Element => {
         color={0x0000ff}
         text="z"
       />
-    </mesh>
+    </group>
   )
 }
 

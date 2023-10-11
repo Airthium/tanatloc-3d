@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Line, OrthographicCamera, Text } from '@react-three/drei'
 import { Float32BufferAttribute } from 'three'
 import { Lut } from 'three/examples/jsm/math/Lut'
@@ -6,6 +6,13 @@ import { Lut } from 'three/examples/jsm/math/Lut'
 import { Context } from '../../context'
 
 import toReadable from '../../tools/toReadable'
+
+/**
+ * Props
+ */
+export interface ColorbarProps {
+  resize?: number
+}
 
 export interface LabelProps {
   position: [number, number, number]
@@ -46,12 +53,15 @@ const Label = ({ position, value }: LabelProps): React.JSX.Element => {
  * Colorbar
  * @returns Colorbar
  */
-const Colorbar = (): React.JSX.Element => {
+const Colorbar = ({ resize }: ColorbarProps): React.JSX.Element => {
   // Ref
   const ref = useRef<THREE.Mesh>(null!)
 
+  // State
+  const [aspectRatio, setAspectRatio] = useState<number>(1)
+
   // Context
-  const { lut } = useContext(Context)
+  const { mainView, lut } = useContext(Context)
 
   // Vertex colors
   useEffect(() => {
@@ -77,6 +87,18 @@ const Colorbar = (): React.JSX.Element => {
     )
   }, [lut.colormap])
 
+  // Aspect ratio (main camera)
+  useEffect(() => {
+    if (!mainView.camera) return
+    setAspectRatio(mainView.camera.aspect)
+  }, [mainView.camera, resize])
+
+  // Camera position
+  const cameraPosition: [number, number, number] = useMemo(
+    () => [0, -(size - 0.75), 0],
+    []
+  )
+
   // Min
   const min = useMemo(() => lut.customMin ?? lut.min, [lut.min, lut.customMin])
 
@@ -90,13 +112,13 @@ const Colorbar = (): React.JSX.Element => {
     <group type="Colorbar">
       <OrthographicCamera
         makeDefault
-        left={-size}
-        right={size}
+        left={-aspectRatio * size}
+        right={aspectRatio * size}
         top={size}
         bottom={-size}
         near={-size}
         far={size}
-        zoom={50}
+        position={cameraPosition}
       />
       <mesh ref={ref}>
         <boxGeometry args={[size - 1, 1 / 2, 1, 10]} />

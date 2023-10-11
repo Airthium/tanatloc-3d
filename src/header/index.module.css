@@ -3,13 +3,14 @@
   background: none;
   background-color: transparent;
   height: unset;
-  width: 200px;
+  width: 220px;
   z-index: 10;
-  top: 200px;
+  top: 10px;
   right: 0px;
   padding: 0;
   display: flex;
   justify-content: center;
+  gap: 10px;
 }
 
 .header :global(.ant-collapse) {
@@ -37,7 +38,7 @@
   align-items: center;
   line-height: unset;
   gap: 10px;
-  max-height: calc(100vh - 265px);
+  max-height: 70vh;
   overflow-x: hidden;
   overflow-y: auto;
 }

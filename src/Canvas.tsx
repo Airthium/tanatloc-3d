@@ -1,7 +1,14 @@
-import { useCallback, useContext, useMemo, useRef, useState } from 'react'
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import { Layout } from 'antd'
 import { Canvas } from '@react-three/fiber'
-import { PerspectiveCamera, TrackballControls, View } from '@react-three/drei'
+import { Hud, PerspectiveCamera, TrackballControls } from '@react-three/drei'
 
 import Provider, { Context, MyCanvasProps } from './context'
 import MainContextFiller from './context/MainContextFiller'
@@ -18,7 +25,6 @@ import Parts from './Parts'
 
 import style from './Canvas.module.css'
 
-// TODO view with transparent background ?
 // TODO auto zoom to fit at first part loaded
 
 /**
@@ -28,9 +34,6 @@ import style from './Canvas.module.css'
 const MyCanvas = (): React.JSX.Element => {
   // Ref
   const containerDiv = useRef(null!)
-  const mainViewDiv = useRef(null!)
-  const navigationViewDiv = useRef(null!)
-  const colorbarViewDiv = useRef(null!)
 
   const mainView = useRef<{
     scene: THREE.Scene
@@ -40,6 +43,7 @@ const MyCanvas = (): React.JSX.Element => {
 
   // State
   const [controlsUpdate, setControlsUpdate] = useState<number>(0)
+  const [resize, setResize] = useState<number>(0)
 
   // Context
   const {
@@ -53,11 +57,26 @@ const MyCanvas = (): React.JSX.Element => {
     setControlsUpdate(Math.random())
   }, [])
 
+  /**
+   * On resize
+   */
+  const onResize = useCallback(() => {
+    setResize(Math.random())
+  }, [])
+
   // At least one part
   const oneResult = useMemo(
     () => parts?.find((part) => part.summary.type === 'result'),
     [parts]
   )
+
+  // Events
+  useEffect(() => {
+    window.addEventListener('resize', onResize)
+    return () => {
+      window.removeEventListener('resize', onResize)
+    }
+  }, [onResize])
 
   /**
    * Render
@@ -66,14 +85,11 @@ const MyCanvas = (): React.JSX.Element => {
     <Layout className={style.layout}>
       <Header />
       <div ref={containerDiv} className={style.container}>
-        <div ref={mainViewDiv} className={style.mainView} />
-        <div ref={navigationViewDiv} className={style.navigationView} />
-        <div ref={colorbarViewDiv} className={style.colorbarView} />
         <Canvas
           eventSource={containerDiv}
           gl={{ preserveDrawingBuffer: true, localClippingEnabled: true }}
         >
-          <View index={1} track={mainViewDiv} frames={1}>
+          <Hud renderPriority={1}>
             <MainContextFiller controls={mainViewControls.current} />
             <PerspectiveCamera makeDefault position={[0, 0, 5]} />
             <Grid update={controlsUpdate} />
@@ -89,14 +105,16 @@ const MyCanvas = (): React.JSX.Element => {
               decay={0}
             />
             <Parts />
-          </View>
-          <View index={2} track={navigationViewDiv} frames={1}>
-            <Navigation update={controlsUpdate} />
-          </View>
+          </Hud>
+
+          <Hud renderPriority={2}>
+            <Navigation update={controlsUpdate} resize={resize} />
+          </Hud>
+
           {oneResult ? (
-            <View index={3} track={colorbarViewDiv} frames={1}>
-              <Colorbar />
-            </View>
+            <Hud renderPriority={3}>
+              <Colorbar resize={resize} />
+            </Hud>
           ) : null}
         </Canvas>
       </div>
