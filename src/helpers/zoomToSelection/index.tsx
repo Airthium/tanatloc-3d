@@ -36,8 +36,7 @@ const ZoomToSelection = (): null => {
 
     // Selection box
     div = document.createElement('div')
-    div.style.position = 'absolute'
-    div.style.display = 'none'
+    div.style.position = 'fixed'
     div.style.border = '1px solid #55aaff'
     div.style.backgroundColor = 'rgba(75, 160, 255, 0.3)'
     div.style.pointerEvents = 'none'
@@ -58,27 +57,22 @@ const ZoomToSelection = (): null => {
    * Pointer down
    * @param event Event
    */
-  const onPointerDown = useCallback(
-    (event: MouseEvent) => {
-      if (!mainView.controls) return
+  const onPointerDown = useCallback((event: MouseEvent) => {
+    // x, y
+    const x = event.clientX
+    const y = event.clientY
 
-      // x, y
-      const x = event.clientX
-      const y = event.clientY
+    // Selection box
+    div.style.display = 'block'
+    div.style.left = x + 'px'
+    div.style.top = y + 'px'
+    div.style.width = '0'
+    div.style.height = '0'
 
-      // Selection box
-      div.style.display = 'block'
-      div.style.left = x + 'px'
-      div.style.top = y + 'px'
-      div.style.width = '0'
-      div.style.height = '0'
-
-      // Save start point
-      startPoint.x = x
-      startPoint.y = y
-    },
-    [mainView.controls]
-  )
+    // Save start point
+    startPoint.x = x
+    startPoint.y = y
+  }, [])
 
   /**
    * Pointer move

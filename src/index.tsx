@@ -3473,7 +3473,9 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <App
-      parts={[/*partOne, partTwo,*/ partThree /* , partFour*/]}
+      parts={[partOne /*, partTwo, partThree, partFour*/]}
+      // data={[]}
+      // filters={[]}
       snapshot={{
         project: { apiRoute: async () => console.log('Snapshot export') }
       }}

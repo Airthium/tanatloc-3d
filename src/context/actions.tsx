@@ -1,5 +1,40 @@
 import { TrackballControlsProps } from '@react-three/drei'
-import { MyCanvasPart, MyCanvasPropsSnapshot, actionTypes } from '.'
+import {
+  MyCanvasPart,
+  MyCanvasProps,
+  MyCanvasPropsSnapshot,
+  actionTypes
+} from '.'
+
+/**
+ * Set props parts
+ * @param parts Parts
+ * @returns Action
+ */
+export const setPropsParts = (parts?: MyCanvasPart[]) => ({
+  type: actionTypes.SETPROPSPARTS,
+  value: parts
+})
+
+/**
+ * Set props data
+ * @param data Data
+ * @returns Action
+ */
+export const setPropsData = (data: MyCanvasProps['data']) => ({
+  type: actionTypes.SETPROPSDATA,
+  value: data
+})
+
+/**
+ * Set props filters
+ * @param filters Filters
+ * @returns Action
+ */
+export const setPropsFilters = (filters: MyCanvasProps['filters']) => ({
+  type: actionTypes.SETPROPSFILTERS,
+  value: filters
+})
 
 /**
  * Set props snapshot project
@@ -11,16 +46,6 @@ export const setPropsSnapshotProject = (
 ) => ({
   type: actionTypes.SETPROPSSNAPSHOTPROJECT,
   value: project
-})
-
-/**
- * Set props parts
- * @param parts Parts
- * @returns Action
- */
-export const setPropsParts = (parts: MyCanvasPart[]) => ({
-  type: actionTypes.SETPROPSPARTS,
-  value: parts
 })
 
 /**
@@ -141,6 +166,16 @@ export const setSectionViewSnap = (axis: THREE.Vector3) => ({
 export const setSectionViewFlip = (number: number) => ({
   type: actionTypes.SETSECTIONVIEWFLIP,
   value: number
+})
+
+/**
+ * Set geometry dimension
+ * @param dimension Dimension
+ * @returns Action
+ */
+export const setGeometryDimension = (dimension: number) => ({
+  type: actionTypes.SETGEOMETRYDIMENSION,
+  value: dimension
 })
 
 /**

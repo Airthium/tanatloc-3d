@@ -1,6 +1,8 @@
 import { TrackballControlsProps } from '@react-three/drei'
 import { Raycaster, Vector2 } from 'three'
 
+// TODO bug with result
+
 /**
  * Zoom to rect
  * @param rect Rect
@@ -47,10 +49,13 @@ const zoomToRect = (
   raycaster.setFromCamera(raycasterCenter, camera)
   const intersects = raycaster.intersectObjects(objects)
 
-  // Set center
+  // Intersection point
   if (!intersects.length) return
+  const intersect = intersects[0].point
+
+  // Set center
   const target = controls.target as THREE.Vector3
-  target.copy(intersects[0].point)
+  target.copy(intersect)
 
   // Zoom
   const ratio = new Vector2(

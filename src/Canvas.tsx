@@ -47,7 +47,8 @@ const MyCanvas = (): React.JSX.Element => {
 
   // Context
   const {
-    props: { parts }
+    props: { parts },
+    geometry: { dimension }
   } = useContext(Context)
 
   /**
@@ -66,7 +67,8 @@ const MyCanvas = (): React.JSX.Element => {
 
   // At least one part
   const oneResult = useMemo(
-    () => parts?.find((part) => part.summary.type === 'result'),
+    () => !!parts?.find((part) => part.summary.type === 'result'),
+
     [parts]
   )
 
@@ -83,11 +85,14 @@ const MyCanvas = (): React.JSX.Element => {
    */
   return (
     <Layout className={style.layout}>
-      <Header />
+      <Header oneResult={oneResult} />
       <div ref={containerDiv} className={style.container}>
         <Canvas
           eventSource={containerDiv}
-          gl={{ preserveDrawingBuffer: true, localClippingEnabled: true }}
+          gl={{
+            preserveDrawingBuffer: true,
+            localClippingEnabled: true
+          }}
         >
           <Hud renderPriority={1}>
             <MainContextFiller controls={mainViewControls.current} />
@@ -98,6 +103,7 @@ const MyCanvas = (): React.JSX.Element => {
             <TrackballControls
               ref={mainViewControls}
               onChange={onMainViewControls}
+              noRotate={dimension !== 3}
             />
             <ambientLight />
             <pointLight

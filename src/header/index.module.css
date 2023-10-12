@@ -3,13 +3,14 @@
   background: none;
   background-color: transparent;
   height: unset;
-  width: 220px;
+  width: 200px;
   z-index: 10;
-  top: 10px;
-  right: 0px;
+  top: 0;
+  right: 0;
   padding: 0;
+  margin: 10px 10px 0 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 10px;
 }
 

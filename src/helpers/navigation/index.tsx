@@ -189,6 +189,11 @@ const Face = ({
   // Ref
   const ref = useRef<THREE.Group>(null!)
 
+  // Context
+  const {
+    geometry: { dimension }
+  } = useContext(Context)
+
   // Shape
   const shape = useMemo(
     () => (
@@ -209,7 +214,6 @@ const Face = ({
    */
   const onInternalPointerOver = useCallback(
     (event: ThreeEvent<PointerEvent>) => {
-      console.log('over')
       onPointerOver(index, event)
     },
     [index, onPointerOver]
@@ -220,7 +224,6 @@ const Face = ({
    */
   const onInternalPointerLeave = useCallback(
     (_event: any) => {
-      console.log('leave')
       onPointerLeave(index)
     },
     [index, onPointerLeave]
@@ -252,14 +255,16 @@ const Face = ({
           opacity={0.75}
         />
       </mesh>
-      <mesh>
-        <sphereGeometry args={[faceSize / 2, 10, 10, 0, Math.PI, 0]} />
-        <meshBasicMaterial
-          color={hover ? hoverColor : color}
-          transparent
-          opacity={0.2}
-        />
-      </mesh>
+      {dimension === 3 ? (
+        <mesh>
+          <sphereGeometry args={[faceSize / 2, 10, 10, 0, Math.PI, 0]} />
+          <meshBasicMaterial
+            color={hover ? hoverColor : color}
+            transparent
+            opacity={0.2}
+          />
+        </mesh>
+      ) : null}
       <Text position={[0, 0, 1]} color={textColor} fontSize={fontSize}>
         {face.text}
       </Text>
@@ -274,7 +279,10 @@ const Face = ({
  */
 const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
   // Context
-  const { mainView } = useContext(Context)
+  const {
+    mainView,
+    geometry: { dimension }
+  } = useContext(Context)
 
   // State
   const [aspectRatio, setAspectRatio] = useState<number>(1)
@@ -285,7 +293,7 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
 
   // Camera position
   const cameraPosition: [number, number, number] = useMemo(
-    () => [-5 * aspectRatio * size + size, 5 * size - size, 2 * size],
+    () => [-4.9 * aspectRatio * size + size, 4.9 * size - size, 2 * size],
     [aspectRatio]
   )
 
@@ -379,7 +387,6 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
         near={(-5 / zoom) * size}
         far={(5 / zoom) * size}
         position={cameraPosition}
-        // zoom={zoom}
       />
       {faces.map((face, index) => (
         <Face
@@ -404,12 +411,14 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
         color={0x00ff00}
         text="y"
       />
-      <Axis
-        origin={axisOrigin}
-        direction={directions.z}
-        color={0x0000ff}
-        text="z"
-      />
+      {dimension === 3 ? (
+        <Axis
+          origin={axisOrigin}
+          direction={directions.z}
+          color={0x0000ff}
+          text="z"
+        />
+      ) : null}
     </group>
   )
 }

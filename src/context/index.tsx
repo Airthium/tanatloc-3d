@@ -26,6 +26,9 @@ export interface ContextState {
     snap?: THREE.Vector3
     flip?: number
   }
+  geometry: {
+    dimension: number
+  }
   result: {
     meshVisible: boolean
   }
@@ -59,6 +62,8 @@ export interface ProviderProps {
  */
 export interface MyCanvasProps {
   parts?: MyCanvasPart[]
+  data?: any
+  filters?: any
   snapshot?: MyCanvasPropsSnapshot
 }
 
@@ -118,6 +123,8 @@ export interface MyCanvasPropsSnapshot {
 export const initialContextState: ContextState = {
   props: {
     parts: undefined,
+    data: undefined,
+    filters: undefined,
     snapshot: undefined
   },
   mainView: {
@@ -140,6 +147,9 @@ export const initialContextState: ContextState = {
     snap: undefined,
     flip: undefined
   },
+  geometry: {
+    dimension: 0
+  },
   result: {
     meshVisible: true
   },
@@ -156,6 +166,8 @@ export const initialContextState: ContextState = {
  */
 export const actionTypes = {
   SETPROPSPARTS: 'SETPROPSPARTS',
+  SETPROPSDATA: 'SETPROPSDATA',
+  SETPROPSFILTERS: 'SETPROPSFILTERS',
   SETPROPSSNAPSHOTPROJECT: 'SETPROPSSNAPSHOTPROJECT',
   SETMAINVIEWGL: 'SETMAINVIEWGL',
   SETMAINVIEWSCENE: 'SETMAINVIEWSCENE',
@@ -169,6 +181,7 @@ export const actionTypes = {
   SETSECTIONVIEWHIDEPLANE: 'SETSECTIONVIEWHIDEPLANE',
   SETSECTIONVIEWSNAP: 'SETSECTIONVIEWSNAP',
   SETSECTIONVIEWFLIP: 'SETSECTIONVIEWFLIP',
+  SETGEOMETRYDIMENSION: 'SETGEOMETRYDIMENSION',
   SETRESULTMESHVISIBLE: 'SETRESULTMESHVISIBLE',
   SETLUTCOLORMAP: 'SETLUTCOLORMAP',
   SETLUTMIN: 'SETLUTMIN',
@@ -199,6 +212,22 @@ export const reducer = (
         props: {
           ...state.props,
           parts: action.value
+        }
+      }
+    case actionTypes.SETPROPSDATA:
+      return {
+        ...state,
+        props: {
+          ...state.props,
+          data: action.value
+        }
+      }
+    case actionTypes.SETPROPSFILTERS:
+      return {
+        ...state,
+        props: {
+          ...state.props,
+          filters: action.value
         }
       }
     case actionTypes.SETPROPSSNAPSHOTPROJECT:
@@ -306,6 +335,14 @@ export const reducer = (
         sectionView: {
           ...state.sectionView,
           flip: action.value
+        }
+      }
+    case actionTypes.SETGEOMETRYDIMENSION:
+      return {
+        ...state,
+        geometry: {
+          ...state.geometry,
+          dimension: action.value
         }
       }
     case actionTypes.SETRESULTMESHVISIBLE:

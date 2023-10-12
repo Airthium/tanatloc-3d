@@ -15,6 +15,15 @@ import Colorbar from './colorbar'
 import Results from './results'
 
 import style from './index.module.css'
+import { useContext } from 'react'
+import { Context } from '../context'
+
+/**
+ * Props
+ */
+export interface HeaderProps {
+  oneResult: boolean
+}
 
 /**
  * PostprocessingCollapseIcon
@@ -43,33 +52,46 @@ const ToolsCollapseIcon = () => (
  * @param props Props
  * @returns Header
  */
-const Header = () => {
+const Header = ({ oneResult }: HeaderProps) => {
+  // Context
+  const {
+    props: { data, filters }
+  } = useContext(Context)
+
   /**
    * Render
    */
   return (
     <Layout.Header className={style.header}>
-      <div>
-        <Collapse
-          expandIcon={PostprocessingCollapseIcon}
-          items={[
-            {
-              key: 'post-processing',
-              children: [
-                <Tooltip key="data" title="Data" placement="left">
-                  <Button icon={<DatabaseOutlined />} />
-                </Tooltip>,
-                <Tooltip key="filters" title="Filters" placement="left">
-                  <Button icon={<FilterOutlined />} />
-                </Tooltip>
-              ]
-            }
-          ]}
-        />
-      </div>
+      {data || filters ? (
+        <div>
+          <Collapse
+            expandIcon={PostprocessingCollapseIcon}
+            activeKey={'post-processing'}
+            items={[
+              {
+                key: 'post-processing',
+                children: [
+                  data && (
+                    <Tooltip key="data" title="Data" placement="left">
+                      <Button icon={<DatabaseOutlined />} />
+                    </Tooltip>
+                  ),
+                  filters && (
+                    <Tooltip key="filters" title="Filters" placement="left">
+                      <Button icon={<FilterOutlined />} />
+                    </Tooltip>
+                  )
+                ]
+              }
+            ]}
+          />
+        </div>
+      ) : null}
       <div>
         <Collapse
           expandIcon={ToolsCollapseIcon}
+          activeKey={'tools'}
           items={[
             {
               key: 'tools',
@@ -81,10 +103,12 @@ const Header = () => {
                 <Zoom key="zoom" />,
                 <Divider key="divider-3" />,
                 <SectionView key="section-view" />,
-                <Divider key="divider-4" />,
-                <Results key="results" />,
-                <Divider key="divider-5" />,
-                <Colorbar key="colorbar" />
+                oneResult && [
+                  <Divider key="divider-4" />,
+                  <Results key="results" />,
+                  <Divider key="divider-5" />,
+                  <Colorbar key="colorbar" />
+                ]
               ]
             }
           ]}

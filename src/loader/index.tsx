@@ -19,8 +19,11 @@ import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { Lut } from 'three/examples/jsm/math/Lut'
 
 import { Context, MyCanvasPart } from '../context'
-import { setLutMax, setLutMin } from '../context/actions'
+import { setGeometryDimension, setLutMax, setLutMin } from '../context/actions'
 
+/**
+ * Props
+ */
 export interface PartLoaderProps {
   part: MyCanvasPart
   uuid: string
@@ -46,15 +49,32 @@ export interface ResultProps {
   scene: GLTF['scene']
 }
 
+// Hover color
 const hoverColor = 0xfad114
 
+/**
+ * Geometry 2D
+ * @param props Props
+ * @returns Geometry2D
+ */
 const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
   // State
   const [hoverFace, setHoverFace] = useState<number>(-1)
   const [hoverEdge, setHoverEdge] = useState<number>(-1)
 
   // Context
-  const { display, sectionView } = useContext(Context)
+  const {
+    display,
+    sectionView,
+    geometry: { dimension },
+    dispatch
+  } = useContext(Context)
+
+  // Dimension
+  useEffect(() => {
+    if (dimension !== Math.max(2, dimension))
+      dispatch(setGeometryDimension(Math.max(2, dimension)))
+  }, [dimension, dispatch])
 
   // Children
   const children = useMemo(
@@ -121,6 +141,7 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
               color={hoverFace === index ? hoverColor : material.color}
               metalness={0.5}
               roughness={0.5}
+              depthWrite={false}
               transparent
               opacity={display.transparent ? 0.5 : 1}
               clippingPlanes={
@@ -175,7 +196,17 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
   const [hover, setHover] = useState<number>(-1)
 
   // Context
-  const { display, sectionView } = useContext(Context)
+  const {
+    display,
+    sectionView,
+    geometry: { dimension },
+    dispatch
+  } = useContext(Context)
+
+  // Dimension
+  useEffect(() => {
+    if (dimension !== 3) dispatch(setGeometryDimension(3))
+  }, [dimension, dispatch])
 
   // Children
   const children = useMemo(
@@ -190,17 +221,17 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
   )
 
   /**
-   * On pointer over
+   * On pointer over face
    * @param index
    */
-  const onPointerOver = useCallback((index: number) => {
+  const onPointerOverFace = useCallback((index: number) => {
     setHover(index)
   }, [])
 
   /**
-   * On pointer out
+   * On pointer out face
    */
-  const onPointerOut = useCallback(() => {
+  const onPointerOutFace = useCallback(() => {
     setHover(-1)
   }, [])
 
@@ -216,7 +247,7 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
           uuid={child.userData.uuid}
           userData={child.userData}
         >
-          {child.children.map((subChild, index) => {
+          {child.children.map((subChild, subIndex) => {
             const geometry = subChild.geometry
             const material = subChild.material
 
@@ -226,15 +257,16 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
                 name={subChild.name}
                 uuid={subChild.userData.uuid}
                 userData={subChild.userData}
-                onPointerOver={() => onPointerOver(index)}
-                onPointerOut={onPointerOut}
+                onPointerOver={() => onPointerOverFace(subIndex)}
+                onPointerOut={onPointerOutFace}
               >
                 <primitive object={geometry} />
                 <meshPhysicalMaterial
                   side={2}
-                  color={hover === index ? hoverColor : material.color}
+                  color={hover === subIndex ? hoverColor : material.color}
                   metalness={0.5}
                   roughness={0.5}
+                  depthWrite={false}
                   transparent
                   opacity={display.transparent ? 0.5 : 1}
                   clippingPlanes={
@@ -401,6 +433,7 @@ const Result = ({ scene }: ResultProps): React.JSX.Element => {
       <meshBasicMaterial
         vertexColors
         side={2}
+        depthWrite={false}
         transparent
         opacity={display.transparent ? 0.5 : 1}
         clippingPlanes={

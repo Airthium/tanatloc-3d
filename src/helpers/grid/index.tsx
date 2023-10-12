@@ -309,6 +309,7 @@ const AxisLabels = ({
     }
   }, [width, height, depth, axis, center, offset])
 
+  // Labels
   const labels = useMemo(() => {
     const labels = []
 
@@ -316,7 +317,7 @@ const AxisLabels = ({
     const step = length / (division - 1)
 
     for (let i = 0; i < division; ++i) {
-      const value = range[0] + (i / division - 1) * range[1]
+      const value = range[0] + (i / (division - 1)) * range[1]
       let textPosition
       switch (axis) {
         case 'xy':
@@ -354,7 +355,11 @@ const AxisLabels = ({
  */
 const Grid = ({ update }: GridProps): React.JSX.Element | null => {
   // Context
-  const { mainView, display } = useContext(Context)
+  const {
+    mainView,
+    display,
+    geometry: { dimension }
+  } = useContext(Context)
 
   // State
   const [center, setCenter] = useState<[number, number, number]>([0, 0, 0])
@@ -436,25 +441,29 @@ const Grid = ({ update }: GridProps): React.JSX.Element | null => {
           depth: sign(cameraDirection[1])
         }}
       />
-      <AxisGrid
-        axis="xz"
-        center={center}
-        size={size}
-        divisions={[numberOfDivisions[0], numberOfDivisions[2]]}
-        offset={{ value: offset, direction: sign(cameraDirection[1]) }}
-      />
-      <AxisLabels
-        axis="xz"
-        center={center}
-        size={size}
-        range={range.z}
-        division={numberOfDivisions[2]}
-        offset={{
-          value: offset,
-          direction: sign(cameraDirection[1]),
-          depth: sign(cameraDirection[0])
-        }}
-      />
+      {dimension === 3 ? (
+        <>
+          <AxisGrid
+            axis="xz"
+            center={center}
+            size={size}
+            divisions={[numberOfDivisions[0], numberOfDivisions[2]]}
+            offset={{ value: offset, direction: sign(cameraDirection[1]) }}
+          />
+          <AxisLabels
+            axis="xz"
+            center={center}
+            size={size}
+            range={range.z}
+            division={numberOfDivisions[2]}
+            offset={{
+              value: offset,
+              direction: sign(cameraDirection[1]),
+              depth: sign(cameraDirection[0])
+            }}
+          />
+        </>
+      ) : null}
       <AxisGrid
         axis="yz"
         center={center}
