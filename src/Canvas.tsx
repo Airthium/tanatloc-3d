@@ -19,13 +19,12 @@ import Grid from './helpers/grid'
 import ZoomToSelection from './helpers/zoomToSelection'
 import SectionView from './helpers/sectionView'
 import Colorbar from './helpers/colorbar'
+import Light from './helpers/light'
 
 import Header from './header'
 import Parts from './Parts'
 
 import style from './Canvas.module.css'
-
-// TODO auto zoom to fit at first part loaded
 
 /**
  * MyCanvas
@@ -34,11 +33,6 @@ import style from './Canvas.module.css'
 const MyCanvas = (): React.JSX.Element => {
   // Ref
   const containerDiv = useRef(null!)
-
-  const mainView = useRef<{
-    scene: THREE.Scene
-    camera: THREE.PerspectiveCamera
-  }>(null!)
   const mainViewControls = useRef(null!)
 
   // State
@@ -96,7 +90,7 @@ const MyCanvas = (): React.JSX.Element => {
         >
           <Hud renderPriority={1}>
             <MainContextFiller controls={mainViewControls.current} />
-            <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+            <PerspectiveCamera makeDefault position={[-1, -1, -5]} />
             <Grid update={controlsUpdate} />
             <ZoomToSelection />
             <SectionView />
@@ -105,11 +99,7 @@ const MyCanvas = (): React.JSX.Element => {
               onChange={onMainViewControls}
               noRotate={dimension !== 3}
             />
-            <ambientLight />
-            <pointLight
-              position={mainView.current?.camera.position}
-              decay={0}
-            />
+            <Light update={controlsUpdate} />
             <Parts />
           </Hud>
 

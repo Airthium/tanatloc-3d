@@ -7,6 +7,7 @@ import {
   useState
 } from 'react'
 import { Buffer } from 'buffer'
+import { ThreeEvent } from '@react-three/fiber'
 import { Wireframe } from '@react-three/drei'
 import {
   BufferGeometry,
@@ -20,6 +21,8 @@ import { Lut } from 'three/examples/jsm/math/Lut'
 
 import { Context, MyCanvasPart } from '../context'
 import { setGeometryDimension, setLutMax, setLutMin } from '../context/actions'
+
+import zoomToFit from '../tools/zoomToFit'
 
 /**
  * Props
@@ -41,6 +44,21 @@ export interface Geometry3DProps {
   scene: GLTF['scene']
 }
 
+export interface Hover {
+  index: number
+  distance: number
+}
+
+export interface Geometry3DFaceProps {
+  child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
+  index: number
+  hover: Hover
+  selected: number[]
+  onPointerMove: (event: ThreeEvent<PointerEvent>, index: number) => void
+  onPointerLeave: (index: number) => void
+  onClick: () => void
+}
+
 export interface MeshProps {
   scene: GLTF['scene']
 }
@@ -51,6 +69,9 @@ export interface ResultProps {
 
 // Hover color
 const hoverColor = 0xfad114
+
+// Select color
+const selectColor = 0xee9817
 
 /**
  * Geometry 2D
@@ -123,6 +144,7 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
     <>
       {children.map((child, index) => {
         const geometry = child.geometry
+        geometry.computeVertexNormals()
         const material = child.material
         const children = child.children
 
@@ -152,6 +174,7 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
             />
             {children.map((subChild, subIndex) => {
               const geometry = subChild.geometry
+              geometry.computeVertexNormals()
               const material = subChild.material
               return (
                 <mesh
@@ -187,18 +210,117 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
 }
 
 /**
+ * Geometry 3D face
+ * @param props Props
+ * @returns Geometry3DFace
+ */
+const Geometry3DFace = ({
+  child,
+  index,
+  hover,
+  selected,
+  onPointerMove,
+  onPointerLeave,
+  onClick
+}: Geometry3DFaceProps) => {
+  // Context
+  const {
+    props: { selection },
+    display,
+    sectionView
+  } = useContext(Context)
+
+  // Geometry
+  const geometry = useMemo(() => {
+    child.geometry.computeVertexNormals()
+    return child.geometry
+  }, [child])
+
+  // Material
+  const material = useMemo(() => child.material, [child])
+
+  /**
+   * On pointer move
+   * @param event Event
+   */
+  const onInternalPointerMove = useCallback(
+    (event: ThreeEvent<PointerEvent>): void => {
+      onPointerMove(event, index)
+    },
+    [index, onPointerMove]
+  )
+
+  /**
+   * On pointer leave
+   */
+  const onInternalPointerLeave = useCallback((): void => {
+    onPointerLeave(index)
+  }, [index, onPointerLeave])
+
+  /**
+   * On click
+   */
+  const onInternalClick = useCallback((): void => {
+    onClick()
+  }, [onClick])
+
+  // Color
+  const color = useMemo(() => {
+    if (selection === 'face') {
+      if (selected.includes(index)) return selectColor
+      return hover.index === index ? hoverColor : material.color
+    } else if (selection === 'solid') {
+      if (selected.length) return selectColor
+      return hover.index === -1 ? material.color : hoverColor
+    } else return material.color
+  }, [index, hover, selected, selection, material])
+
+  /**
+   * Render
+   */
+  return (
+    <mesh
+      name={child.name}
+      uuid={child.userData.uuid}
+      userData={child.userData}
+      onPointerMove={onInternalPointerMove}
+      onPointerLeave={onInternalPointerLeave}
+      onClick={onInternalClick}
+    >
+      <primitive object={geometry} />
+      <meshPhysicalMaterial
+        side={2}
+        color={color}
+        metalness={0.5}
+        roughness={0.5}
+        depthWrite={false}
+        transparent
+        opacity={display.transparent ? 0.5 : 1}
+        clippingPlanes={
+          sectionView.enabled && sectionView.clippingPlane
+            ? [sectionView.clippingPlane]
+            : []
+        }
+      />
+    </mesh>
+  )
+}
+
+/**
  * Geometry3D
  * @param props Props
  * @returns Geometry3D
  */
 const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
   // State
-  const [hover, setHover] = useState<number>(-1)
+  const [hover, setHover] = useState<Hover>({
+    index: -1,
+    distance: Infinity
+  })
+  const [selected, setSelected] = useState<number[]>([])
 
   // Context
   const {
-    display,
-    sectionView,
     geometry: { dimension },
     dispatch
   } = useContext(Context)
@@ -221,19 +343,35 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
   )
 
   /**
-   * On pointer over face
+   * On pointer move
+   * @param event Event
    * @param index
    */
-  const onPointerOverFace = useCallback((index: number) => {
-    setHover(index)
-  }, [])
+  const onPointerMove = useCallback(
+    (event: ThreeEvent<PointerEvent>, index: number) => {
+      const distance = event.distance
+      if (distance < hover.distance) setHover({ index, distance })
+    },
+    [hover]
+  )
 
   /**
-   * On pointer out face
+   * On pointer move
    */
-  const onPointerOutFace = useCallback(() => {
-    setHover(-1)
-  }, [])
+  const onPointerLeave = useCallback(
+    (index: number) => {
+      if (index === hover.index) setHover({ index: -1, distance: Infinity })
+    },
+    [hover]
+  )
+
+  const onClick = useCallback(() => {
+    const index = hover.index
+
+    const pos = selected.findIndex((s) => s === index)
+    if (pos === -1) setSelected((prev) => [...prev, index])
+    else setSelected((prev) => [...prev.slice(0, pos), ...prev.slice(pos + 1)])
+  }, [hover, selected])
 
   /**
    * Render
@@ -247,37 +385,18 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
           uuid={child.userData.uuid}
           userData={child.userData}
         >
-          {child.children.map((subChild, subIndex) => {
-            const geometry = subChild.geometry
-            const material = subChild.material
-
-            return (
-              <mesh
-                key={subChild.uuid}
-                name={subChild.name}
-                uuid={subChild.userData.uuid}
-                userData={subChild.userData}
-                onPointerOver={() => onPointerOverFace(subIndex)}
-                onPointerOut={onPointerOutFace}
-              >
-                <primitive object={geometry} />
-                <meshPhysicalMaterial
-                  side={2}
-                  color={hover === subIndex ? hoverColor : material.color}
-                  metalness={0.5}
-                  roughness={0.5}
-                  depthWrite={false}
-                  transparent
-                  opacity={display.transparent ? 0.5 : 1}
-                  clippingPlanes={
-                    sectionView.enabled && sectionView.clippingPlane
-                      ? [sectionView.clippingPlane]
-                      : []
-                  }
-                />
-              </mesh>
-            )
-          })}
+          {child.children.map((subChild, subIndex) => (
+            <Geometry3DFace
+              key={subChild.uuid}
+              child={subChild}
+              index={subIndex}
+              hover={hover}
+              selected={selected}
+              onPointerMove={onPointerMove}
+              onPointerLeave={onPointerLeave}
+              onClick={onClick}
+            />
+          ))}
         </mesh>
       ))}
     </>
@@ -484,6 +603,9 @@ export const PartLoader = ({
   // State
   const [gltf, setGltf] = useState<GLTF>()
 
+  // Context
+  const { mainView } = useContext(Context)
+
   // GLTF load
   useEffect(() => {
     const blob = new Blob([Buffer.from(part.buffer)])
@@ -499,6 +621,18 @@ export const PartLoader = ({
       console.error
     )
   }, [part])
+
+  // Zoom to fit
+  useEffect(() => {
+    if (!mainView.scene || !mainView.camera || !mainView.controls) return
+
+    zoomToFit(mainView.scene, mainView.camera, mainView.controls)
+  }, [
+    mainView.scene,
+    mainView.scene?.children,
+    mainView.camera,
+    mainView.controls
+  ])
 
   /**
    * Render

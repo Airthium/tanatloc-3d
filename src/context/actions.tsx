@@ -17,6 +17,16 @@ export const setPropsParts = (parts?: MyCanvasPart[]) => ({
 })
 
 /**
+ * Set props slection
+ * @param selection Selection
+ * @returns Action
+ */
+export const setPropsSelection = (selection?: string) => ({
+  type: actionTypes.SETPROPSSELECTION,
+  value: selection
+})
+
+/**
  * Set props data
  * @param data Data
  * @returns Action

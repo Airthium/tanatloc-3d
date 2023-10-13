@@ -62,6 +62,7 @@ export interface ProviderProps {
  */
 export interface MyCanvasProps {
   parts?: MyCanvasPart[]
+  selection?: 'solid' | 'face' | 'edge'
   data?: any
   filters?: any
   snapshot?: MyCanvasPropsSnapshot
@@ -123,6 +124,7 @@ export interface MyCanvasPropsSnapshot {
 export const initialContextState: ContextState = {
   props: {
     parts: undefined,
+    selection: undefined,
     data: undefined,
     filters: undefined,
     snapshot: undefined
@@ -166,6 +168,7 @@ export const initialContextState: ContextState = {
  */
 export const actionTypes = {
   SETPROPSPARTS: 'SETPROPSPARTS',
+  SETPROPSSELECTION: 'SETPROPSSELECTION',
   SETPROPSDATA: 'SETPROPSDATA',
   SETPROPSFILTERS: 'SETPROPSFILTERS',
   SETPROPSSNAPSHOTPROJECT: 'SETPROPSSNAPSHOTPROJECT',
@@ -212,6 +215,14 @@ export const reducer = (
         props: {
           ...state.props,
           parts: action.value
+        }
+      }
+    case actionTypes.SETPROPSSELECTION:
+      return {
+        ...state,
+        props: {
+          ...state.props,
+          selection: action.value
         }
       }
     case actionTypes.SETPROPSDATA:

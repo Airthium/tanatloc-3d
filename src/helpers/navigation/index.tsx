@@ -47,7 +47,7 @@ export interface FaceProps {
   index: number
   face: IFace
   hover?: boolean
-  onPointerOver: (index: number, event: ThreeEvent<PointerEvent>) => void
+  onPointerMove: (event: ThreeEvent<PointerEvent>, index: number) => void
   onPointerLeave: (index: number) => void
   onClick: () => void
 }
@@ -182,7 +182,7 @@ const Face = ({
   index,
   face,
   hover,
-  onPointerOver,
+  onPointerMove,
   onPointerLeave,
   onClick
 }: FaceProps): React.JSX.Element => {
@@ -210,13 +210,13 @@ const Face = ({
   }, [face])
 
   /**
-   * On pointer enter (internal)
+   * On pointer move (internal)
    */
-  const onInternalPointerOver = useCallback(
+  const onInternalPointerMove = useCallback(
     (event: ThreeEvent<PointerEvent>) => {
-      onPointerOver(index, event)
+      onPointerMove(event, index)
     },
-    [index, onPointerOver]
+    [index, onPointerMove]
   )
 
   /**
@@ -235,7 +235,7 @@ const Face = ({
   return (
     <group
       ref={ref}
-      onPointerMove={onInternalPointerOver}
+      onPointerMove={onInternalPointerMove}
       onPointerLeave={onInternalPointerLeave}
       onClick={onClick}
     >
@@ -288,7 +288,7 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
   const [aspectRatio, setAspectRatio] = useState<number>(1)
   const [hover, setHover] = useState<{ index: number; distance: number }>({
     index: -1,
-    distance: Number.MAX_VALUE
+    distance: Infinity
   })
 
   // Camera position
@@ -324,11 +324,12 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
   })
 
   /**
-   * On pointer over
+   * On pointer move
+   * @param event Event
    * @param index Index
    */
-  const onPointerOver = useCallback(
-    (index: number, event: ThreeEvent<PointerEvent>): void => {
+  const onPointerMove = useCallback(
+    (event: ThreeEvent<PointerEvent>, index: number): void => {
       const distance = event.distance
       if (distance < hover.distance) setHover({ index, distance })
     },
@@ -341,8 +342,7 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
    */
   const onPointerLeave = useCallback(
     (index: number): void => {
-      if (index === hover.index)
-        setHover({ index: -1, distance: Number.MAX_VALUE })
+      if (index === hover.index) setHover({ index: -1, distance: Infinity })
     },
     [hover]
   )
@@ -394,7 +394,7 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
           index={index}
           face={face}
           hover={hover.index === index}
-          onPointerOver={onPointerOver}
+          onPointerMove={onPointerMove}
           onPointerLeave={onPointerLeave}
           onClick={onClick}
         />

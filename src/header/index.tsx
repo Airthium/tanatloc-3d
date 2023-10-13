@@ -67,7 +67,7 @@ const Header = ({ oneResult }: HeaderProps) => {
         <div>
           <Collapse
             expandIcon={PostprocessingCollapseIcon}
-            activeKey={'post-processing'}
+            defaultActiveKey={'post-processing'}
             items={[
               {
                 key: 'post-processing',
@@ -91,7 +91,7 @@ const Header = ({ oneResult }: HeaderProps) => {
       <div>
         <Collapse
           expandIcon={ToolsCollapseIcon}
-          activeKey={'tools'}
+          defaultActiveKey={'tools'}
           items={[
             {
               key: 'tools',

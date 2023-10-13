@@ -5,6 +5,7 @@ import {
   setPropsData,
   setPropsFilters,
   setPropsParts,
+  setPropsSelection,
   setPropsSnapshotProject
 } from './actions'
 
@@ -21,6 +22,11 @@ const PropsContextFiller = (props: MyCanvasProps): null => {
   useEffect(() => {
     dispatch(setPropsParts(props.parts))
   }, [props.parts, dispatch])
+
+  // Selection
+  useEffect(() => {
+    dispatch(setPropsSelection(props.selection))
+  }, [props.selection, dispatch])
 
   // Data
   useEffect(() => {

@@ -3476,6 +3476,8 @@ root.render(
       parts={[partOne /*, partTwo, partThree, partFour*/]}
       // data={[]}
       // filters={[]}
+      // selection="face"
+      // selection="solid"
       snapshot={{
         project: { apiRoute: async () => console.log('Snapshot export') }
       }}
