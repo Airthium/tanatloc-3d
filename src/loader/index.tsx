@@ -163,7 +163,6 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
               color={hoverFace === index ? hoverColor : material.color}
               metalness={0.5}
               roughness={0.5}
-              depthWrite={false}
               transparent
               opacity={display.transparent ? 0.5 : 1}
               clippingPlanes={
@@ -293,7 +292,6 @@ const Geometry3DFace = ({
         color={color}
         metalness={0.5}
         roughness={0.5}
-        depthWrite={false}
         transparent
         opacity={display.transparent ? 0.5 : 1}
         clippingPlanes={
@@ -552,7 +550,6 @@ const Result = ({ scene }: ResultProps): React.JSX.Element => {
       <meshBasicMaterial
         vertexColors
         side={2}
-        depthWrite={false}
         transparent
         opacity={display.transparent ? 0.5 : 1}
         clippingPlanes={
