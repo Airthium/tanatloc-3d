@@ -36,7 +36,8 @@ const ZoomToSelection = (): null => {
 
     // Selection box
     div = document.createElement('div')
-    div.style.position = 'fixed'
+    div.style.position = 'absolute'
+    div.style.display = 'none'
     div.style.border = '1px solid #55aaff'
     div.style.backgroundColor = 'rgba(75, 160, 255, 0.3)'
     div.style.pointerEvents = 'none'

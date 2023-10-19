@@ -1,12 +1,20 @@
 import { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { Euler, Line3, PerspectiveCamera, Plane, Vector2, Vector3 } from 'three'
+import {
+  Euler,
+  Line3,
+  PerspectiveCamera,
+  Plane,
+  Raycaster,
+  Vector2,
+  Vector3
+} from 'three'
+import { ThreeEvent } from '@react-three/fiber'
+import { TrackballControlsProps } from '@react-three/drei'
 
 import { Context } from '../../context'
 import { setSectionViewClippingPlane } from '../../context/actions'
 
 import { computeSceneBoundingBox } from '../../tools'
-import { ThreeEvent } from '@react-three/fiber'
-import { TrackballControlsProps } from '@react-three/drei'
 
 /**
  * Props
@@ -49,12 +57,17 @@ const initialData = {
   intersection: new Vector3(),
   offset: new Vector3(),
   rotation: new Euler(),
-  pointer: new Vector2()
+  pointer: new Vector2(),
+  controlPlane: new Plane()
 }
 
 // Runtime data
 const runtimeData = {
-  controlPoint: new Vector3()
+  raycaster: new Raycaster(),
+  position: new Vector3(),
+  scale: 1,
+  controlPoint: new Vector3(),
+  intersection: new Vector3()
 }
 
 // Camera directions
@@ -68,35 +81,35 @@ const cameraDirections = {
  * On start
  * @param enabled Enabled
  * @param sceneChildren Scene children
- * @returns { success: boolean, position: THREE.Vector3, scale: number }
+ * @returns { success: boolean }
  */
 const onStart = (
   enabled: boolean,
   sceneChildren?: THREE.Scene['children']
-): { success: boolean; position?: THREE.Vector3; scale?: number } => {
+): { success: boolean } => {
   if (!enabled || !sceneChildren) return { success: false }
 
   // Bounding box
   const boundingBox = computeSceneBoundingBox(sceneChildren)
 
   // Center
-  const center = new Vector3()
-  boundingBox.getCenter(center)
+  boundingBox.getCenter(runtimeData.position)
 
   // Scale
   const size = new Vector3()
   boundingBox.getSize(size)
   const maxSize = Math.max(size.x, size.y, size.z)
-  const scale = maxSize * 1.2
+  runtimeData.scale = maxSize * 1.2
 
   // Update clipping plane
-  clippingPlane.setFromNormalAndCoplanarPoint(defaultNormal, center)
+  clippingPlane.setFromNormalAndCoplanarPoint(
+    defaultNormal,
+    runtimeData.position
+  )
 
   // Return
   return {
-    success: true,
-    position: center,
-    scale: scale
+    success: true
   }
 }
 
@@ -105,36 +118,35 @@ const onStart = (
  * @param snap Snap
  * @param sceneChildren Scene children
  * @param group Group
- * @returns { success: boolean, position: THREE.Vector3 }
+ * @returns { success: boolean }
  */
 const onSnap = (
   snap?: THREE.Vector3,
   sceneChildren?: THREE.Scene['children'],
   group?: THREE.Group
-): { success: boolean; position?: THREE.Vector3 } => {
+): { success: boolean } => {
   if (!snap || !sceneChildren || !group) return { success: false }
 
   // Bounding box
   const boundingBox = computeSceneBoundingBox(sceneChildren)
 
   // Center
-  const center = new Vector3()
-  boundingBox.getCenter(center)
+  boundingBox.getCenter(runtimeData.position)
 
   // Group update
-  const lookAt = center.clone().add(snap)
+  const lookAt = runtimeData.position.clone().add(snap)
+  group.position.copy(runtimeData.position)
   group.lookAt(lookAt)
 
   // Clipping plane
   clippingPlane.setFromNormalAndCoplanarPoint(
     snap.clone().multiplyScalar(-1),
-    center
+    runtimeData.position
   )
 
   // Return
   return {
-    success: true,
-    position: center
+    success: true
   }
 }
 
@@ -160,6 +172,19 @@ const onFlip = (flip?: number, group?: THREE.Group): { success: boolean } => {
 }
 
 /**
+ * Set camera directions
+ * @param camera Camera
+ */
+const setCameraDirections = (camera: PerspectiveCamera) => {
+  camera.getWorldDirection(cameraDirections.forward)
+  cameraDirections.forward.normalize()
+  cameraDirections.up.copy(camera.up).normalize()
+  cameraDirections.right
+    .crossVectors(cameraDirections.up, cameraDirections.forward)
+    .normalize()
+}
+
+/**
  * Set initial data
  * @param intersection Intersection
  * @param rotation Rotation
@@ -180,19 +205,10 @@ const setInitialData = (
   initialData.offset.copy(intersection).sub(initialPosition)
   initialData.rotation.copy(group.rotation)
   initialData.pointer.copy(pointer)
-}
-
-/**
- * Set camera directions
- * @param camera Camera
- */
-const setCameraDirections = (camera: PerspectiveCamera) => {
-  camera.getWorldDirection(cameraDirections.forward)
-  cameraDirections.forward.normalize()
-  cameraDirections.up.copy(camera.up).normalize()
-  cameraDirections.right
-    .crossVectors(cameraDirections.up, cameraDirections.forward)
-    .normalize()
+  initialData.controlPlane.setFromNormalAndCoplanarPoint(
+    cameraDirections.forward,
+    intersection
+  )
 }
 
 /**
@@ -200,9 +216,7 @@ const setCameraDirections = (camera: PerspectiveCamera) => {
  * @param controller Controller
  */
 const updateClippingPlane = (controller: THREE.Group) => {
-  const normal = new Vector3(0, 0, 1)
-    .applyQuaternion(controller.quaternion)
-    .multiplyScalar(-1)
+  const normal = defaultNormal.clone().applyQuaternion(controller.quaternion)
   clippingPlane.setFromNormalAndCoplanarPoint(normal, controller.position)
 }
 
@@ -251,16 +265,14 @@ const _onPointerDown = (
   controls.enabled = false
 
   // Type (dome / plane)
-  const type = intersection?.object.type as Type
+  const type = intersection.object.type as Type
+
+  // Camera directions
+  setCameraDirections(camera)
 
   // Initial data
   const pointer = event.pointer
   setInitialData(group, intersection.point, pointer)
-
-  // Camera directions
-  if (type === 'Dome') {
-    setCameraDirections(camera)
-  }
 
   // Return
   return {
@@ -274,15 +286,20 @@ const _onPointerDown = (
  * @param enabled Enabled
  * @param event Event
  * @param group Group
+ * @param plane Plane
  * @param type Type
+ * @param camera Camera
  */
 const _onPointerMove = (
   enabled: boolean,
   event: ThreeEvent<PointerEvent>,
   group: THREE.Group,
-  type: Type
+  plane: THREE.Mesh,
+  type: Type,
+  camera?: PerspectiveCamera
 ) => {
   if (!enabled) return
+  if (!camera) return
 
   if (type === 'Dome') {
     const pointer = event.pointer
@@ -300,14 +317,14 @@ const _onPointerMove = (
     // Update clipping plane
     updateClippingPlane(group)
   } else if (type === 'Plane') {
-    // TODO nothing happens
-    const intersection = event.intersections.find(
-      (intersection) => intersection.object.type === 'Plane'
+    runtimeData.raycaster.setFromCamera(event.pointer, camera)
+    runtimeData.raycaster.ray.intersectPlane(
+      initialData.controlPlane,
+      runtimeData.intersection
     )
-    if (!intersection) return
 
     // Translation
-    const point = intersection.point.clone()
+    const point = runtimeData.intersection.clone()
     point.sub(initialData.offset)
 
     initialData.line.closestPointToPoint(point, false, runtimeData.controlPoint)
@@ -334,6 +351,7 @@ const _onPointerUp = (controls?: TrackballControlsProps) => {
 const SectionView = (): React.JSX.Element | null => {
   // Ref
   const ref = useRef<THREE.Group>(null!)
+  const planeRef = useRef<THREE.Mesh>(null!)
 
   // State
   const [position, setPosition] = useState<THREE.Vector3>()
@@ -374,9 +392,16 @@ const SectionView = (): React.JSX.Element | null => {
    */
   const onPointerMove = useCallback(
     (event: ThreeEvent<PointerEvent>) => {
-      _onPointerMove(enabled, event, ref.current, type)
+      _onPointerMove(
+        enabled,
+        event,
+        ref.current,
+        planeRef.current,
+        type,
+        mainView.camera
+      )
     },
-    [enabled, type]
+    [enabled, type, mainView.camera]
   )
 
   /**
@@ -430,26 +455,23 @@ const SectionView = (): React.JSX.Element | null => {
 
   // Start
   useEffect(() => {
-    const { success, position, scale } = onStart(
-      sectionView.enabled,
-      mainView.scene?.children
-    )
+    const { success } = onStart(sectionView.enabled, mainView.scene?.children)
     if (!success) return
 
-    setPosition(position)
-    setScale(scale!)
+    setPosition(runtimeData.position)
+    setScale(runtimeData.scale)
   }, [mainView.scene?.children, sectionView.enabled, dispatch])
 
   // Snap
   useEffect(() => {
-    const { success, position } = onSnap(
+    const { success } = onSnap(
       sectionView.snap,
       mainView.scene?.children,
       ref.current
     )
     if (!success) return
 
-    setPosition(position)
+    setPosition(runtimeData.position)
   }, [mainView.scene?.children, sectionView.snap])
 
   // Flip
@@ -472,6 +494,7 @@ const SectionView = (): React.JSX.Element | null => {
       onPointerOut={onPointerOut}
     >
       <mesh
+        ref={planeRef}
         type="Plane"
         visible={!sectionView.hidePlane}
         onPointerMove={onPointerMovePlane}
