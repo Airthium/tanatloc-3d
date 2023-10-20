@@ -1,48 +1,44 @@
 {
   "name": "tanatloc-3d",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
+  "types": "index.d.ts",
+  "main": "src/Canvas.tsx",
+  "scripts": {
+    "prettier": "prettier -l '**/*.{js,ts,json,md}'",
+    "test": "jest --coverage",
+    "build": "tsc --declaration"
+  },
   "dependencies": {
     "@ant-design/icons": "5.2.6",
     "@react-three/drei": "9.88.3",
     "@react-three/fiber": "8.14.6",
+    "antd": "5.10.1",
+    "buffer": "6.0.3",
+    "react": ">=18.2.0",
+    "react-dom": ">=18.2.0",
+    "three": "0.157.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.0",
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
+    "@babel/preset-react": "^7.22.15",
+    "@babel/preset-typescript": "^7.23.2",
+    "@react-three/test-renderer": "^8.2.0",
     "@types/jest": "29.5.6",
     "@types/node": "18.18.5",
     "@types/react": "18.2.28",
     "@types/react-dom": "18.2.13",
     "@types/three": "0.157.0",
-    "antd": "5.10.1",
-    "buffer": "6.0.3",
+    "depcheck": "^1.4.7",
+    "jest": "^29.7.0",
+    "prettier": "^3.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-scripts": "5.0.1",
-    "three": "0.157.0",
+    "tsc": "^2.0.4",
     "typescript": "5.2.2"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "7.21.11"
-  }
+  "packageManager": "yarn@3.6.4"
 }

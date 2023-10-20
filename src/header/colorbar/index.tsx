@@ -1,10 +1,10 @@
+import { useCallback, useContext, useState } from 'react'
 import { Button, Dropdown, Form, InputNumber, Modal, Tooltip } from 'antd'
 import {
   ArrowsAltOutlined,
   BgColorsOutlined,
   ColumnWidthOutlined
 } from '@ant-design/icons'
-import { useCallback, useContext, useState } from 'react'
 import { useForm } from 'antd/es/form/Form'
 
 import { Context } from '../../context'

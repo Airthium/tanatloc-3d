@@ -14,6 +14,9 @@ export interface ArrowProps {
   text?: string
 }
 
+// Axis
+const axis = new Vector3()
+
 /**
  * Arrow
  * @param props Props
@@ -43,7 +46,7 @@ const Arrow = ({
     if (direction.y > 0.99999) ref.current.quaternion.set(0, 0, 0, 1)
     else if (direction.y < -0.99999) ref.current.quaternion.set(1, 0, 0, 0)
     else {
-      const axis = new Vector3(direction.z, 0, -direction.x).normalize()
+      axis.set(direction.z, 0, -direction.x).normalize()
       const angle = Math.acos(direction.y)
       ref.current.quaternion.setFromAxisAngle(axis, angle)
     }

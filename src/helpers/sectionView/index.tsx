@@ -501,9 +501,11 @@ const SectionView = (): React.JSX.Element | null => {
         onPointerOut={onPointerOutPlane}
       >
         <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial
-          color={hoverPlane ? hoverColor : color}
+        <meshPhysicalMaterial
           side={2}
+          color={hoverPlane ? hoverColor : color}
+          metalness={0.5}
+          roughness={0.5}
           transparent
           opacity={0.25}
         />
@@ -515,9 +517,11 @@ const SectionView = (): React.JSX.Element | null => {
         onPointerOut={onPointerOutDome}
       >
         <sphereGeometry args={[0.2, 32, 32, Math.PI, -Math.PI]} />
-        <meshBasicMaterial
-          color={hoverDome ? hoverColor : color}
+        <meshPhysicalMaterial
           side={2}
+          color={hoverDome ? hoverColor : color}
+          metalness={0.5}
+          roughness={0.5}
           transparent
           opacity={0.25}
         />

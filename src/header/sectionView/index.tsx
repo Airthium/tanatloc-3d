@@ -16,7 +16,10 @@ import {
   setSectionViewSnap
 } from '../../context/actions'
 
-import style from '../index.module.css'
+// Directions
+const X = new Vector3(1, 0, 0)
+const Y = new Vector3(0, 1, 0)
+const Z = new Vector3(0, 0, 1)
 
 /**
  * SectionView
@@ -44,21 +47,21 @@ const SectionView = (): React.JSX.Element => {
    * On section view snap X
    */
   const onSectionViewSnapX = useCallback(() => {
-    dispatch(setSectionViewSnap(new Vector3(1, 0, 0)))
+    dispatch(setSectionViewSnap(X))
   }, [dispatch])
 
   /**
    * On section view snap Y
    */
   const onSectionViewSnapY = useCallback(() => {
-    dispatch(setSectionViewSnap(new Vector3(0, 1, 0)))
+    dispatch(setSectionViewSnap(Y))
   }, [dispatch])
 
   /**
    * On section view snap Z
    */
   const onSectionViewSnapZ = useCallback(() => {
-    dispatch(setSectionViewSnap(new Vector3(0, 0, 1)))
+    dispatch(setSectionViewSnap(Z))
   }, [dispatch])
 
   /**
@@ -98,17 +101,17 @@ const SectionView = (): React.JSX.Element => {
             />
           </Tooltip>
           <Tooltip title="Snap plane to X" placement="left">
-            <Button className={style.iconButton} onClick={onSectionViewSnapX}>
+            <Button className="tanatloc3d_header_iconButton" onClick={onSectionViewSnapX}>
               X
             </Button>
           </Tooltip>
           <Tooltip title="Snap plane to Y" placement="left">
-            <Button className={style.iconButton} onClick={onSectionViewSnapY}>
+            <Button className="tanatloc3d_header_iconButton" onClick={onSectionViewSnapY}>
               Y
             </Button>
           </Tooltip>
           <Tooltip title="Snap plane to Z" placement="left">
-            <Button className={style.iconButton} onClick={onSectionViewSnapZ}>
+            <Button className="tanatloc3d_header_iconButton" onClick={onSectionViewSnapZ}>
               Z
             </Button>
           </Tooltip>

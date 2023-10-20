@@ -1,0 +1,56 @@
+.tanatloc3d_header {
+    position: absolute;
+    background: none;
+    background-color: transparent;
+    height: unset;
+    width: 200px;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 10px 10px 0 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.tanatloc3d_header .ant-collapse {
+    background-color: #f5f5f5;
+}
+
+.tanatloc3d_header .ant-collapse-header {
+    padding: 16px 20px !important;
+}
+
+.tanatloc3d_header .ant-collapse-expand-icon {
+    padding-inline-end: 0 !important;
+}
+
+.tanatloc3d_header .ant-collapse-arrow {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+}
+
+.tanatloc3d_header .ant-collapse-content-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: unset;
+    gap: 10px;
+    max-height: 70vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.tanatloc3d_header .ant-divider {
+    margin: 10px 0;
+}
+
+.tanatloc3d_header_iconButton {
+    width: 32px;
+    height: 32px;
+    padding-inline-start: 0;
+    padding-inline-end: 0;
+}

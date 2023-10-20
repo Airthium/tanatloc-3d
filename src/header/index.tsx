@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import { Button, Collapse, Divider, Layout, Tooltip } from 'antd'
 import {
   DatabaseOutlined,
@@ -7,6 +8,8 @@ import {
   ToolOutlined
 } from '@ant-design/icons'
 
+import { Context } from '../context'
+
 import Snapshot from './snapshot'
 import Display from './display'
 import Zoom from './zoom'
@@ -14,9 +17,6 @@ import SectionView from './sectionView'
 import Colorbar from './colorbar'
 import Results from './results'
 
-import style from './index.module.css'
-import { useContext } from 'react'
-import { Context } from '../context'
 
 /**
  * Props
@@ -62,7 +62,7 @@ const Header = ({ oneResult }: HeaderProps) => {
    * Render
    */
   return (
-    <Layout.Header className={style.header}>
+    <Layout.Header className="tanatloc3d_header">
       {data || filters ? (
         <div>
           <Collapse
