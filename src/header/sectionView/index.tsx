@@ -16,6 +16,8 @@ import {
   setSectionViewSnap
 } from '../../context/actions'
 
+import style from '../../style/Header'
+
 // Directions
 const X = new Vector3(1, 0, 0)
 const Y = new Vector3(0, 1, 0)
@@ -101,17 +103,17 @@ const SectionView = (): React.JSX.Element => {
             />
           </Tooltip>
           <Tooltip title="Snap plane to X" placement="left">
-            <Button className="tanatloc3d_header_iconButton" onClick={onSectionViewSnapX}>
+            <Button style={style.iconButton} onClick={onSectionViewSnapX}>
               X
             </Button>
           </Tooltip>
           <Tooltip title="Snap plane to Y" placement="left">
-            <Button className="tanatloc3d_header_iconButton" onClick={onSectionViewSnapY}>
+            <Button style={style.iconButton} onClick={onSectionViewSnapY}>
               Y
             </Button>
           </Tooltip>
           <Tooltip title="Snap plane to Z" placement="left">
-            <Button className="tanatloc3d_header_iconButton" onClick={onSectionViewSnapZ}>
+            <Button style={style.iconButton} onClick={onSectionViewSnapZ}>
               Z
             </Button>
           </Tooltip>

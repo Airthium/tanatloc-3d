@@ -2,7 +2,6 @@ import { useContext } from 'react'
 import { Button, Collapse, Divider, Layout, Tooltip } from 'antd'
 import {
   DatabaseOutlined,
-  DownOutlined,
   FilterOutlined,
   HighlightOutlined,
   ToolOutlined
@@ -17,6 +16,7 @@ import SectionView from './sectionView'
 import Colorbar from './colorbar'
 import Results from './results'
 
+import style from '../style/Header'
 
 /**
  * Props
@@ -24,28 +24,6 @@ import Results from './results'
 export interface HeaderProps {
   oneResult: boolean
 }
-
-/**
- * PostprocessingCollapseIcon
- * @returns PostprocessingCollapseIcon
- */
-const PostprocessingCollapseIcon = () => (
-  <Tooltip title="Post-processing">
-    <DownOutlined style={{ fontSize: 16 }} />
-    <HighlightOutlined style={{ fontSize: 16 }} />
-  </Tooltip>
-)
-
-/**
- * ToolsCollapseIcon
- * @returns ToolsCollapseIcon
- */
-const ToolsCollapseIcon = () => (
-  <Tooltip title="Tools">
-    <DownOutlined style={{ fontSize: 16 }} />
-    <ToolOutlined style={{ fontSize: 16 }} />
-  </Tooltip>
-)
 
 /**
  * Header
@@ -62,56 +40,70 @@ const Header = ({ oneResult }: HeaderProps) => {
    * Render
    */
   return (
-    <Layout.Header className="tanatloc3d_header">
+    <Layout.Header style={style.header}>
       {data || filters ? (
         <div>
           <Collapse
-            expandIcon={PostprocessingCollapseIcon}
             defaultActiveKey={'post-processing'}
             items={[
               {
                 key: 'post-processing',
+                label: (
+                  <HighlightOutlined
+                    style={{ fontSize: 16, paddingRight: '6px' }}
+                  />
+                ),
                 children: [
-                  data && (
-                    <Tooltip key="data" title="Data" placement="left">
-                      <Button icon={<DatabaseOutlined />} />
-                    </Tooltip>
-                  ),
-                  filters && (
-                    <Tooltip key="filters" title="Filters" placement="left">
-                      <Button icon={<FilterOutlined />} />
-                    </Tooltip>
-                  )
+                  <div key="container" style={style.collapseBody}>
+                    {data ? (
+                      <Tooltip key="data" title="Data" placement="left">
+                        <Button icon={<DatabaseOutlined />} />
+                      </Tooltip>
+                    ) : null}
+                    {filters ? (
+                      <Tooltip key="filters" title="Filters" placement="left">
+                        <Button icon={<FilterOutlined />} />
+                      </Tooltip>
+                    ) : null}
+                  </div>
                 ]
               }
             ]}
+            style={style.collapse}
           />
         </div>
       ) : null}
       <div>
         <Collapse
-          expandIcon={ToolsCollapseIcon}
           defaultActiveKey={'tools'}
           items={[
             {
               key: 'tools',
+              label: (
+                <ToolOutlined style={{ fontSize: 16, paddingRight: '6px' }} />
+              ),
               children: [
-                <Snapshot key="snapshot" />,
-                <Divider key="divider-1" />,
-                <Display key="display" />,
-                <Divider key="divider-2" />,
-                <Zoom key="zoom" />,
-                <Divider key="divider-3" />,
-                <SectionView key="section-view" />,
-                oneResult && [
-                  <Divider key="divider-4" />,
-                  <Results key="results" />,
-                  <Divider key="divider-5" />,
-                  <Colorbar key="colorbar" />
-                ]
+                <div key="container" style={style.collapseBody}>
+                  <Snapshot key="snapshot" />
+                  <Divider key="divider-1" style={style.divider} />
+                  <Display key="display" />
+                  <Divider key="divider-2" style={style.divider} />
+                  <Zoom key="zoom" />
+                  <Divider key="divider-3" style={style.divider} />
+                  <SectionView key="section-view" />
+                  {oneResult ? (
+                    <>
+                      <Divider key="divider-4" style={style.divider} />
+                      <Results key="results" />
+                      <Divider key="divider-5" style={style.divider} />
+                      <Colorbar key="colorbar" />
+                    </>
+                  ) : null}
+                </div>
               ]
             }
           ]}
+          style={style.collapse}
         />
       </div>
     </Layout.Header>

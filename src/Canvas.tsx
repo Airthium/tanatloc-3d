@@ -24,7 +24,7 @@ import Light from './helpers/light'
 import Header from './header'
 import Parts from './Parts'
 
-import './style/Canvas.css'
+import style from './style/Canvas'
 
 /**
  * MyCanvas
@@ -78,9 +78,9 @@ const MyCanvas = (): React.JSX.Element => {
    * Render
    */
   return (
-    <Layout className="tanatloc3d_canvas_layout">
+    <Layout style={style.layout}>
       <Header oneResult={oneResult} />
-      <div ref={containerDiv} className="tanatloc3d_canvas_container">
+      <div ref={containerDiv} style={style.container}>
         <Canvas
           eventSource={containerDiv}
           gl={{
