@@ -3,7 +3,11 @@ import { useContext, useEffect } from 'react'
 import { Context, MyCanvasProps } from '.'
 import {
   setPropsData,
-  setPropsFilters,
+  setPropsPostProcessing,
+  setPropsOnData,
+  setPropsOnHighlight,
+  setPropsOnPostprocessing,
+  setPropsOnSelect,
   setPropsParts,
   setPropsSelection,
   setPropsSnapshotProject
@@ -33,15 +37,35 @@ const PropsContextFiller = (props: MyCanvasProps): null => {
     dispatch(setPropsData(props.data))
   }, [props.data, dispatch])
 
-  // Filters
+  // Post-processing
   useEffect(() => {
-    dispatch(setPropsFilters(props.filters))
-  }, [props.filters, dispatch])
+    dispatch(setPropsPostProcessing(props.postProcessing))
+  }, [props.postProcessing, dispatch])
 
   // Set snapshot project
   useEffect(() => {
     dispatch(setPropsSnapshotProject(props.snapshot?.project))
   }, [props.snapshot?.project, dispatch])
+
+  // On highlight
+  useEffect(() => {
+    dispatch(setPropsOnHighlight(props.onHighlight))
+  }, [props.onHighlight, dispatch])
+
+  // On select
+  useEffect(() => {
+    dispatch(setPropsOnSelect(props.onSelect))
+  }, [props.onSelect, dispatch])
+
+  // On data
+  useEffect(() => {
+    dispatch(setPropsOnData(props.onData))
+  }, [props.onData, dispatch])
+
+  // On post-processing
+  useEffect(() => {
+    dispatch(setPropsOnPostprocessing(props.onPostProcessing))
+  }, [props.onPostProcessing, dispatch])
 
   /**
    * Render

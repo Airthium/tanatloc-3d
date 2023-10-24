@@ -43,7 +43,7 @@ export type Type = 'Plane' | 'Dome' | undefined
 const color = 0xfad114
 
 // Hover color
-const hoverColor = 0xe98a15
+const hoverColor = 0xfa9814
 
 // Default plane normal
 const defaultNormal = new Vector3(0, 0, -1)

@@ -1,5 +1,5 @@
-import type { MyCanvasProps } from './src/context'
+import type { MyCanvasProps, MyCanvasPart, Selection } from './src/context'
 
-export type { MyCanvasProps }
+export type { MyCanvasProps, MyCanvasPart, Selection }
 
 export default function Tanatloc3D(props: MyCanvasProps): React.JSX.Element

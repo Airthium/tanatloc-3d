@@ -33,7 +33,7 @@ export interface HeaderProps {
 const Header = ({ oneResult }: HeaderProps) => {
   // Context
   const {
-    props: { data, filters }
+    props: { data, postProcessing, onData, onPostProcessing }
   } = useContext(Context)
 
   /**
@@ -41,7 +41,7 @@ const Header = ({ oneResult }: HeaderProps) => {
    */
   return (
     <Layout.Header style={style.header}>
-      {data || filters ? (
+      {data || postProcessing ? (
         <div>
           <Collapse
             defaultActiveKey={'post-processing'}
@@ -57,12 +57,19 @@ const Header = ({ oneResult }: HeaderProps) => {
                   <div key="container" style={style.collapseBody}>
                     {data ? (
                       <Tooltip key="data" title="Data" placement="left">
-                        <Button icon={<DatabaseOutlined />} />
+                        <Button icon={<DatabaseOutlined />} onClick={onData} />
                       </Tooltip>
                     ) : null}
-                    {filters ? (
-                      <Tooltip key="filters" title="Filters" placement="left">
-                        <Button icon={<FilterOutlined />} />
+                    {postProcessing ? (
+                      <Tooltip
+                        key="postProcessing"
+                        title="Post-processing"
+                        placement="left"
+                      >
+                        <Button
+                          icon={<FilterOutlined />}
+                          onClick={onPostProcessing}
+                        />
                       </Tooltip>
                     ) : null}
                   </div>

@@ -62,11 +62,17 @@ export interface ProviderProps {
  */
 export interface MyCanvasProps {
   parts?: MyCanvasPart[]
-  selection?: 'solid' | 'face' | 'edge'
-  data?: any
-  filters?: any
+  selection?: Selection
+  data?: boolean
+  postProcessing?: boolean
   snapshot?: MyCanvasPropsSnapshot
+  onHighlight?: (uuid?: string) => void
+  onSelect?: (uuids: string[]) => void
+  onData?: () => void
+  onPostProcessing?: () => void
 }
+
+export type Selection = 'solid' | 'face' | 'edge'
 
 export interface MyCanvasPart {
   summary: MyCanvasPartSummary
@@ -126,8 +132,12 @@ export const initialContextState: ContextState = {
     parts: undefined,
     selection: undefined,
     data: undefined,
-    filters: undefined,
-    snapshot: undefined
+    postProcessing: undefined,
+    snapshot: undefined,
+    onHighlight: undefined,
+    onSelect: undefined,
+    onData: undefined,
+    onPostProcessing: undefined
   },
   mainView: {
     gl: undefined,
@@ -170,8 +180,12 @@ export const actionTypes = {
   SETPROPSPARTS: 'SETPROPSPARTS',
   SETPROPSSELECTION: 'SETPROPSSELECTION',
   SETPROPSDATA: 'SETPROPSDATA',
-  SETPROPSFILTERS: 'SETPROPSFILTERS',
+  SETPROPSPOSTPROCESSING: 'SETPROPSPOSTPROCESSING',
   SETPROPSSNAPSHOTPROJECT: 'SETPROPSSNAPSHOTPROJECT',
+  SETPROPSONHIGHLIGHT: 'SETPROPSONHIGHLIGHT',
+  SETPROPSONSELECT: 'SETPROPSONSELECT',
+  SETPROPSONDATA: 'SETPROPSONDATA',
+  SETPROPSONPOSTPROCESSING: 'SETPROPSONPOSTPROCESSING',
   SETMAINVIEWGL: 'SETMAINVIEWGL',
   SETMAINVIEWSCENE: 'SETMAINVIEWSCENE',
   SETMAINVIEWCAMERA: 'SETMAINVIEWCAMERA',
@@ -233,12 +247,12 @@ export const reducer = (
           data: action.value
         }
       }
-    case actionTypes.SETPROPSFILTERS:
+    case actionTypes.SETPROPSPOSTPROCESSING:
       return {
         ...state,
         props: {
           ...state.props,
-          filters: action.value
+          postProcessing: action.value
         }
       }
     case actionTypes.SETPROPSSNAPSHOTPROJECT:
@@ -250,6 +264,38 @@ export const reducer = (
             ...state.props.snapshot,
             project: action.value
           }
+        }
+      }
+    case actionTypes.SETPROPSONHIGHLIGHT:
+      return {
+        ...state,
+        props: {
+          ...state.props,
+          onHighlight: action.value
+        }
+      }
+    case actionTypes.SETPROPSONSELECT:
+      return {
+        ...state,
+        props: {
+          ...state.props,
+          onSelect: action.value
+        }
+      }
+    case actionTypes.SETPROPSONDATA:
+      return {
+        ...state,
+        props: {
+          ...state.props,
+          onData: action.value
+        }
+      }
+    case actionTypes.SETPROPSONPOSTPROCESSING:
+      return {
+        ...state,
+        props: {
+          ...state.props,
+          onPostProcessing: action.value
         }
       }
     case actionTypes.SETMAINVIEWGL:

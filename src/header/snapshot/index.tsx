@@ -36,7 +36,7 @@ const projectSnapshot = (
   camera.updateProjectionMatrix()
 
   gl.clear()
-  gl.setViewport(0, 0, width, height)
+  gl.setViewport(0, 0, snapshotWidth, snapshotHeight)
   gl.render(scene, camera)
 
   // Image
@@ -48,6 +48,10 @@ const projectSnapshot = (
 
   camera.aspect = aspect
   camera.updateProjectionMatrix()
+
+  gl.clear()
+  gl.setViewport(0, 0, width, height)
+  gl.render(scene, camera)
 
   //API route
   propsSnapshotProject?.apiRoute(image).catch(console.error)

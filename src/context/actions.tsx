@@ -37,13 +37,15 @@ export const setPropsData = (data: MyCanvasProps['data']) => ({
 })
 
 /**
- * Set props filters
- * @param filters Filters
+ * Set props post-processing
+ * @param postProcessing Post-processing
  * @returns Action
  */
-export const setPropsFilters = (filters: MyCanvasProps['filters']) => ({
-  type: actionTypes.SETPROPSFILTERS,
-  value: filters
+export const setPropsPostProcessing = (
+  postProcessing: MyCanvasProps['postProcessing']
+) => ({
+  type: actionTypes.SETPROPSPOSTPROCESSING,
+  value: postProcessing
 })
 
 /**
@@ -56,6 +58,50 @@ export const setPropsSnapshotProject = (
 ) => ({
   type: actionTypes.SETPROPSSNAPSHOTPROJECT,
   value: project
+})
+
+/**
+ * Set props onHighlight
+ * @param onHighlight On highlight
+ * @returns Action
+ */
+export const setPropsOnHighlight = (
+  onHighlight: MyCanvasProps['onHighlight']
+) => ({
+  type: actionTypes.SETPROPSONHIGHLIGHT,
+  value: onHighlight
+})
+
+/**
+ * Set props onSelect
+ * @param onSelect On select
+ * @returns Action
+ */
+export const setPropsOnSelect = (onSelect: MyCanvasProps['onSelect']) => ({
+  type: actionTypes.SETPROPSONSELECT,
+  value: onSelect
+})
+
+/**
+ * Set props onData
+ * @param onData On data
+ * @returns Action
+ */
+export const setPropsOnData = (onData: MyCanvasProps['onData']) => ({
+  type: actionTypes.SETPROPSONDATA,
+  value: onData
+})
+
+/**
+ * Set props onPostprocessing
+ * @param onPostProcessing On post-processing
+ * @returns Action
+ */
+export const setPropsOnPostprocessing = (
+  onPostprocessing: MyCanvasProps['onPostProcessing']
+) => ({
+  type: actionTypes.SETPROPSONPOSTPROCESSING,
+  value: onPostprocessing
 })
 
 /**

@@ -46,15 +46,23 @@ export interface Geometry3DProps {
 
 export interface Hover {
   index: number
+  uuid: string
+  parentUuid: string
   distance: number
 }
 
 export interface Geometry3DFaceProps {
+  parent: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
   child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
   index: number
   hover: Hover
-  selected: number[]
-  onPointerMove: (event: ThreeEvent<PointerEvent>, index: number) => void
+  selected: { index: number; uuid: string }[]
+  onPointerMove: (
+    event: ThreeEvent<PointerEvent>,
+    index: number,
+    uuid: string,
+    parentUuid: string
+  ) => void
   onPointerLeave: (index: number) => void
   onClick: () => void
 }
@@ -71,7 +79,10 @@ export interface ResultProps {
 const hoverColor = 0xfad114
 
 // Select color
-const selectColor = 0xee9817
+const selectColor = 0xfa9814
+
+// Hover select color
+const hoverSelectColor = 0xfa5f14
 
 /**
  * Geometry 2D
@@ -110,28 +121,28 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
   )
 
   /**
-   * On pointer over face
+   * On pointer move (face)
    */
-  const onPointerOverFace = useCallback((index: number) => {
+  const onPointerMoveFace = useCallback((index: number) => {
     setHoverFace(index)
   }, [])
 
   /**
-   * On pointer out face
+   * On pointer out (face)
    */
   const onPointerOutFace = useCallback(() => {
     setHoverFace(-1)
   }, [])
 
   /**
-   * On pointer over edge
+   * On pointer move (edge)
    */
-  const onPointerOverEdge = useCallback((index: number) => {
+  const onPointerMoveEdge = useCallback((index: number) => {
     setHoverEdge(index)
   }, [])
 
   /**
-   * On poiner out edge
+   * On poiner out (edge)
    */
   const onPointerOutEdge = useCallback(() => {
     setHoverEdge(-1)
@@ -154,7 +165,7 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
             name={child.name}
             uuid={child.userData.uuid}
             userData={child.userData}
-            onPointerOver={() => onPointerOverFace(index)}
+            onPointerMove={() => onPointerMoveFace(index)}
             onPointerOut={onPointerOutFace}
           >
             <primitive object={geometry} />
@@ -181,7 +192,7 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
                   name={subChild.name}
                   uuid={subChild.userData.uuid}
                   userData={subChild.userData}
-                  onPointerOver={() => onPointerOverEdge(subIndex)}
+                  onPointerMove={() => onPointerMoveEdge(subIndex)}
                   onPointerOut={onPointerOutEdge}
                 >
                   <primitive object={geometry} />
@@ -214,6 +225,7 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
  * @returns Geometry3DFace
  */
 const Geometry3DFace = ({
+  parent,
   child,
   index,
   hover,
@@ -238,15 +250,21 @@ const Geometry3DFace = ({
   // Material
   const material = useMemo(() => child.material, [child])
 
+  // User data
+  const userData = useMemo(() => child.userData, [child.userData])
+
+  // Parent uuid
+  const parentUuid = useMemo(() => parent.userData.uuid, [parent.userData.uuid])
+
   /**
    * On pointer move
    * @param event Event
    */
   const onInternalPointerMove = useCallback(
     (event: ThreeEvent<PointerEvent>): void => {
-      onPointerMove(event, index)
+      onPointerMove(event, index, userData.uuid, parentUuid)
     },
-    [index, onPointerMove]
+    [index, userData.uuid, parentUuid, onPointerMove]
   )
 
   /**
@@ -266,10 +284,12 @@ const Geometry3DFace = ({
   // Color
   const color = useMemo(() => {
     if (selection === 'face') {
-      if (selected.includes(index)) return selectColor
+      if (selected.find((s) => s.index === index))
+        return hover.index === index ? hoverSelectColor : selectColor
       return hover.index === index ? hoverColor : material.color
     } else if (selection === 'solid') {
-      if (selected.length) return selectColor
+      if (selected.length)
+        return hover.index === -1 ? selectColor : hoverSelectColor
       return hover.index === -1 ? material.color : hoverColor
     } else return material.color
   }, [index, hover, selected, selection, material])
@@ -280,8 +300,8 @@ const Geometry3DFace = ({
   return (
     <mesh
       name={child.name}
-      uuid={child.userData.uuid}
-      userData={child.userData}
+      uuid={userData.uuid}
+      userData={userData}
       onPointerMove={onInternalPointerMove}
       onPointerLeave={onInternalPointerLeave}
       onClick={onInternalClick}
@@ -313,12 +333,17 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
   // State
   const [hover, setHover] = useState<Hover>({
     index: -1,
+    uuid: '',
+    parentUuid: '',
     distance: Infinity
   })
-  const [selected, setSelected] = useState<number[]>([])
+  const [selected, setSelected] = useState<{ index: number; uuid: string }[]>(
+    []
+  )
 
   // Context
   const {
+    props: { selection, onHighlight, onSelect },
     geometry: { dimension },
     dispatch
   } = useContext(Context)
@@ -344,11 +369,19 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
    * On pointer move
    * @param event Event
    * @param index
+   * @param uuid UUID
+   * @param parentUuid Pärent UUID
    */
   const onPointerMove = useCallback(
-    (event: ThreeEvent<PointerEvent>, index: number) => {
+    (
+      event: ThreeEvent<PointerEvent>,
+      index: number,
+      uuid: string,
+      parentUuid: string
+    ) => {
       const distance = event.distance
-      if (distance < hover.distance) setHover({ index, distance })
+      if (distance < hover.distance)
+        setHover({ index, distance, uuid, parentUuid })
     },
     [hover]
   )
@@ -358,18 +391,48 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
    */
   const onPointerLeave = useCallback(
     (index: number) => {
-      if (index === hover.index) setHover({ index: -1, distance: Infinity })
+      if (index === hover.index)
+        setHover({ index: -1, distance: Infinity, uuid: '', parentUuid: '' })
     },
     [hover]
   )
 
+  /**
+   * On click
+   */
   const onClick = useCallback(() => {
     const index = hover.index
+    const uuid = hover.uuid
+    const parentUuid = hover.parentUuid
 
-    const pos = selected.findIndex((s) => s === index)
-    if (pos === -1) setSelected((prev) => [...prev, index])
-    else setSelected((prev) => [...prev.slice(0, pos), ...prev.slice(pos + 1)])
-  }, [hover, selected])
+    const pos = selected.findIndex((s) => s.index === index)
+    if (pos === -1) {
+      if (selection === 'face') setSelected([...selected, { index, uuid }])
+      else if (selection === 'solid')
+        setSelected([...selected, { index, uuid: parentUuid }])
+    } else
+      setSelected((prev) => [...prev.slice(0, pos), ...prev.slice(pos + 1)])
+  }, [hover, selected, selection])
+
+  // Selection changes
+  useEffect(() => {
+    setSelected([])
+  }, [selection])
+
+  // On highlight
+  useEffect(() => {
+    if (selection === 'face') {
+      if (hover.index === -1) onHighlight?.()
+      else onHighlight?.(hover.uuid)
+    } else if (selection === 'solid') {
+      onHighlight?.(hover.parentUuid)
+    }
+  }, [hover, selection, onHighlight])
+
+  // On select
+  useEffect(() => {
+    onSelect?.(selected.map((s) => s.uuid))
+  }, [selected, onSelect])
 
   /**
    * Render
@@ -385,6 +448,7 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
         >
           {child.children.map((subChild, subIndex) => (
             <Geometry3DFace
+              parent={child}
               key={subChild.uuid}
               child={subChild}
               index={subIndex}

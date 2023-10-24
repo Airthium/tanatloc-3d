@@ -10,6 +10,9 @@
     "minify": "uglifyjs-folder dist -e -o dist -x .js -c -m",
     "build": "tsc --declaration && yarn minify"
   },
+  "workspaces": [
+    "renderer"
+  ],
   "peerDependencies": {
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0"
