@@ -2,6 +2,7 @@ import { TrackballControlsProps } from '@react-three/drei'
 import { Raycaster, Vector2 } from 'three'
 
 // TODO bug with result
+// Wrong position
 
 /**
  * Zoom to rect

@@ -28,6 +28,9 @@ const size = 10
  * @returns Label
  */
 const Label = ({ position, value }: LabelProps): React.JSX.Element => {
+  /**
+   * Render
+   */
   return (
     <>
       <Text

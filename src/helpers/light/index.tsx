@@ -67,7 +67,7 @@ const Light = ({ update }: LightProps) => {
    * Render
    */
   return (
-    <>
+    <group type="Light">
       <ambientLight />
       <pointLight
         position={positionRight}
@@ -81,7 +81,7 @@ const Light = ({ update }: LightProps) => {
         intensity={intensity}
         decay={decay}
       />
-    </>
+    </group>
   )
 }
 

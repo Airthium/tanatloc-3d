@@ -658,9 +658,7 @@ const Meshes = ({ scene }: MeshesProps): React.JSX.Element => {
  * @param props Props
  * @returns PartLoader
  */
-export const PartLoader = ({
-  part
-}: PartLoaderProps): React.JSX.Element | null => {
+const PartLoader = ({ part }: PartLoaderProps): React.JSX.Element | null => {
   // State
   const [gltf, setGltf] = useState<GLTF>()
 
@@ -709,3 +707,5 @@ export const PartLoader = ({
     </mesh>
   ) : null
 }
+
+export default PartLoader

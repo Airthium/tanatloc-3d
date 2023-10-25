@@ -1,15 +1,12 @@
 import { Line } from '@react-three/drei'
 import { useContext, useEffect, useMemo, useState } from 'react'
-import { Vector3 } from 'three'
+import { Euler, Vector3 } from 'three'
 
 import { Context } from '../../context'
 
-import {
-  computeSceneBoundingBox,
-  numberArraytoEuler,
-  numberArraytoVector3
-} from '../../tools'
+import computeSceneBoundingBox from '../../tools/computeSceneBoundingBox'
 import toReadable from '../../tools/toReadable'
+import sign from '../../tools/sign'
 
 import StaticText from '../staticText'
 
@@ -93,16 +90,6 @@ const getNumberOfDivisions = (
 }
 
 /**
- * Sign
- * @param number Number
- * @returns Sign
- */
-const sign = (number: number): -1 | 1 => {
-  if (number < 0) return -1
-  return 1
-}
-
-/**
  * AxisLine
  * @param props Props
  * @returns AxisLine
@@ -162,11 +149,11 @@ const AxisGrid = ({
   // Rotation
   const rotation = useMemo(
     () =>
-      numberArraytoEuler([
+      new Euler(
         axis === 'xy' ? Math.PI / 2 : 0,
         0,
         axis === 'yz' ? -Math.PI / 2 : 0
-      ]),
+      ),
     [axis]
   )
 
@@ -174,23 +161,23 @@ const AxisGrid = ({
   const position = useMemo(() => {
     switch (axis) {
       case 'xy':
-        return numberArraytoVector3([
+        return new Vector3(
           center[0],
           center[1],
           center[2] + offset.direction * (depth / 2 + offset.value)
-        ])
+        )
       case 'xz':
-        return numberArraytoVector3([
+        return new Vector3(
           center[0],
           center[1] + offset.direction * (depth / 2 + offset.value),
           center[2]
-        ])
+        )
       case 'yz':
-        return numberArraytoVector3([
+        return new Vector3(
           center[0] + offset.direction * (depth / 2 + offset.value),
           center[1],
           center[2]
-        ])
+        )
     }
   }, [depth, axis, center, offset])
 
@@ -289,23 +276,23 @@ const AxisLabels = ({
   const position = useMemo(() => {
     switch (axis) {
       case 'xy':
-        return numberArraytoVector3([
+        return new Vector3(
           center[0],
           center[1] - offset.depth! * (height / 2 + offset.value),
           center[2] + offset.direction * (depth / 2 + offset.value)
-        ])
+        )
       case 'xz':
-        return numberArraytoVector3([
+        return new Vector3(
           center[0] - offset.depth! * (width / 2 + offset.value),
           center[1] + offset.direction * (depth / 2 + offset.value),
           center[2]
-        ])
+        )
       case 'yz':
-        return numberArraytoVector3([
+        return new Vector3(
           center[0] + offset.direction * (depth / 2 + offset.value),
           center[1],
           center[2] - offset.depth! * (height / 2 + offset.value)
-        ])
+        )
     }
   }, [width, height, depth, axis, center, offset])
 
@@ -321,13 +308,13 @@ const AxisLabels = ({
       let textPosition
       switch (axis) {
         case 'xy':
-          textPosition = numberArraytoVector3([-length / 2 + i * step, 0, 0])
+          textPosition = new Vector3(-length / 2 + i * step, 0, 0)
           break
         case 'xz':
-          textPosition = numberArraytoVector3([0, 0, -length / 2 + i * step])
+          textPosition = new Vector3(0, 0, -length / 2 + i * step)
           break
         case 'yz':
-          textPosition = numberArraytoVector3([0, -length / 2 + i * step, 0])
+          textPosition = new Vector3(0, -length / 2 + i * step, 0)
           break
       }
 

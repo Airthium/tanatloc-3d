@@ -1,6 +1,6 @@
 import { useContext, useEffect } from 'react'
 
-import { Context, MyCanvasProps } from '.'
+import { Context, MyCanvasProps } from '..'
 import {
   setPropsData,
   setPropsPostProcessing,
@@ -11,7 +11,7 @@ import {
   setPropsParts,
   setPropsSelection,
   setPropsSnapshotProject
-} from './actions'
+} from '../actions'
 
 /**
  * Props context filler

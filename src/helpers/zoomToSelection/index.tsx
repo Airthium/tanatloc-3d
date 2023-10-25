@@ -163,6 +163,7 @@ const ZoomToSelection = (): null => {
       document.removeEventListener('pointerup', onPointerUp)
     }
 
+    // Cleanup
     return () => {
       document.removeEventListener('pointerdown', onPointerDown)
       document.removeEventListener('pointermove', onPointerMove)

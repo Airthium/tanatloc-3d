@@ -14,7 +14,7 @@ import { TrackballControlsProps } from '@react-three/drei'
 import { Context } from '../../context'
 import { setSectionViewClippingPlane } from '../../context/actions'
 
-import { computeSceneBoundingBox } from '../../tools'
+import computeSceneBoundingBox from '../../tools/computeSceneBoundingBox'
 
 /**
  * Props

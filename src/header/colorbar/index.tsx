@@ -5,7 +5,6 @@ import {
   BgColorsOutlined,
   ColumnWidthOutlined
 } from '@ant-design/icons'
-import { useForm } from 'antd/es/form/Form'
 
 import { Context } from '../../context'
 import {
@@ -28,7 +27,7 @@ const Colorbar = () => {
   const { lut, dispatch } = useContext(Context)
 
   // Data
-  const [form] = useForm()
+  const [form] = Form.useForm()
 
   /**
    * On colormap

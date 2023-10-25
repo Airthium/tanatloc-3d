@@ -1,6 +1,7 @@
 import { TrackballControlsProps } from '@react-three/drei'
-import { computeSceneBoundingBox } from '.'
 import { Sphere, Vector3 } from 'three'
+
+import computeSceneBoundingBox from './computeSceneBoundingBox'
 
 /**
  * Zoom to fit

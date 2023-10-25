@@ -1,9 +1,10 @@
+import React from 'react'
 import { Vector3 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import Arrow from '..'
+import Arrow from '.'
 
-jest.mock('../../staticText', () => () => <mesh type="StaticText" />)
+jest.mock('../staticText', () => () => <mesh type="StaticText" />)
 
 describe('helpers/arrow', () => {
   const origin = new Vector3(0, 0, 0)

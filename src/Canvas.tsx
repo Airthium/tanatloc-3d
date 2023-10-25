@@ -11,8 +11,8 @@ import { Canvas } from '@react-three/fiber'
 import { Hud, PerspectiveCamera, TrackballControls } from '@react-three/drei'
 
 import Provider, { Context, MyCanvasProps } from './context'
-import MainContextFiller from './context/MainContextFiller'
-import PropsContextFiller from './context/PropsContextFiller'
+import MainContextFiller from './context/mainContextFiller'
+import PropsContextFiller from './context/propsContextFiller'
 
 import Navigation from './helpers/navigation'
 import Grid from './helpers/grid'
@@ -30,7 +30,7 @@ import style from './style/Canvas'
  * MyCanvas
  * @returns MyCanvas
  */
-const MyCanvas = (): React.JSX.Element => {
+export const MyCanvas = (): React.JSX.Element => {
   // Ref
   const containerDiv = useRef(null!)
   const mainViewControls = useRef(null!)
@@ -62,7 +62,6 @@ const MyCanvas = (): React.JSX.Element => {
   // At least one part
   const oneResult = useMemo(
     () => !!parts?.find((part) => part.summary.type === 'result'),
-
     [parts]
   )
 

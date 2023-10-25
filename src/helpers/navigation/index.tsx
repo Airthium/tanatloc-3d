@@ -12,8 +12,6 @@ import { Vector3, Shape } from 'three'
 
 import { Context } from '../../context'
 
-import { numberArraytoVector3 } from '../../tools'
-
 import Arrow from '../arrow'
 
 /**
@@ -25,10 +23,10 @@ export interface NavigationProps {
 }
 
 export interface AxisProps {
-  origin?: number[]
-  direction?: number[]
-  color?: string | number
-  text?: string
+  origin: number[]
+  direction: number[]
+  color: string | number
+  text: string
 }
 
 export interface IFace {
@@ -100,13 +98,13 @@ const Axis = ({
 }: AxisProps): React.JSX.Element => {
   // Direction
   const direction3 = useMemo(
-    () => numberArraytoVector3(direction ?? [0, 0, 1]),
+    () => new Vector3(direction[0], direction[1], direction[2]),
     [direction]
   )
 
   // Origin
   const origin3 = useMemo(
-    () => numberArraytoVector3(origin ?? [0, 0, 0]),
+    () => new Vector3(origin[0], origin[1], origin[2]),
     [origin]
   )
 
@@ -235,6 +233,7 @@ const Face = ({
   return (
     <group
       ref={ref}
+      type="Navigation_Face"
       onPointerMove={onInternalPointerMove}
       onPointerLeave={onInternalPointerLeave}
       onClick={onClick}

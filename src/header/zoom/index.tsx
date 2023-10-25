@@ -29,7 +29,7 @@ const Zoom = (): React.JSX.Element => {
    */
   const onZoomIn = useCallback(() => {
     zoom(mainView.camera, mainView.controls, 1)
-    zoomInProgress = requestAnimationFrame(() => onZoomIn())
+    zoomInProgress = requestAnimationFrame(onZoomIn)
   }, [mainView.camera, mainView.controls])
 
   /**
@@ -45,7 +45,7 @@ const Zoom = (): React.JSX.Element => {
    */
   const onZoomOut = useCallback(() => {
     zoom(mainView.camera, mainView.controls, -1)
-    zoomInProgress = requestAnimationFrame(() => onZoomOut())
+    zoomInProgress = requestAnimationFrame(onZoomOut)
   }, [mainView.camera, mainView.controls])
 
   /**
