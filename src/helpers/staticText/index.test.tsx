@@ -15,6 +15,8 @@ describe('helpers/staticText', () => {
     expect(scene).toBeDefined()
 
     await renderer.advanceFrames(1, 1)
+
+    await renderer.unmount()
   })
 
   test('full render', async () => {
@@ -27,5 +29,7 @@ describe('helpers/staticText', () => {
     expect(scene).toBeDefined()
 
     await renderer.advanceFrames(1, 1)
+
+    await renderer.unmount()
   })
 })

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 
 import { Context } from './context'
 
-import { PartLoader } from './loader'
+import PartLoader from './loader'
 
 /**
  * Parts

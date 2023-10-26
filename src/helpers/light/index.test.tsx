@@ -23,6 +23,8 @@ describe('helpers/light', () => {
     const renderer = await ReactThreeTestRenderer.create(<Light />)
     const mesh = renderer.scene.children[0]
     expect(mesh.type).toBe('Light')
+
+    await renderer.unmount()
   })
 
   test('with context', async () => {
@@ -33,5 +35,7 @@ describe('helpers/light', () => {
     )
     const mesh = renderer.scene.children[0]
     expect(mesh.type).toBe('Light')
+
+    await renderer.unmount()
   })
 })

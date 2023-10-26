@@ -1,9 +1,21 @@
 import React from 'react'
-import { fireEvent, render } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 
 import { Context, ContextState } from './context'
 
 import Canvas, { MyCanvas } from './Canvas'
+
+jest.mock('@react-three/fiber', () => ({
+  Canvas: (props: any) => <div>{props.children}</div>
+}))
+
+jest.mock('@react-three/drei', () => ({
+  Hud: (props: any) => <div>{props.children}</div>,
+  PerspectiveCamera: () => <div />,
+  TrackballControls: (props: any) => (
+    <div role="TrackballControls" onClick={props.onChange} />
+  )
+}))
 
 jest.mock('./context/mainContextFiller', () => () => <div />)
 jest.mock('./context/propsContextFiller', () => () => <div />)
@@ -34,6 +46,15 @@ describe('Canvas', () => {
 
   test('render', () => {
     const { unmount } = render(<MyCanvas />)
+
+    unmount()
+  })
+
+  test('controls update', () => {
+    const { unmount } = render(<MyCanvas />)
+
+    const trackballControls = screen.getByRole('TrackballControls')
+    fireEvent.click(trackballControls)
 
     unmount()
   })

@@ -1,5 +1,5 @@
 import React from 'react'
-import ReactThreeTestRenderer from '@react-three/test-renderer'
+import { fireEvent, render } from '@testing-library/react'
 
 import { Context, ContextState } from '../../context'
 
@@ -30,24 +30,29 @@ describe('helpers/zoomToSelection', () => {
     dispatch.mockReset()
   })
 
-  test('empty render', async () => {
-    const renderer = await ReactThreeTestRenderer.create(<ZoomToSelection />)
-    const children = renderer.scene.children
-    expect(children).toEqual([])
+  test('empty render', () => {
+    const { unmount } = render(<ZoomToSelection />)
+
+    unmount()
   })
 
-  test('with context', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
+  test('with context', () => {
+    const { unmount } = render(
       <Context.Provider value={contextValue}>
         <ZoomToSelection />
       </Context.Provider>
     )
-    const children = renderer.scene.children
-    expect(children).toEqual([])
+
+    // Events
+    fireEvent.pointerDown(document)
+    fireEvent.pointerMove(document)
+    fireEvent.pointerUp(document)
+
+    unmount()
   })
 
-  test('with context - disabled', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
+  test('with context - disabled', () => {
+    const { unmount } = render(
       <Context.Provider
         value={{
           ...contextValue,
@@ -59,12 +64,12 @@ describe('helpers/zoomToSelection', () => {
         <ZoomToSelection />
       </Context.Provider>
     )
-    const children = renderer.scene.children
-    expect(children).toEqual([])
+
+    unmount()
   })
 
-  test('with context - no controls', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
+  test('with context - no controls', () => {
+    const { unmount } = render(
       <Context.Provider
         value={{
           ...contextValue,
@@ -77,7 +82,28 @@ describe('helpers/zoomToSelection', () => {
         <ZoomToSelection />
       </Context.Provider>
     )
-    const children = renderer.scene.children
-    expect(children).toEqual([])
+
+    unmount()
+  })
+
+  test('with context - no camera', () => {
+    const { unmount } = render(
+      <Context.Provider
+        value={{
+          ...contextValue,
+          mainView: {
+            ...contextValue.mainView,
+            camera: undefined
+          }
+        }}
+      >
+        <ZoomToSelection />
+      </Context.Provider>
+    )
+
+    // Events
+    fireEvent.pointerUp(document)
+
+    unmount()
   })
 })

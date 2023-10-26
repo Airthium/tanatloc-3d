@@ -20,6 +20,8 @@ describe('helpers/arrow', () => {
     const renderer = await ReactThreeTestRenderer.create(<Arrow />)
     const mesh = renderer.scene.children[0]
     expect(mesh.type).toBe('Arrow')
+
+    await renderer.unmount()
   })
 
   test('full render', async () => {
@@ -36,6 +38,8 @@ describe('helpers/arrow', () => {
     expect(mesh.type).toBe('Arrow')
     const child = mesh.children[1]
     expect(child.type).toEqual('StaticText')
+
+    await renderer.unmount()
   })
 
   test('near y direction', async () => {
@@ -45,10 +49,14 @@ describe('helpers/arrow', () => {
     const mesh1 = renderer1.scene.children[0]
     expect(mesh1.type).toBe('Arrow')
 
+    await renderer1.unmount()
+
     const renderer2 = await ReactThreeTestRenderer.create(
       <Arrow direction={yMinux} />
     )
     const mesh2 = renderer2.scene.children[0]
     expect(mesh2.type).toBe('Arrow')
+
+    await renderer2.unmount()
   })
 })

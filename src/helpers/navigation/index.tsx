@@ -66,7 +66,7 @@ const size = 10
 const fontSize = 2
 
 // Corner
-const corner = 0.25
+const corner = 0.15
 
 // Zoom
 const zoom = 0.4
@@ -233,7 +233,7 @@ const Face = ({
   return (
     <group
       ref={ref}
-      type="Navigation_Face"
+      type={'Navigation_' + face.text}
       onPointerMove={onInternalPointerMove}
       onPointerLeave={onInternalPointerLeave}
       onClick={onClick}
@@ -351,8 +351,7 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
    */
   const onClick = useCallback((): void => {
     // Checks
-    if (!mainView?.camera) return
-    if (!mainView.controls) return
+    if (!mainView?.camera || !mainView.controls) return
 
     const currentFace = faces[hover.index]
     if (!currentFace) return

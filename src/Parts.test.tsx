@@ -5,9 +5,7 @@ import { Context, ContextState } from './context'
 
 import Parts from './Parts'
 
-jest.mock('./loader', () => ({
-  PartLoader: () => <div />
-}))
+jest.mock('./loader', () => () => <div />)
 
 describe('Parts', () => {
   const parts = [

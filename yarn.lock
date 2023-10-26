@@ -2212,9 +2212,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-three/drei@npm:9.88.4":
-  version: 9.88.4
-  resolution: "@react-three/drei@npm:9.88.4"
+"@react-three/drei@npm:9.88.7":
+  version: 9.88.7
+  resolution: "@react-three/drei@npm:9.88.7"
   dependencies:
     "@babel/runtime": ^7.11.2
     "@mediapipe/tasks-vision": 0.10.2
@@ -2248,13 +2248,13 @@ __metadata:
   peerDependenciesMeta:
     react-dom:
       optional: true
-  checksum: 3c9da8c702d10535d4233d206a3379354565c6f0cdd48c79e1aa8ca598833f5d303b77177232b0af8d691a39ae2176587c69520015eb17f8cdfe6178b4b9159d
+  checksum: dbc8643ecf1ea492dde4d0eda6cbf20cbb7829c6d0ade17b6c32c3dbaa43601e8d52eeba35acd08679b9afe6edee14d05644141c4c7647ecb7b168611e62ddc4
   languageName: node
   linkType: hard
 
-"@react-three/fiber@npm:8.15.4":
-  version: 8.15.4
-  resolution: "@react-three/fiber@npm:8.15.4"
+"@react-three/fiber@npm:8.15.8":
+  version: 8.15.8
+  resolution: "@react-three/fiber@npm:8.15.8"
   dependencies:
     "@babel/runtime": ^7.17.8
     "@types/react-reconciler": ^0.26.7
@@ -2289,7 +2289,7 @@ __metadata:
       optional: true
     react-native:
       optional: true
-  checksum: d50571cef96216b77c88ee93c4d8d3a161ce03f59df85336e1611f2d8315a3b43ed2dc8fdbf6fe3fb2b02c2e3412b5cd3b6cae545775f4b7a62a6fec12cff483
+  checksum: f53c2f2a166eaf75703ec35d15cff79e664cc79705c99e53dbfde673b09746738e20877c8d2439718f46e679128c9b0a73c1a97bacf3f4d3b06c9e982c67cea7
   languageName: node
   linkType: hard
 
@@ -2513,12 +2513,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:20.8.7":
+"@types/node@npm:*":
   version: 20.8.7
   resolution: "@types/node@npm:20.8.7"
   dependencies:
     undici-types: ~5.25.1
   checksum: 2173c0c03daefcb60c03a61b1371b28c8fe412e7a40dc6646458b809d14a85fbc7aeb369d957d57f0aaaafd99964e77436f29b3b579232d8f2b20c58abbd1d25
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:20.8.9":
+  version: 20.8.9
+  resolution: "@types/node@npm:20.8.9"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: 0c05f3502a9507ff27e91dd6fd574fa6f391b3fafedcfe8e0c8d33351fb22d02c0121f854e5b6b3ecb9a8a468407ddf6e7ac0029fb236d4c7e1361ffc758a01f
   languageName: node
   linkType: hard
 
@@ -2577,7 +2586,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:18.2.31":
+"@types/react@npm:*":
   version: 18.2.31
   resolution: "@types/react@npm:18.2.31"
   dependencies:
@@ -2585,6 +2594,17 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: b11be8e39174d3303e308461400889e353e422d22b01d09795b2c35b7b99d5351716503d9ec5c58e4c2c871249603fa52840d45a34fb5901dd7a26e06129c716
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:18.2.32":
+  version: 18.2.32
+  resolution: "@types/react@npm:18.2.32"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: dad139dd165c4ce2364d1849af4e022746adc73f1a35bb5e0c95dbfee4732637de709504440c518e0177898aaf151b7a6b34019c8e398ea2e919dcfc4d79198f
   languageName: node
   linkType: hard
 
@@ -8368,8 +8388,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "renderer@workspace:renderer"
   dependencies:
-    "@types/node": 20.8.7
-    "@types/react": 18.2.31
+    "@types/node": 20.8.9
+    "@types/react": 18.2.32
     "@types/react-dom": 18.2.14
     eslint: 8.52.0
     eslint-config-next: 13.5.6
@@ -9128,13 +9148,13 @@ __metadata:
     "@babel/preset-env": 7.23.2
     "@babel/preset-react": 7.22.15
     "@babel/preset-typescript": 7.23.2
-    "@react-three/drei": 9.88.4
-    "@react-three/fiber": 8.15.4
+    "@react-three/drei": 9.88.7
+    "@react-three/fiber": 8.15.8
     "@react-three/test-renderer": 8.2.0
     "@testing-library/react": 14.0.0
     "@types/jest": 29.5.6
-    "@types/node": 20.8.7
-    "@types/react": 18.2.31
+    "@types/node": 20.8.9
+    "@types/react": 18.2.32
     "@types/react-dom": 18.2.14
     "@types/three": 0.157.2
     antd: 5.10.2
@@ -9512,6 +9532,13 @@ __metadata:
   version: 5.25.3
   resolution: "undici-types@npm:5.25.3"
   checksum: ec9d2cc36520cbd9fbe3b3b6c682a87fe5be214699e1f57d1e3d9a2cb5be422e62735f06e0067dc325fd3dd7404c697e4d479f9147dc8a804e049e29f357f2ff
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~5.26.4":
+  version: 5.26.5
+  resolution: "undici-types@npm:5.26.5"
+  checksum: 3192ef6f3fd5df652f2dc1cd782b49d6ff14dc98e5dced492aa8a8c65425227da5da6aafe22523c67f035a272c599bb89cfe803c1db6311e44bed3042fc25487
   languageName: node
   linkType: hard
 

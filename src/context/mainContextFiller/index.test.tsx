@@ -13,6 +13,8 @@ describe('context/mainContextFiller', () => {
   test('render', async () => {
     const renderer = await ReactThreeTestRenderer.create(<MainContextFiller />)
     expect(renderer.scene.children.length).toBe(0)
+
+    await renderer.unmount()
   })
 
   test('with controls', async () => {
@@ -20,15 +22,19 @@ describe('context/mainContextFiller', () => {
       <MainContextFiller controls={controls} />
     )
     expect(renderer.scene.children.length).toBe(0)
+
+    await renderer.unmount()
   })
 
   test('with context', async () => {
-    await ReactThreeTestRenderer.create(
+    const renderer = await ReactThreeTestRenderer.create(
       <Context.Provider value={contextValue}>
         <MainContextFiller controls={controls} />
       </Context.Provider>
     )
 
     expect(dispatch).toHaveBeenCalledTimes(4)
+
+    await renderer.unmount()
   })
 })

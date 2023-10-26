@@ -298,9 +298,10 @@ const _onPointerMove = (
   type: Type,
   camera?: PerspectiveCamera
 ) => {
-  if (!enabled) return
-  if (!camera) return
+  if (!enabled || !camera) return
 
+  /* istanbul ignore else */
+  /* that is never something else than Plane but this is a security check */
   if (type === 'Dome') {
     const pointer = event.pointer
 

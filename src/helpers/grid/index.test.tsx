@@ -6,6 +6,10 @@ import { Context, ContextState } from '../../context'
 
 import Grid from '.'
 
+jest.mock('@react-three/drei', () => ({
+  Line: () => <mesh />
+}))
+
 const mockBox = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 1))
 jest.mock('../../tools/computeSceneBoundingBox', () => () => mockBox)
 
@@ -41,6 +45,8 @@ describe('helpers/grid', () => {
     )
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Grid')
+
+    await renderer.unmount()
   })
 
   test('with context', async () => {
@@ -51,6 +57,8 @@ describe('helpers/grid', () => {
     )
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Grid')
+
+    await renderer.unmount()
   })
 
   test('no display', async () => {
@@ -63,5 +71,7 @@ describe('helpers/grid', () => {
     )
     const children = renderer.scene.children
     expect(children).toEqual([])
+
+    await renderer.unmount()
   })
 })

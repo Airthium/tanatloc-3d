@@ -46,6 +46,8 @@ describe('helpers/colorbar', () => {
     )
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Colorbar')
+
+    await renderer.unmount()
   })
 
   test('with mainView.camera', async () => {
@@ -61,5 +63,7 @@ describe('helpers/colorbar', () => {
     )
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Colorbar')
+
+    await renderer.unmount()
   })
 })

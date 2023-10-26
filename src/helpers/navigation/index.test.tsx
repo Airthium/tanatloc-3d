@@ -14,9 +14,12 @@ describe('helpers/navigation', () => {
       camera: {
         aspect: 1,
         position: new Vector3(0, 0, 5),
+        up: new Vector3(0, 0, 1),
         rotation: new Euler(0, 0, 0)
       },
-      controls: {}
+      controls: {
+        target: new Vector3(0, 0, 0)
+      }
     },
     geometry: {
       dimension: 3
@@ -29,6 +32,8 @@ describe('helpers/navigation', () => {
     expect(group.type).toBe('Navigation')
 
     await renderer.advanceFrames(1, 1)
+
+    await renderer.unmount()
   })
 
   test('with context', async () => {
@@ -43,6 +48,42 @@ describe('helpers/navigation', () => {
     await renderer.advanceFrames(1, 1)
 
     // Events
-    // TODO
+    const face1 = group.children[2]
+    const face2 = group.children[3]
+
+    await renderer.fireEvent(face1, 'pointerMove', { distance: 1 })
+    await renderer.fireEvent(face2, 'pointerMove', { distance: 2 })
+    await renderer.fireEvent(face1, 'click')
+    await renderer.fireEvent(face2, 'pointerLeave')
+    await renderer.fireEvent(face1, 'pointerLeave')
+    await renderer.fireEvent(face1, 'click')
+
+    await renderer.unmount()
+  })
+
+  test('with context - no camera', async () => {
+    const renderer = await ReactThreeTestRenderer.create(
+      <Context.Provider
+        value={{
+          ...contextValue,
+          mainView: {
+            ...contextValue.mainView,
+            camera: undefined
+          }
+        }}
+      >
+        <Navigation />
+      </Context.Provider>
+    )
+    const group = renderer.scene.children[0]
+    expect(group.type).toBe('Navigation')
+
+    await renderer.advanceFrames(1, 1)
+
+    // Events
+    const face1 = group.children[2]
+    await renderer.fireEvent(face1, 'click')
+
+    await renderer.unmount()
   })
 })
