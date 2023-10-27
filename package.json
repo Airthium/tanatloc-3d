@@ -1,6 +1,6 @@
 {
   "name": "tanatloc-3d",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "private": true,
   "types": "index.d.ts",
   "main": "dist/Canvas.js",
@@ -10,7 +10,8 @@
     "testw": "jest --config config/jest.config.js --watch",
     "test": "jest --config config/jest.config.js --silent",
     "minify": "uglifyjs-folder dist -e -o dist -x .js -c -m",
-    "build": "tsc --declaration && yarn minify"
+    "build": "tsc --declaration && yarn minify",
+    "check": "reset && .github/workflows/check.sh"
   },
   "workspaces": [
     "renderer"

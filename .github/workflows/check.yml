@@ -1,4 +1,4 @@
-name: Node
+name: Check
 on: [push]
 
 jobs:

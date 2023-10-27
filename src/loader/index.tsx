@@ -90,6 +90,7 @@ const PartLoader = ({ part }: PartLoaderProps): React.JSX.Element | null => {
     )
   }, [part])
 
+  // TODO not always works
   // Zoom to fit
   useEffect(() => {
     if (!mainView.scene || !mainView.camera || !mainView.controls) return

@@ -2,7 +2,7 @@
   "extends": ["config:base"],
   "timezone": "Europe/Paris",
   "schedule": ["before 9am on Monday"],
-  "baseBranches": ["main"],
+  "baseBranches": ["hotfix"],
   "groupName": "all dependencies",
   "separateMajorMinor": false,
   "groupSlug": "all",
