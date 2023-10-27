@@ -7,10 +7,10 @@ import { Context, MyCanvasPart } from '../context'
 
 import zoomToFit from '../tools/zoomToFit'
 
-import Geometry2D from './Geometry2D'
-import Geometry3D from './Geometry3D'
-import Mesh from './Mesh'
-import Result from './Result'
+import Geometry2D from './geometry2D'
+import Geometry3D from './geometry3D'
+import Mesh from './mesh'
+import Result from './result'
 
 /**
  * Props
@@ -18,13 +18,6 @@ import Result from './Result'
 export interface PartLoaderProps {
   part: MyCanvasPart
   uuid: string
-}
-
-export interface Hover {
-  index: number
-  uuid: string
-  parentUuid?: string
-  distance: number
 }
 
 export interface MeshesProps {
@@ -102,12 +95,7 @@ const PartLoader = ({ part }: PartLoaderProps): React.JSX.Element | null => {
     if (!mainView.scene || !mainView.camera || !mainView.controls) return
 
     zoomToFit(mainView.scene, mainView.camera, mainView.controls)
-  }, [
-    mainView.scene,
-    mainView.scene?.children,
-    mainView.camera,
-    mainView.controls
-  ])
+  }, [mainView.scene?.children, mainView.camera, mainView.controls])
 
   /**
    * Render

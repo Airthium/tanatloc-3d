@@ -160,7 +160,7 @@ export const initialContextState: ContextState = {
     flip: undefined
   },
   geometry: {
-    dimension: 3
+    dimension: 0
   },
   result: {
     meshVisible: true

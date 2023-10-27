@@ -1,6 +1,5 @@
 import React from 'react'
-import { createEvent, fireEvent, render, screen } from '@testing-library/react'
-import ReactThreeTestRenderer from '@react-three/test-renderer'
+import { render } from '@testing-library/react'
 
 import { Context, ContextState, MyCanvasPart } from '../context'
 
@@ -25,10 +24,10 @@ jest.mock('three/examples/jsm/loaders/GLTFLoader', () => {
 
 jest.mock('../tools/zoomToFit', () => () => undefined)
 
-jest.mock('./Geometry2D', () => () => <mesh />)
-jest.mock('./Geometry3D', () => () => <mesh />)
-jest.mock('./Mesh', () => () => <mesh />)
-jest.mock('./Result', () => () => <mesh />)
+jest.mock('./geometry2D', () => () => <mesh />)
+jest.mock('./geometry3D', () => () => <mesh />)
+jest.mock('./mesh', () => () => <mesh />)
+jest.mock('./result', () => () => <mesh />)
 
 global.URL.createObjectURL = jest.fn()
 
@@ -137,162 +136,4 @@ describe('loader', () => {
 
     unmount()
   })
-
-  // test('geometry3D', async () => {
-  //   mockGLTFLoad.mockImplementation(() => ({
-  //     scene: {
-  //       userData: { type: 'geometry3D' },
-  //       children: [
-  //         {
-  //           name: 'Solid',
-  //           userData: { uuid: 'solid' },
-  //           children: [
-  //             {
-  //               name: 'Face',
-  //               userData: { uuid: 'face' },
-  //               geometry: {
-  //                 computeVertexNormals: jest.fn()
-  //               },
-  //               material: {
-  //                 color: 'color'
-  //               }
-  //             }
-  //           ]
-  //         }
-  //       ]
-  //     }
-  //   }))
-  //   const renderer = await ReactThreeTestRenderer.create(
-  //     <Context.Provider value={contextValue}>
-  //       <PartLoader part={part} uuid="uuid" />
-  //     </Context.Provider>
-  //   )
-
-  //   const solid = renderer.scene.children[0].children[0]
-  //   const face = solid.children[0]
-
-  //   await renderer.fireEvent(face, 'pointerMove', { distance: 1 })
-  //   await renderer.fireEvent(face, 'pointerMove', { distance: 2 })
-  //   await renderer.fireEvent(face, 'pointerLeave')
-  //   await renderer.fireEvent(face, 'pointerLeave')
-  //   await renderer.fireEvent(face, 'click')
-
-  //   await renderer.unmount()
-  // })
-
-  // test('geometry3D - face selection', async () => {
-  //   mockGLTFLoad.mockImplementation(() => ({
-  //     scene: {
-  //       userData: { type: 'geometry3D' },
-  //       children: [
-  //         {
-  //           name: 'Solid',
-  //           userData: { uuid: 'solid' },
-  //           children: [
-  //             {
-  //               name: 'Face',
-  //               userData: { uuid: 'face' },
-  //               geometry: {
-  //                 computeVertexNormals: jest.fn()
-  //               },
-  //               material: {
-  //                 color: 'color'
-  //               }
-  //             }
-  //           ]
-  //         }
-  //       ]
-  //     }
-  //   }))
-  //   const renderer = await ReactThreeTestRenderer.create(
-  //     <Context.Provider
-  //       value={
-  //         {
-  //           ...contextValue,
-  //           props: {
-  //             ...contextValue.props,
-  //             selection: 'face'
-  //           },
-  //           geometry: {
-  //             dimension: 3
-  //           },
-  //           display: {
-  //             transparent: false
-  //           },
-  //           sectionView: {
-  //             enabled: false
-  //           }
-  //         } as unknown as ContextState
-  //       }
-  //     >
-  //       <PartLoader part={part} uuid="uuid" />
-  //     </Context.Provider>
-  //   )
-
-  //   const solid = renderer.scene.children[0].children[0]
-  //   const face = solid.children[0]
-
-  //   await renderer.fireEvent(face, 'pointerMove', { distance: 1 })
-  //   await renderer.fireEvent(face, 'click')
-  //   await renderer.fireEvent(face, 'pointerLeave')
-
-  //   await renderer.fireEvent(face, 'pointerMove', { distance: 1 })
-  //   await renderer.fireEvent(face, 'click')
-  //   await renderer.fireEvent(face, 'click')
-  //   await renderer.fireEvent(face, 'pointerLeave')
-
-  //   await renderer.unmount()
-  // })
-
-  // test('geometry3D - solid selection', async () => {
-  //   mockGLTFLoad.mockImplementation(() => ({
-  //     scene: {
-  //       userData: { type: 'geometry3D' },
-  //       children: [
-  //         {
-  //           name: 'Solid',
-  //           userData: { uuid: 'solid' },
-  //           children: [
-  //             {
-  //               name: 'Face',
-  //               userData: { uuid: 'face' },
-  //               geometry: {
-  //                 computeVertexNormals: jest.fn()
-  //               },
-  //               material: {
-  //                 color: 'color'
-  //               }
-  //             }
-  //           ]
-  //         }
-  //       ]
-  //     }
-  //   }))
-  //   const renderer = await ReactThreeTestRenderer.create(
-  //     <Context.Provider
-  //       value={{
-  //         ...contextValue,
-  //         props: {
-  //           ...contextValue.props,
-  //           selection: 'solid'
-  //         }
-  //       }}
-  //     >
-  //       <PartLoader part={part} uuid="uuid" />
-  //     </Context.Provider>
-  //   )
-
-  //   const solid = renderer.scene.children[0].children[0]
-  //   const face = solid.children[0]
-
-  //   await renderer.fireEvent(face, 'pointerMove', { distance: 1 })
-  //   await renderer.fireEvent(face, 'click')
-  //   await renderer.fireEvent(face, 'pointerLeave')
-
-  //   await renderer.unmount()
-  // })
-
-  // TODO
-  // test geometry2D, mesh, result after
-  // Not completed for now
 })

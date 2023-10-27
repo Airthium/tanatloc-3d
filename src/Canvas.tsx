@@ -89,7 +89,10 @@ export const MyCanvas = (): React.JSX.Element => {
         >
           <Hud renderPriority={1}>
             <MainContextFiller controls={mainViewControls.current} />
-            <PerspectiveCamera makeDefault position={[-1, -1, -5]} />
+            <PerspectiveCamera
+              makeDefault
+              position={dimension === 3 ? [1, 1, 5] : [0, 0, -5]}
+            />
             <Grid update={controlsUpdate} />
             <ZoomToSelection />
             <SectionView />

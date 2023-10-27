@@ -277,6 +277,9 @@ const Face = ({
  * @returns Navigation
  */
 const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
+  // Ref
+  const currentDimension = useRef<number>(3)
+
   // Context
   const {
     mainView,
@@ -370,6 +373,17 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
     mainView.camera.position.copy(newPosition)
     mainView.camera.up.copy(currentFace.up)
   }, [mainView?.camera, mainView.controls, hover])
+
+  // Dimension
+  useEffect(() => {
+    if (dimension !== 2) return
+    if (dimension === currentDimension.current) return
+
+    currentDimension.current = dimension
+
+    setHover({ index: 0, distance: Infinity })
+    onClick()
+  }, [dimension, onClick])
 
   /**
    * Render

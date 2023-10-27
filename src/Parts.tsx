@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Context } from './context'
 
 import PartLoader from './loader'
+import { setGeometryDimension } from './context/actions'
 
 /**
  * Parts
@@ -14,12 +15,21 @@ const Parts = (): React.JSX.Element => {
 
   // Context
   const {
-    props: { parts }
+    props: { parts },
+    dispatch
   } = useContext(Context)
 
   // Manage parts
   useEffect(() => {
     if (!parts?.length) return
+
+    // Check dimension of all geometries
+    let dimension = 3
+    parts.forEach((part) => {
+      const localDimension = part.summary.dimension ?? 3
+      dimension = Math.min(dimension, localDimension)
+    })
+    dispatch(setGeometryDimension(dimension))
 
     // Check parts to add
     const toAdd = parts.filter(

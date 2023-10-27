@@ -1,11 +1,9 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ThreeEvent } from '@react-three/fiber'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { Context } from '../../context'
-import { setGeometryDimension } from '../../context/actions'
 
-import { Hover, hoverColor } from '..'
+import { hoverColor, hoverSelectColor, selectColor } from '..'
 
 /**
  * Props
@@ -24,11 +22,7 @@ export interface Geometry2DFaceProps {
   index: number
   hover: Hover
   selected: { index: number; uuid: string }[]
-  onPointerMove: (
-    event: ThreeEvent<PointerEvent>,
-    index: number,
-    uuid: string
-  ) => void
+  onPointerMove: (index: number, uuid: string) => void
   onPointerLeave: (index: number) => void
   onClick: () => void
 }
@@ -38,15 +32,35 @@ export interface Geometry2DEdgeProps {
   index: number
   hover: Hover
   selected: { index: number; uuid: string }[]
-  onPointerMove: (
-    event: ThreeEvent<PointerEvent>,
-    index: number,
-    uuid: string
-  ) => void
+  onPointerMove: (index: number, uuid: string) => void
   onPointerLeave: (index: number) => void
   onClick: () => void
 }
 
+export interface Hover {
+  index: number
+  uuid: string
+}
+
+export interface Select {
+  index: number
+  uuid: string
+}
+
+// Initial hover
+const initHover: Hover = {
+  index: -1,
+  uuid: ''
+}
+
+// Initial selected
+const initSelected: Select[] = []
+
+/**
+ * Geometry 2D edge
+ * @param props Props
+ * @returns Geometry2DEdge
+ */
 const Geometry2DEdge = ({
   child,
   index,
@@ -81,36 +95,47 @@ const Geometry2DEdge = ({
 
   /**
    * On pointer move
-   * @param event Event
    */
-  const onInternalPointerMove = useCallback(
-    (event: ThreeEvent<PointerEvent>): void => {
-      if (selection == 'edge') onPointerMove(event, index, uuid)
-    },
-    [index, uuid, onPointerMove]
-  )
+  const onInternalPointerMove = useCallback((): void => {
+    if (selection == 'edge') onPointerMove(index, uuid)
+  }, [selection, uuid, index, onPointerMove])
 
   /**
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
     if (selection === 'edge') onPointerLeave(index)
-  }, [index])
+  }, [selection, index, onPointerLeave])
+
+  /**
+   * On click
+   */
+  const onInternalClick = useCallback((): void => {
+    if (selection === 'edge') onClick()
+  }, [selection, onClick])
+
+  // Material color
+  const materialColor = useMemo(() => {
+    if (selection !== 'edge') return material.color
+    else if (selected.find((s) => s.index === index))
+      return hover.index === index ? hoverSelectColor : selectColor
+    else return hover.index === index ? hoverColor : material.color
+  }, [selection, material, hover, selected])
 
   return (
     <mesh
-      key={child.uuid}
       name={child.name}
+      type="Geometry2D_edge"
       uuid={child.userData.uuid}
       userData={child.userData}
       onPointerMove={onInternalPointerMove}
       onPointerLeave={onInternalPointerLeave}
-      onClick={onClick}
+      onClick={onInternalClick}
     >
       <primitive object={geometry} />
       <meshPhysicalMaterial
         side={2}
-        color={hover.index === index ? hoverColor : material.color}
+        color={materialColor}
         metalness={0.5}
         roughness={0.5}
         transparent
@@ -125,6 +150,11 @@ const Geometry2DEdge = ({
   )
 }
 
+/**
+ * Geometry 2D face
+ * @param props Props
+ * @returns Geometry2DFace
+ */
 const Geometry2DFace = ({
   child,
   index,
@@ -162,21 +192,32 @@ const Geometry2DFace = ({
 
   /**
    * On pointer move
-   * @param event Event
    */
-  const onInternalPointerMove = useCallback(
-    (event: ThreeEvent<PointerEvent>): void => {
-      if (selection === 'face') onPointerMove(event, index, uuid)
-    },
-    [index, uuid, onPointerMove]
-  )
+  const onInternalPointerMove = useCallback((): void => {
+    if (selection === 'face') onPointerMove(index, uuid)
+  }, [selection, uuid, index, onPointerMove])
 
   /**
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
     if (selection === 'face') onPointerLeave(index)
-  }, [index])
+  }, [selection, index, onPointerLeave])
+
+  /**
+   * On click
+   */
+  const onInternalClick = useCallback((): void => {
+    if (selection === 'face') onClick()
+  }, [selection, onClick])
+
+  // Material color
+  const materialColor = useMemo(() => {
+    if (selection !== 'face') return material.color
+    else if (selected.find((s) => s.index === index))
+      return hover.index === index ? hoverSelectColor : selectColor
+    else return hover.index === index ? hoverColor : material.color
+  }, [selection, material, hover, selected])
 
   /**
    * Render
@@ -185,16 +226,17 @@ const Geometry2DFace = ({
     <mesh
       key={child.uuid}
       name={child.name}
+      type="Geometry2D_face"
       uuid={child.userData.uuid}
       userData={child.userData}
       onPointerMove={onInternalPointerMove}
       onPointerLeave={onInternalPointerLeave}
-      onClick={onClick}
+      onClick={onInternalClick}
     >
       <primitive object={geometry} />
       <meshPhysicalMaterial
         side={2}
-        color={hover.index === index ? hoverColor : material.color}
+        color={materialColor}
         metalness={0.5}
         roughness={0.5}
         transparent
@@ -228,26 +270,13 @@ const Geometry2DFace = ({
  */
 const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
   // State
-  const [hover, setHover] = useState<Hover>({
-    index: -1,
-    distance: Infinity,
-    uuid: ''
-  })
-  const [selected, setSelected] = useState<{ index: number; uuid: string }[]>(
-    []
-  )
+  const [hover, setHover] = useState<Hover>(initHover)
+  const [selected, setSelected] = useState<Select[]>(initSelected)
 
   // Context
   const {
-    geometry: { dimension },
-    dispatch
+    props: { selection, onHighlight, onSelect }
   } = useContext(Context)
-
-  // Dimension
-  useEffect(() => {
-    if (dimension !== Math.max(2, dimension))
-      dispatch(setGeometryDimension(Math.max(2, dimension)))
-  }, [dimension, dispatch])
 
   // Children
   const children = useMemo(
@@ -263,14 +292,12 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
 
   /**
    * On pointer move
-   * @param event Event
    * @param index Index
    * @param uuid UUID
    */
   const onPointerMove = useCallback(
-    (event: ThreeEvent<PointerEvent>, index: number, uuid: string) => {
-      const distance = event.distance
-      if (distance < hover.distance) setHover({ index, distance, uuid })
+    (index: number, uuid: string) => {
+      setHover({ index, uuid })
     },
     [hover]
   )
@@ -281,19 +308,43 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
    */
   const onPointerLeave = useCallback(
     (index: number) => {
-      if (index === hover.index)
-        setHover({ index: -1, distance: Infinity, uuid: '', parentUuid: '' })
+      if (index === hover.index) setHover(initHover)
     },
     [hover]
   )
 
-  const onClick = useCallback(() => {}, [])
+  /**
+   * On click
+   */
+  const onClick = useCallback(() => {
+    const index = selected.findIndex((s) => s.index === hover.index)
+    if (index === -1)
+      setSelected([...selected, { index: hover.index, uuid: hover.uuid }])
+    else
+      setSelected([...selected.slice(0, index), ...selected.slice(index + 1)])
+  }, [hover, selected])
+
+  // On selection update
+  useEffect(() => {
+    setHover(initHover)
+    setSelected(initSelected)
+  }, [selection])
+
+  // On highlight
+  useEffect(() => {
+    onHighlight?.(hover.uuid)
+  }, [hover, onHighlight])
+
+  // On select
+  useEffect(() => {
+    onSelect?.(selected.map((s) => s.uuid))
+  }, [selected, onSelect])
 
   /**
    * Render
    */
   return (
-    <>
+    <mesh type="Geometry2D">
       {children.map((child, index) => (
         <Geometry2DFace
           key={child.uuid}
@@ -306,7 +357,7 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
           onClick={onClick}
         />
       ))}
-    </>
+    </mesh>
   )
 }
 

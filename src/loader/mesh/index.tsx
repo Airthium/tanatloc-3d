@@ -39,7 +39,7 @@ const MeshFace = ({ child }: MeshFaceProps) => {
     })
     const mesh = <lineSegments args={[geometry, material]} />
     return mesh
-  }, [child])
+  }, [child, display, sectionView])
 
   /**
    * Render
@@ -50,6 +50,17 @@ const MeshFace = ({ child }: MeshFaceProps) => {
       uuid={child.userData.uuid}
       userData={child.userData}
     >
+      <primitive object={child.geometry} />
+      <meshBasicMaterial
+        transparent
+        side={2}
+        opacity={0}
+        clippingPlanes={
+          sectionView.enabled && sectionView.clippingPlane
+            ? [sectionView.clippingPlane]
+            : []
+        }
+      />
       {mesh}
     </mesh>
   )
@@ -75,11 +86,11 @@ const Mesh = ({ scene }: MeshProps): React.JSX.Element => {
    * Render
    */
   return (
-    <>
+    <mesh type="Mesh">
       {children.map((child) => (
         <MeshFace key={child.uuid} child={child} />
       ))}
-    </>
+    </mesh>
   )
 }
 

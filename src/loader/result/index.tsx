@@ -98,8 +98,8 @@ const Result = ({ scene }: ResultProps): React.JSX.Element => {
    */
   return (
     <mesh
-      key={child.uuid}
       name={child.name}
+      type="Result"
       uuid={child.userData.uuid}
       userData={child.userData}
     >

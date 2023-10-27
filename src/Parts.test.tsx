@@ -13,13 +13,16 @@ describe('Parts', () => {
       summary: { uuid: 'uuid1', type: 'geometry3D', dimension: 3 }
     },
     {
-      summary: { uuid: 'uuid2', type: 'mesh', dimension: 3 }
+      summary: { uuid: 'uuid2', type: 'mesh' }
     }
   ]
+
+  const dispatch = jest.fn()
   const contextValue = {
     props: {
       parts
-    }
+    },
+    dispatch
   } as unknown as ContextState
 
   test('render', () => {
@@ -41,7 +44,8 @@ describe('Parts', () => {
           {
             props: {
               parts: [parts[0]]
-            }
+            },
+            dispatch
           } as unknown as ContextState
         }
       >
