@@ -14,6 +14,7 @@ import Provider, { Context, MyCanvasProps } from './context'
 import MainContextFiller from './context/mainContextFiller'
 import PropsContextFiller from './context/propsContextFiller'
 
+import FrameRate from './helpers/frameRate'
 import Navigation from './helpers/navigation'
 import Grid from './helpers/grid'
 import ZoomToSelection from './helpers/zoomToSelection'
@@ -73,6 +74,7 @@ export const MyCanvas = (): React.JSX.Element => {
     }
   }, [onResize])
 
+
   /**
    * Render
    */
@@ -81,12 +83,14 @@ export const MyCanvas = (): React.JSX.Element => {
       <Header oneResult={oneResult} />
       <div ref={containerDiv} style={style.container}>
         <Canvas
+          frameloop="demand"
           eventSource={containerDiv}
           gl={{
             preserveDrawingBuffer: true,
             localClippingEnabled: true
           }}
         >
+          <FrameRate/>
           <Hud renderPriority={1}>
             <MainContextFiller controls={mainViewControls.current} />
             <PerspectiveCamera

@@ -20,6 +20,7 @@ jest.mock('@react-three/drei', () => ({
 jest.mock('./context/mainContextFiller', () => () => <div />)
 jest.mock('./context/propsContextFiller', () => () => <div />)
 
+jest.mock('./helpers/frameRate', () => () => <div />)
 jest.mock('./helpers/navigation', () => () => <div />)
 jest.mock('./helpers/grid', () => () => <div />)
 jest.mock('./helpers/zoomToSelection', () => () => <div />)
