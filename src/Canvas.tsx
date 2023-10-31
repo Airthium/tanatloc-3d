@@ -74,7 +74,6 @@ export const MyCanvas = (): React.JSX.Element => {
     }
   }, [onResize])
 
-
   /**
    * Render
    */
@@ -90,12 +89,12 @@ export const MyCanvas = (): React.JSX.Element => {
             localClippingEnabled: true
           }}
         >
-          <FrameRate/>
+          <FrameRate />
           <Hud renderPriority={1}>
             <MainContextFiller controls={mainViewControls.current} />
             <PerspectiveCamera
               makeDefault
-              position={dimension === 3 ? [1, 1, 5] : [0, 0, -5]}
+              position={dimension === 3 ? [-1, -1, -5] : [0, 0, -5]}
             />
             <Grid update={controlsUpdate} />
             <ZoomToSelection />

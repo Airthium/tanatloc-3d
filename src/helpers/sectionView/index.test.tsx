@@ -14,7 +14,9 @@ jest.mock('three', () => {
         intersectPlane: jest.fn()
       }
     }
-    setFromCamera() {}
+    setFromCamera() {
+      // Empty
+    }
   }
 
   return {
@@ -46,6 +48,9 @@ describe('helpers/sectionView', () => {
       snap: new Vector3(0, 0, 1),
       flip: 1,
       hidePlane: false
+    },
+    settings: {
+      colors: {}
     },
     dispatch
   } as unknown as ContextState

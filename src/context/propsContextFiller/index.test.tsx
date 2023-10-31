@@ -6,7 +6,6 @@ import { Context, ContextState } from '..'
 import PropsContextFiller from '.'
 
 describe('context/propsContextFiller', () => {
-  const controls = {}
   const dispatch = jest.fn()
   const contextValue = { dispatch } as unknown as ContextState
 

@@ -3,8 +3,6 @@ import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { Context } from '../../context'
 
-import { hoverColor, hoverSelectColor, selectColor } from '..'
-
 /**
  * Props
  */
@@ -74,7 +72,10 @@ const Geometry2DEdge = ({
   const {
     props: { selection },
     display,
-    sectionView
+    sectionView,
+    settings: {
+      colors: { hoverColor, selectColor, hoverSelectColor }
+    }
   } = useContext(Context)
 
   // Geometry
@@ -120,7 +121,15 @@ const Geometry2DEdge = ({
     else if (selected.find((s) => s.index === index))
       return hover.index === index ? hoverSelectColor : selectColor
     else return hover.index === index ? hoverColor : material.color
-  }, [selection, material, hover, selected])
+  }, [
+    selection,
+    hoverColor,
+    selectColor,
+    hoverSelectColor,
+    material,
+    hover,
+    selected
+  ])
 
   return (
     <mesh
@@ -168,7 +177,10 @@ const Geometry2DFace = ({
   const {
     props: { selection },
     display,
-    sectionView
+    sectionView,
+    settings: {
+      colors: { hoverColor, selectColor, hoverSelectColor }
+    }
   } = useContext(Context)
 
   // Geometry
@@ -217,7 +229,15 @@ const Geometry2DFace = ({
     else if (selected.find((s) => s.index === index))
       return hover.index === index ? hoverSelectColor : selectColor
     else return hover.index === index ? hoverColor : material.color
-  }, [selection, material, hover, selected])
+  }, [
+    selection,
+    hoverColor,
+    selectColor,
+    hoverSelectColor,
+    material,
+    hover,
+    selected
+  ])
 
   /**
    * Render

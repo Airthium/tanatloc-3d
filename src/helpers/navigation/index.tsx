@@ -50,12 +50,6 @@ export interface FaceProps {
   onClick: () => void
 }
 
-// Base color
-const color = 0xd3d3d3
-
-// Hover color
-const hoverColor = 0xfad114
-
 // Text color
 const textColor = 0x000000
 
@@ -189,7 +183,10 @@ const Face = ({
 
   // Context
   const {
-    geometry: { dimension }
+    geometry: { dimension },
+    settings: {
+      colors: { baseColor, hoverColor }
+    }
   } = useContext(Context)
 
   // Shape
@@ -241,7 +238,7 @@ const Face = ({
       <mesh>
         {shape}
         <meshBasicMaterial
-          color={hover ? hoverColor : color}
+          color={hover ? hoverColor : baseColor}
           transparent
           opacity={0.75}
         />
@@ -249,7 +246,7 @@ const Face = ({
       <mesh rotation={[0, Math.PI, 0]}>
         {shape}
         <meshBasicMaterial
-          color={hover ? hoverColor : color}
+          color={hover ? hoverColor : baseColor}
           transparent
           opacity={0.75}
         />
@@ -258,7 +255,7 @@ const Face = ({
         <mesh>
           <sphereGeometry args={[faceSize / 2, 10, 10, 0, Math.PI, 0]} />
           <meshBasicMaterial
-            color={hover ? hoverColor : color}
+            color={hover ? hoverColor : baseColor}
             transparent
             opacity={0.2}
           />

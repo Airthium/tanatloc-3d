@@ -4,9 +4,9 @@ import Tanatloc3D from '../../../dist/Canvas'
 import { MyCanvasPart } from '../../../index.d'
 
 // import geometry2D from '../assets/geometry2D'
-import geometry3D from '../assets/geometry3D'
+// import geometry3D from '../assets/geometry3D'
 // import mesh from '../assets/mesh'
-// import result from '../assets/result'
+import result from '../assets/result'
 
 import styles from './page.module.css'
 
@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <Tanatloc3D
-        parts={[geometry3D as MyCanvasPart]}
+        parts={[result as MyCanvasPart]}
         // selection="face"
         data={true}
         postProcessing={true}

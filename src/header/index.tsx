@@ -15,6 +15,7 @@ import Zoom from './zoom'
 import SectionView from './sectionView'
 import Colorbar from './colorbar'
 import Results from './results'
+import Settings from './settings'
 
 import style from '../style/Header'
 
@@ -106,6 +107,8 @@ const Header = ({ oneResult }: HeaderProps) => {
                       <Colorbar key="colorbar" />
                     </>
                   ) : null}
+                  <Divider key="divider-4" style={style.divider} />
+                  <Settings />
                 </div>
               ]
             }

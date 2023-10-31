@@ -1,14 +1,20 @@
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useThree } from '@react-three/fiber'
 
-// FPS
-const fps = 30
+import { Context } from '../../context'
 
 /**
  * Frame rate
  * @returns FrameRate
  */
 const FrameRate = () => {
+  // Context
+  const {
+    settings: {
+      frameRate: { fps }
+    }
+  } = useContext(Context)
+
   // Data
   const { invalidate } = useThree()
 
@@ -18,7 +24,7 @@ const FrameRate = () => {
     return () => {
       clearInterval(id)
     }
-  }, [])
+  }, [fps])
 
   return null
 }

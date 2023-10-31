@@ -7,12 +7,6 @@ import { Context, ContextState } from '../../context'
 
 import Geometry2D from '.'
 
-jest.mock('..', () => ({
-  hoverColor: 'hoverColor',
-  hoverSelectColor: 'hoverSelectColor',
-  selectColor: 'selectColor'
-}))
-
 describe('loader/Geometry2D', () => {
   const geometry = new BoxGeometry(1, 1, 1)
   const material = new MeshBasicMaterial()
@@ -51,6 +45,9 @@ describe('loader/Geometry2D', () => {
     sectionView: {
       enabled: true,
       clippingPlane: 'plane'
+    },
+    settings: {
+      colors: {}
     }
   } as unknown as ContextState
 

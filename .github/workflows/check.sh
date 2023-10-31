@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Install
+yarn
+
 # Depcheck
 yarn depcheck
 

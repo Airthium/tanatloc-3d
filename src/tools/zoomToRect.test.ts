@@ -6,7 +6,9 @@ import { Vector3 } from 'three'
 const mockIntersectObjects = jest.fn()
 jest.mock('three', () => {
   class Raycaster {
-    setFromCamera() {}
+    setFromCamera() {
+      // Empty
+    }
     intersectObjects() {
       return mockIntersectObjects()
     }

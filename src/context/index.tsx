@@ -39,6 +39,23 @@ export interface ContextState {
     customMin?: number
     customMax?: number
   }
+  settings: {
+    light: {
+      color: string
+      intensity: number
+      decay: number
+    }
+    colors: {
+      baseColor: string
+      hoverColor: string
+      selectColor: string
+      hoverSelectColor: string
+    }
+    frameRate: {
+      fps: number
+    }
+    localStorage: boolean
+  }
   dispatch: Dispatch<ContextAction>
 }
 
@@ -125,6 +142,35 @@ export interface MyCanvasPropsSnapshot {
 }
 
 /**
+ * Default settings
+ */
+export const defaultSettings: ContextState['settings'] = {
+  light: {
+    color: '#ffffff',
+    intensity: 1,
+    decay: 0
+  },
+  colors: {
+    baseColor: '#d3d3d3',
+    hoverColor: '#fad114',
+    selectColor: '#fa9814',
+    hoverSelectColor: '#fa5f14'
+  },
+  frameRate: {
+    fps: 30
+  },
+  localStorage: false
+}
+
+/**
+ * Local storage settings
+ */
+const localStorageSettings =
+  typeof window === 'undefined'
+    ? undefined
+    : localStorage.getItem('tanatloc-3d-settings')
+
+/**
  * Initial context state
  */
 export const initialContextState: ContextState = {
@@ -170,6 +216,9 @@ export const initialContextState: ContextState = {
     min: -1,
     max: 1
   },
+  settings: localStorageSettings
+    ? JSON.parse(localStorageSettings)
+    : defaultSettings,
   dispatch: () => undefined
 }
 
@@ -204,7 +253,8 @@ export const actionTypes = {
   SETLUTMIN: 'SETLUTMIN',
   SETLUTMAX: 'SETLUTMAX',
   SETLUTCUSTOMMIN: 'SETLUTCUSTOMMIN',
-  SETLUTCUSTOMMAX: 'SETLUTCUSTOMMAX'
+  SETLUTCUSTOMMAX: 'SETLUTCUSTOMMAX',
+  SETSETTINGS: 'SETSETTINGS'
 }
 
 /**
@@ -449,6 +499,11 @@ export const reducer = (
           ...state.lut,
           customMax: action.value
         }
+      }
+    case actionTypes.SETSETTINGS:
+      return {
+        ...state,
+        settings: action.value
       }
     default:
       return state

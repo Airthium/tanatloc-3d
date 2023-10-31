@@ -1,5 +1,6 @@
 import { TrackballControlsProps } from '@react-three/drei'
 import {
+  ContextState,
   MyCanvasPart,
   MyCanvasProps,
   MyCanvasPropsSnapshot,
@@ -292,4 +293,14 @@ export const setLutCustomMin = (min?: number) => ({
 export const setLutCustomMax = (max?: number) => ({
   type: actionTypes.SETLUTCUSTOMMAX,
   value: max
+})
+
+/**
+ * Set settings
+ * @param settings Settings
+ * @returns Action
+ */
+export const setSettings = (settings: ContextState['settings']) => ({
+  type: actionTypes.SETSETTINGS,
+  value: settings
 })

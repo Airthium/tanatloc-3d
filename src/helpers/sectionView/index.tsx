@@ -39,12 +39,6 @@ export interface ControlDomeProps {
 
 export type Type = 'Plane' | 'Dome' | undefined
 
-// Color
-const color = 0xfad114
-
-// Hover color
-const hoverColor = 0xfa9814
-
 // Default plane normal
 const defaultNormal = new Vector3(0, 0, -1)
 
@@ -365,7 +359,14 @@ const SectionView = (): React.JSX.Element | null => {
   const [type, setType] = useState<Type>()
 
   // Context
-  const { mainView, sectionView, dispatch } = useContext(Context)
+  const {
+    mainView,
+    sectionView,
+    settings: {
+      colors: { hoverColor: baseColor, selectColor: hoverColor }
+    },
+    dispatch
+  } = useContext(Context)
 
   /**
    * On pointer down
@@ -504,7 +505,7 @@ const SectionView = (): React.JSX.Element | null => {
         <planeGeometry args={[1, 1]} />
         <meshPhysicalMaterial
           side={2}
-          color={hoverPlane ? hoverColor : color}
+          color={hoverPlane ? hoverColor : baseColor}
           metalness={0.5}
           roughness={0.5}
           transparent
@@ -520,7 +521,7 @@ const SectionView = (): React.JSX.Element | null => {
         <sphereGeometry args={[0.2, 32, 32, Math.PI, -Math.PI]} />
         <meshPhysicalMaterial
           side={2}
-          color={hoverDome ? hoverColor : color}
+          color={hoverDome ? hoverColor : baseColor}
           metalness={0.5}
           roughness={0.5}
           transparent

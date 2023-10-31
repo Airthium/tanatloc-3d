@@ -9,15 +9,6 @@ export interface LightProps {
   update?: number
 }
 
-// Color
-const color = 0xffffff
-
-// Intensity
-const intensity = 1
-
-// Decay
-const decay = 0
-
 /**
  * Light
  * @param props Props
@@ -29,7 +20,7 @@ const Light = ({ update }: LightProps) => {
   const [positionLeft, setPositionLeft] = useState<THREE.Vector3>(null!)
 
   // Context
-  const { mainView } = useContext(Context)
+  const { mainView, settings } = useContext(Context)
 
   // Set position
   useEffect(() => {
@@ -71,15 +62,15 @@ const Light = ({ update }: LightProps) => {
       <ambientLight />
       <pointLight
         position={positionRight}
-        color={color}
-        intensity={intensity}
-        decay={decay}
+        color={settings.light.color}
+        intensity={settings.light.intensity}
+        decay={settings.light.decay}
       />
       <pointLight
         position={positionLeft}
-        color={color}
-        intensity={intensity}
-        decay={decay}
+        color={settings.light.color}
+        intensity={settings.light.intensity}
+        decay={settings.light.decay}
       />
     </group>
   )

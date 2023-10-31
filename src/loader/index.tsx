@@ -24,15 +24,6 @@ export interface MeshesProps {
   scene: GLTF['scene']
 }
 
-// Hover color
-export const hoverColor = 0xfad114
-
-// Select color
-export const selectColor = 0xfa9814
-
-// Hover select color
-export const hoverSelectColor = 0xfa5f14
-
 /**
  * Meshes
  * @param props
@@ -90,13 +81,12 @@ const PartLoader = ({ part }: PartLoaderProps): React.JSX.Element | null => {
     )
   }, [part])
 
-  // TODO not always works
   // Zoom to fit
   useEffect(() => {
     if (!mainView.scene || !mainView.camera || !mainView.controls) return
 
     zoomToFit(mainView.scene, mainView.camera, mainView.controls)
-  }, [mainView.scene?.children, mainView.camera, mainView.controls])
+  }, [mainView.scene, mainView.camera, mainView.controls, gltf])
 
   /**
    * Render

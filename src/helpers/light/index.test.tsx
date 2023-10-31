@@ -16,6 +16,9 @@ describe('helpers/light', () => {
       controls: {
         target: new Vector3(0, 0, 0)
       }
+    },
+    settings: {
+      light: {}
     }
   } as unknown as ContextState
 

@@ -23,6 +23,9 @@ describe('helpers/navigation', () => {
     },
     geometry: {
       dimension: 3
+    },
+    settings: {
+      colors: {}
     }
   } as unknown as ContextState
 

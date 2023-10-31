@@ -11,6 +11,7 @@ jest.mock('./zoom', () => () => <div />)
 jest.mock('./sectionView', () => () => <div />)
 jest.mock('./colorbar', () => () => <div />)
 jest.mock('./results', () => () => <div />)
+jest.mock('./settings', () => () => <div />)
 
 describe('header', () => {
   const contextValue = {

@@ -327,6 +327,13 @@ describe('context', () => {
 
   expect(
     reducer(initialContextState, {
+      type: actionTypes.SETSETTINGS,
+      value: {}
+    })
+  ).toEqual({ ...initialContextState, settings: {} })
+
+  expect(
+    reducer(initialContextState, {
       type: 'unknown type',
       value: 0
     })
