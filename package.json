@@ -1,6 +1,6 @@
 {
   "name": "tanatloc-3d",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "private": true,
   "types": "index.d.ts",
   "main": "dist/Canvas.js",
@@ -22,15 +22,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "5.2.6",
-<<<<<<< HEAD
-    "@react-three/drei": "9.88.10",
-    "@react-three/fiber": "8.15.9",
-    "antd": "5.10.3",
-=======
     "@react-three/drei": "9.88.11",
     "@react-three/fiber": "8.15.9",
     "antd": "5.11.0",
->>>>>>> hotfix
     "three": "0.158.0"
   },
   "devDependencies": {
@@ -42,11 +36,7 @@
     "@testing-library/react": "14.0.0",
     "@types/jest": "29.5.7",
     "@types/node": "20.8.10",
-<<<<<<< HEAD
-    "@types/react": "18.2.33",
-=======
     "@types/react": "18.2.35",
->>>>>>> hotfix
     "@types/react-dom": "18.2.14",
     "@types/three": "0.158.1",
     "depcheck": "1.4.7",
