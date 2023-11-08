@@ -12,6 +12,9 @@
 # production
 /dist
 
+# pack
+package.tgz
+
 # misc
 .DS_Store
 .env.local
