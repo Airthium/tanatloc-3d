@@ -1,9 +1,16 @@
 {
+  "$schema": "https://json.schemastore.org/swcrc",
   "minify": true,
   "exclude": [".*\\.test.tsx"],
   "jsc": {
     "parser": {
-      "syntax": "typescript"
+      "syntax": "typescript",
+      "jsx": true
+    },
+    "transform": {
+      "react": {
+        "runtime": "automatic"
+      }
     },
     "target": "es2022"
   },
