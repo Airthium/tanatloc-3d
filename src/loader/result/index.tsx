@@ -4,8 +4,8 @@ import {
   LineBasicMaterial,
   WireframeGeometry
 } from 'three'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
-import { Lut } from 'three/examples/jsm/math/Lut'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { Lut } from 'three/examples/jsm/math/Lut.js'
 
 import { Context } from '../../context'
 import { setLutMax, setLutMin } from '../../context/actions'

@@ -1,6 +1,7 @@
 .git
 .github
 .yarn
+config
 coverage
 node_modules
 renderer

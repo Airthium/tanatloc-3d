@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 import { Context } from '../../context'
 

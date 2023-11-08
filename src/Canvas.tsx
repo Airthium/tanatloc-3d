@@ -6,7 +6,7 @@ import {
   useRef,
   useState
 } from 'react'
-import { Layout } from 'antd'
+import { ConfigProvider, Layout, ThemeConfig } from 'antd'
 import { Canvas } from '@react-three/fiber'
 import { Hud, PerspectiveCamera, TrackballControls } from '@react-three/drei'
 
@@ -83,7 +83,7 @@ export const MyCanvas = (): React.JSX.Element => {
       <div ref={containerDiv} style={style.container}>
         <Canvas
           frameloop="demand"
-          eventSource={containerDiv}
+          // eventSource={containerDiv} // needed for section view ? // Bug on hot reload
           gl={{
             preserveDrawingBuffer: true,
             localClippingEnabled: true
@@ -127,15 +127,19 @@ export const MyCanvas = (): React.JSX.Element => {
  * MyCanvasWithContext
  * @returns MyCanvasWithContext
  */
-const MyCanvasWithContext = (props: MyCanvasProps) => {
+const MyCanvasWithContext = (
+  props: MyCanvasProps & { theme?: ThemeConfig }
+) => {
   /**
    * Render
    */
   return (
-    <Provider>
-      <PropsContextFiller {...props} />
-      <MyCanvas />
-    </Provider>
+    <ConfigProvider theme={props.theme}>
+      <Provider>
+        <PropsContextFiller {...props} />
+        <MyCanvas />
+      </Provider>
+    </ConfigProvider>
   )
 }
 

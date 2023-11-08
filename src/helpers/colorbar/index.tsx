@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Line, OrthographicCamera, Text } from '@react-three/drei'
 import { Float32BufferAttribute } from 'three'
-import { Lut } from 'three/examples/jsm/math/Lut'
+import { Lut } from 'three/examples/jsm/math/Lut.js'
 
 import { Context } from '../../context'
 
