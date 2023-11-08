@@ -3,7 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 
 import { Context, ContextState } from './context'
 
-import Canvas, { MyCanvas } from './Canvas'
+import Tanatloc3DWithContext, { Tanatloc3D } from './Canvas'
 
 jest.mock('@react-three/fiber', () => ({
   Canvas: (props: any) => <div>{props.children}</div>
@@ -31,7 +31,15 @@ jest.mock('./helpers/light', () => () => <div />)
 jest.mock('./header', () => () => <div />)
 jest.mock('./Parts', () => () => <div />)
 
-describe('Canvas', () => {
+describe('Tanatloc3DWithContext', () => {
+  test('render', () => {
+    const { unmount } = render(<Tanatloc3DWithContext />)
+
+    unmount()
+  })
+})
+
+describe('Tanatloc3D', () => {
   const contextValue = {
     props: { parts: [{ summary: { type: 'result' } }] },
     geometry: {
@@ -39,20 +47,14 @@ describe('Canvas', () => {
     }
   } as unknown as ContextState
 
-  test('render Canvas', () => {
-    const { unmount } = render(<Canvas />)
-
-    unmount()
-  })
-
   test('render', () => {
-    const { unmount } = render(<MyCanvas />)
+    const { unmount } = render(<Tanatloc3D />)
 
     unmount()
   })
 
   test('controls update', () => {
-    const { unmount } = render(<MyCanvas />)
+    const { unmount } = render(<Tanatloc3D />)
 
     const trackballControls = screen.getByRole('TrackballControls')
     fireEvent.click(trackballControls)
@@ -61,7 +63,7 @@ describe('Canvas', () => {
   })
 
   test('resize', () => {
-    const { unmount } = render(<MyCanvas />)
+    const { unmount } = render(<Tanatloc3D />)
 
     fireEvent.resize(window)
 
@@ -71,7 +73,7 @@ describe('Canvas', () => {
   test('oneResult', () => {
     const { unmount } = render(
       <Context.Provider value={contextValue}>
-        <MyCanvas />
+        <Tanatloc3D />
       </Context.Provider>
     )
 

@@ -1,11 +1,13 @@
 import { Dispatch, ReactNode, createContext, useMemo, useReducer } from 'react'
 import { TrackballControlsProps } from '@react-three/drei'
 
+import { Tanatloc3DProps } from '../..'
+
 /**
  * Context state interface
  */
 export interface ContextState {
-  props: MyCanvasProps
+  props: Tanatloc3DProps
   mainView: {
     gl?: THREE.WebGLRenderer
     scene?: THREE.Scene
@@ -72,73 +74,6 @@ export interface ContextAction {
  */
 export interface ProviderProps {
   children: ReactNode
-}
-
-/**
- * MyCanvas props
- */
-export interface MyCanvasProps {
-  parts?: MyCanvasPart[]
-  selection?: Selection
-  data?: boolean
-  postProcessing?: boolean
-  snapshot?: MyCanvasPropsSnapshot
-  onHighlight?: (uuid?: string) => void
-  onSelect?: (uuids: string[]) => void
-  onData?: () => void
-  onPostProcessing?: () => void
-}
-
-export type Selection = 'solid' | 'face' | 'edge'
-
-export interface MyCanvasPart {
-  summary: MyCanvasPartSummary
-  buffer: Buffer
-  extra?: {
-    name?: string
-    id?: string
-    glb?: string
-    fields?: {
-      name: string
-      units?: MyCanvasPart[]
-      unit?: MyCanvasPart
-    }[]
-  }
-}
-
-export interface MyCanvasPartSummary {
-  uuid: string
-  type: 'geometry2D' | 'geometry3D' | 'mesh' | 'result'
-  dimension: number
-  solids?: MyCanvasPropsSummaryElement[]
-  faces?: MyCanvasPropsSummaryElement[]
-  edges?: MyCanvasPropsSummaryElement[]
-}
-
-export interface MyCanvasPropsSummaryElement {
-  name: string
-  uuid: string
-  label: number
-  color?: MyCanvasPartSummaryColor
-}
-
-export interface MyCanvasPartSummaryColor {
-  r: number
-  g: number
-  b: number
-}
-
-export interface MyCanvasPartUnit {
-  label: string
-  multiplicator?: number
-  adder?: number
-}
-
-export interface MyCanvasPropsSnapshot {
-  project?: {
-    apiRoute: (image: string) => Promise<void>
-    size?: { width: number; height: number }
-  }
 }
 
 /**

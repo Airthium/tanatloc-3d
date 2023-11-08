@@ -1,6 +1,7 @@
 import { useContext, useMemo } from 'react'
 import { LineBasicMaterial, WireframeGeometry } from 'three'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { Context } from '../../context'
 

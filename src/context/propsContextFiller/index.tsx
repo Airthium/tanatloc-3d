@@ -1,6 +1,8 @@
 import { useContext, useEffect } from 'react'
 
-import { Context, MyCanvasProps } from '..'
+import { Tanatloc3DProps } from '../../..'
+
+import { Context } from '..'
 import {
   setPropsData,
   setPropsPostProcessing,
@@ -18,7 +20,7 @@ import {
  * @param props Props
  * @returns PropsContextFiller
  */
-const PropsContextFiller = (props: MyCanvasProps): null => {
+const PropsContextFiller = (props: Tanatloc3DProps): null => {
   // Context
   const { dispatch } = useContext(Context)
 

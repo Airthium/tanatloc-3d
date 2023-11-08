@@ -1,7 +1,7 @@
 'use client'
 
 import Tanatloc3D from '../../../../dist/Canvas'
-import { MyCanvasPart } from '../../../../index.d'
+import { Tanatloc3DPart } from '../../../../index.d'
 
 // import geometry2D from '../assets/geometry2D'
 // import geometry3D from '../assets/geometry3D'
@@ -11,7 +11,7 @@ import result from '../../assets/result'
 const ThreeD = () => {
   return (
     <Tanatloc3D
-      parts={[result as MyCanvasPart]}
+      parts={[result as Tanatloc3DPart]}
       // selection="face"
       data={true}
       postProcessing={true}

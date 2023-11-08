@@ -10,7 +10,9 @@ import { ConfigProvider, Layout, ThemeConfig } from 'antd'
 import { Canvas } from '@react-three/fiber'
 import { Hud, PerspectiveCamera, TrackballControls } from '@react-three/drei'
 
-import Provider, { Context, MyCanvasProps } from './context'
+import { Tanatloc3DProps } from '..'
+
+import Provider, { Context } from './context'
 import MainContextFiller from './context/mainContextFiller'
 import PropsContextFiller from './context/propsContextFiller'
 
@@ -28,10 +30,10 @@ import Parts from './Parts'
 import style from './style/Canvas'
 
 /**
- * MyCanvas
- * @returns MyCanvas
+ * Tanatloc3D
+ * @returns Tanatloc3D
  */
-export const MyCanvas = (): React.JSX.Element => {
+export const Tanatloc3D = (): React.JSX.Element => {
   // Ref
   const containerDiv = useRef(null!)
   const mainViewControls = useRef(null!)
@@ -124,11 +126,11 @@ export const MyCanvas = (): React.JSX.Element => {
 }
 
 /**
- * MyCanvasWithContext
- * @returns MyCanvasWithContext
+ * Tanatloc3DWithContext
+ * @returns Tanatloc3DWithContext
  */
-const MyCanvasWithContext = (
-  props: MyCanvasProps & { theme?: ThemeConfig }
+const Tanatloc3DWithContext = (
+  props: Tanatloc3DProps & { theme?: ThemeConfig }
 ) => {
   /**
    * Render
@@ -137,10 +139,10 @@ const MyCanvasWithContext = (
     <ConfigProvider theme={props.theme}>
       <Provider>
         <PropsContextFiller {...props} />
-        <MyCanvas />
+        <Tanatloc3D />
       </Provider>
     </ConfigProvider>
   )
 }
 
-export default MyCanvasWithContext
+export default Tanatloc3DWithContext

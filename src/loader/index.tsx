@@ -1,9 +1,11 @@
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { Buffer } from 'buffer'
 
-import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { Context, MyCanvasPart } from '../context'
+import { Tanatloc3DPart } from '../..'
+
+import { Context } from '../context'
 
 import zoomToFit from '../tools/zoomToFit'
 
@@ -16,7 +18,7 @@ import Result from './result'
  * Props
  */
 export interface PartLoaderProps {
-  part: MyCanvasPart
+  part: Tanatloc3DPart
   uuid: string
 }
 

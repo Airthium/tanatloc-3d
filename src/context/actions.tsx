@@ -1,18 +1,15 @@
 import { TrackballControlsProps } from '@react-three/drei'
-import {
-  ContextState,
-  MyCanvasPart,
-  MyCanvasProps,
-  MyCanvasPropsSnapshot,
-  actionTypes
-} from '.'
+
+import { Tanatloc3DPart, Tanatloc3DProps, Tanatloc3DPropsSnapshot } from '../..'
+
+import { ContextState, actionTypes } from './index'
 
 /**
  * Set props parts
  * @param parts Parts
  * @returns Action
  */
-export const setPropsParts = (parts?: MyCanvasPart[]) => ({
+export const setPropsParts = (parts?: Tanatloc3DPart[]) => ({
   type: actionTypes.SETPROPSPARTS,
   value: parts
 })
@@ -32,7 +29,7 @@ export const setPropsSelection = (selection?: string) => ({
  * @param data Data
  * @returns Action
  */
-export const setPropsData = (data: MyCanvasProps['data']) => ({
+export const setPropsData = (data: Tanatloc3DProps['data']) => ({
   type: actionTypes.SETPROPSDATA,
   value: data
 })
@@ -43,7 +40,7 @@ export const setPropsData = (data: MyCanvasProps['data']) => ({
  * @returns Action
  */
 export const setPropsPostProcessing = (
-  postProcessing: MyCanvasProps['postProcessing']
+  postProcessing: Tanatloc3DProps['postProcessing']
 ) => ({
   type: actionTypes.SETPROPSPOSTPROCESSING,
   value: postProcessing
@@ -55,7 +52,7 @@ export const setPropsPostProcessing = (
  * @returns Action
  */
 export const setPropsSnapshotProject = (
-  project: MyCanvasPropsSnapshot['project']
+  project: Tanatloc3DPropsSnapshot['project']
 ) => ({
   type: actionTypes.SETPROPSSNAPSHOTPROJECT,
   value: project
@@ -67,7 +64,7 @@ export const setPropsSnapshotProject = (
  * @returns Action
  */
 export const setPropsOnHighlight = (
-  onHighlight: MyCanvasProps['onHighlight']
+  onHighlight: Tanatloc3DProps['onHighlight']
 ) => ({
   type: actionTypes.SETPROPSONHIGHLIGHT,
   value: onHighlight
@@ -78,7 +75,7 @@ export const setPropsOnHighlight = (
  * @param onSelect On select
  * @returns Action
  */
-export const setPropsOnSelect = (onSelect: MyCanvasProps['onSelect']) => ({
+export const setPropsOnSelect = (onSelect: Tanatloc3DProps['onSelect']) => ({
   type: actionTypes.SETPROPSONSELECT,
   value: onSelect
 })
@@ -88,7 +85,7 @@ export const setPropsOnSelect = (onSelect: MyCanvasProps['onSelect']) => ({
  * @param onData On data
  * @returns Action
  */
-export const setPropsOnData = (onData: MyCanvasProps['onData']) => ({
+export const setPropsOnData = (onData: Tanatloc3DProps['onData']) => ({
   type: actionTypes.SETPROPSONDATA,
   value: onData
 })
@@ -99,7 +96,7 @@ export const setPropsOnData = (onData: MyCanvasProps['onData']) => ({
  * @returns Action
  */
 export const setPropsOnPostprocessing = (
-  onPostprocessing: MyCanvasProps['onPostProcessing']
+  onPostprocessing: Tanatloc3DProps['onPostProcessing']
 ) => ({
   type: actionTypes.SETPROPSONPOSTPROCESSING,
   value: onPostprocessing

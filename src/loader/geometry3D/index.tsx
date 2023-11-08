@@ -1,6 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ThreeEvent } from '@react-three/fiber'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { Context } from '../../context'
 

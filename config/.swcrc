@@ -1,0 +1,13 @@
+{
+  "minify": true,
+  "exclude": [".*\\.test.tsx"],
+  "jsc": {
+    "parser": {
+      "syntax": "typescript"
+    },
+    "target": "es2022"
+  },
+  "module": {
+    "type": "es6"
+  }
+}
