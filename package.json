@@ -1,6 +1,6 @@
 {
   "name": "@airthium/tanatloc-3d",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "types": "index.d.ts",
   "main": "dist/Canvas.js",
   "scripts": {
