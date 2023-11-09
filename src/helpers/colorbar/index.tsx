@@ -2,11 +2,11 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Line, OrthographicCamera, Text } from '@react-three/drei'
 import { Float32BufferAttribute } from 'three'
 
-import { Lut } from 'three/examples/jsm/math/Lut.js'
-
 import { Context } from '../../context'
 
 import toReadable from '../../tools/toReadable'
+
+const LutModule = import('three/examples/jsm/math/Lut.js')
 
 /**
  * Props
@@ -69,26 +69,31 @@ const Colorbar = ({ resize }: ColorbarProps): React.JSX.Element => {
 
   // Vertex colors
   useEffect(() => {
-    const geometry = ref.current.geometry
+    const setColor = async () => {
+      const Lut = (await LutModule).Lut
 
-    const lookUpTable = new Lut(lut.colormap)
-    lookUpTable.setMin(-(size - 1) / 2)
-    lookUpTable.setMax((size - 1) / 2)
+      const geometry = ref.current.geometry
 
-    const position = geometry.getAttribute('position')
+      const lookUpTable = new Lut(lut.colormap)
+      lookUpTable.setMin(-(size - 1) / 2)
+      lookUpTable.setMax((size - 1) / 2)
 
-    const colors = new Float32Array(position.count * 3)
-    for (let i = 0; i < position.count; ++i) {
-      const color = lookUpTable.getColor(position.array[3 * i + 0])
+      const position = geometry.getAttribute('position')
 
-      colors[3 * i + 0] = color.r
-      colors[3 * i + 1] = color.g
-      colors[3 * i + 2] = color.b
+      const colors = new Float32Array(position.count * 3)
+      for (let i = 0; i < position.count; ++i) {
+        const color = lookUpTable.getColor(position.array[3 * i + 0])
+
+        colors[3 * i + 0] = color.r
+        colors[3 * i + 1] = color.g
+        colors[3 * i + 2] = color.b
+      }
+      ref.current.geometry.setAttribute(
+        'color',
+        new Float32BufferAttribute(colors, 3)
+      )
     }
-    ref.current.geometry.setAttribute(
-      'color',
-      new Float32BufferAttribute(colors, 3)
-    )
+    setColor().catch(console.error)
   }, [lut.colormap])
 
   // Aspect ratio (main camera)

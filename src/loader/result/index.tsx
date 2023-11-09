@@ -5,7 +5,8 @@ import {
   WireframeGeometry
 } from 'three'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
-import { Lut } from 'three/examples/jsm/math/Lut.js'
+
+const LutModule = import('three/examples/jsm/math/Lut.js')
 
 import { Context } from '../../context'
 import { setLutMax, setLutMin } from '../../context/actions'
@@ -41,29 +42,35 @@ const Result = ({ scene }: ResultProps): React.JSX.Element => {
 
   // Vertex color
   useEffect(() => {
-    const data = child.geometry.getAttribute('data')
-    const array = data.array as unknown as number[]
-    const min = array.reduce((a, b) => Math.min(a, b), Infinity)
-    const max = array.reduce((a, b) => Math.max(a, b), -Infinity)
-    dispatch(setLutMin(min))
-    dispatch(setLutMax(max))
+    const setColor = async () => {
+      const Lut = (await LutModule).Lut
 
-    const lookUpTable = new Lut(lut.colormap)
-    lookUpTable.setMin(lut.customMin ?? min)
-    lookUpTable.setMax(lut.customMax ?? max)
+      const data = child.geometry.getAttribute('data')
+      const array = data.array as unknown as number[]
+      const min = array.reduce((a, b) => Math.min(a, b), Infinity)
+      const max = array.reduce((a, b) => Math.max(a, b), -Infinity)
+      dispatch(setLutMin(min))
+      dispatch(setLutMax(max))
 
-    const vertexColors = new Float32Array(data.count * 3)
-    for (let i = 0; i < data.count; ++i) {
-      const vertexColor = lookUpTable.getColor(data.array[i])
+      const lookUpTable = new Lut(lut.colormap)
+      lookUpTable.setMin(lut.customMin ?? min)
+      lookUpTable.setMax(lut.customMax ?? max)
 
-      vertexColors[3 * i + 0] = vertexColor.r
-      vertexColors[3 * i + 1] = vertexColor.g
-      vertexColors[3 * i + 2] = vertexColor.b
+      const vertexColors = new Float32Array(data.count * 3)
+      for (let i = 0; i < data.count; ++i) {
+        const vertexColor = lookUpTable.getColor(data.array[i])
+
+        vertexColors[3 * i + 0] = vertexColor.r
+        vertexColors[3 * i + 1] = vertexColor.g
+        vertexColors[3 * i + 2] = vertexColor.b
+      }
+      child.geometry.setAttribute(
+        'color',
+        new Float32BufferAttribute(vertexColors, 3)
+      )
     }
-    child.geometry.setAttribute(
-      'color',
-      new Float32BufferAttribute(vertexColors, 3)
-    )
+
+    setColor().catch(console.error)
   }, [child, lut.colormap, lut.customMin, lut.customMax, dispatch])
 
   // Result mesh
