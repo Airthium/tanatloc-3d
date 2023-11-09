@@ -110,7 +110,6 @@ const PartLoader = ({ part }: PartLoaderProps): React.JSX.Element | null => {
    */
   return gltf?.scene ? (
     <mesh
-      data-testid={gltf.scene.userData?.type}
       type="Part"
       uuid={part.summary.uuid}
       userData={gltf.scene.userData}

@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 
 import { Tanatloc3DPart } from '../..'
 
@@ -69,13 +69,13 @@ describe('loader', () => {
   test('Geometry2D', async () => {
     const PartLoader = (await import('.')).default
 
-    const { unmount } = render(
+    const { container, unmount } = render(
       <Context.Provider value={contextValue}>
         <PartLoader part={part} uuid="uuid" />
       </Context.Provider>
     )
 
-    await waitFor(() => screen.getByTestId('other'))
+    await waitFor(() => container.querySelector('mesh'))
 
     unmount()
   })
