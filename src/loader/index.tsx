@@ -3,7 +3,7 @@ import { Buffer } from 'buffer'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
-const GLTFModule = import('three/examples/jsm/loaders/GLTFLoader')
+const GLTFModule = import('three/examples/jsm/loaders/GLTFLoader.js')
 
 import { Tanatloc3DPart } from '../..'
 
@@ -103,11 +103,14 @@ const PartLoader = ({ part }: PartLoaderProps): React.JSX.Element | null => {
     zoomToFit(mainView.scene, mainView.camera, mainView.controls)
   }, [mainView.scene, mainView.camera, mainView.controls, gltf])
 
+  console.log(gltf)
+
   /**
    * Render
    */
   return gltf?.scene ? (
     <mesh
+      data-testid={gltf.scene.userData?.type}
       type="Part"
       uuid={part.summary.uuid}
       userData={gltf.scene.userData}

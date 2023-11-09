@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 import { Vector3 } from 'three'
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Color } from 'antd/es/color-picker'
 import { fireEvent, render, screen } from '@testing-library/react'
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
 
 import { Context, ContextState } from '../../context'
@@ -11,7 +10,11 @@ describe('helpers/zoomToSelection', () => {
   const dispatch = jest.fn()
   const parentElement = {
     appendChild: jest.fn(),
-    removeChild: jest.fn()
+    removeChild: jest.fn(),
+    getBoundingClientRect: () => ({
+      left: 0,
+      top: 0
+    })
   }
   const contextValue = {
     mainView: {

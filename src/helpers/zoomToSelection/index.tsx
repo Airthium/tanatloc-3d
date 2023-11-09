@@ -60,14 +60,12 @@ const ZoomToSelection = (): null => {
    */
   const onPointerDown = useCallback(
     (event: MouseEvent) => {
-      if (!parentElement) return
-
       // x, y
       const x = event.clientX
       const y = event.clientY
 
       // Rect
-      const rect = parentElement.getBoundingClientRect()
+      const rect = parentElement!.getBoundingClientRect()
 
       // Left, top
       const left = x - rect.left
@@ -93,14 +91,12 @@ const ZoomToSelection = (): null => {
    */
   const onPointerMove = useCallback(
     (event: MouseEvent) => {
-      if (!parentElement) return
-
       // x, y
       const x = event.clientX
       const y = event.clientY
 
       // Rect
-      const rect = parentElement.getBoundingClientRect()
+      const rect = parentElement!.getBoundingClientRect()
 
       // Left, top
       const left = x - rect.left
@@ -128,7 +124,6 @@ const ZoomToSelection = (): null => {
    */
   const onPointerUp = useCallback(
     (event: MouseEvent) => {
-      if (!parentElement) return
       if (
         !mainView.gl ||
         !mainView.scene ||
@@ -142,7 +137,7 @@ const ZoomToSelection = (): null => {
       const y = event.clientY
 
       // Rect
-      const rect = parentElement.getBoundingClientRect()
+      const rect = parentElement!.getBoundingClientRect()
 
       // Left, top
       const left = x - rect.left

@@ -1,4 +1,3 @@
-import React from 'react'
 import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import ReactThreeTestRenderer from '@react-three/test-renderer'

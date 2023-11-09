@@ -1,7 +1,8 @@
-import React from 'react'
 import { render } from '@testing-library/react'
 
-import { Context, ContextState, MyCanvasPart } from '../context'
+import { Tanatloc3DPart } from '../..'
+
+import { Context, ContextState } from '../context'
 
 import PartLoader from '.'
 
@@ -35,7 +36,7 @@ describe('loader', () => {
   const part = {
     summary: { uuid: 'uuid' },
     buffer: 'buffer'
-  } as unknown as MyCanvasPart
+  } as unknown as Tanatloc3DPart
 
   const dispatch = jest.fn()
   const contextValue = {
@@ -76,58 +77,6 @@ describe('loader', () => {
   })
 
   test('with context', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <PartLoader part={part} uuid="uuid" />
-      </Context.Provider>
-    )
-
-    unmount()
-  })
-
-  test('Geometry2D', () => {
-    mockGLTFLoad.mockImplementation(() => ({
-      scene: { userData: { type: 'geometry2D' } }
-    }))
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <PartLoader part={part} uuid="uuid" />
-      </Context.Provider>
-    )
-
-    unmount()
-  })
-
-  test('Geometry3D', () => {
-    mockGLTFLoad.mockImplementation(() => ({
-      scene: { userData: { type: 'geometry3D' } }
-    }))
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <PartLoader part={part} uuid="uuid" />
-      </Context.Provider>
-    )
-
-    unmount()
-  })
-
-  test('Mesh', () => {
-    mockGLTFLoad.mockImplementation(() => ({
-      scene: { userData: { type: 'mesh' } }
-    }))
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <PartLoader part={part} uuid="uuid" />
-      </Context.Provider>
-    )
-
-    unmount()
-  })
-
-  test('Result', () => {
-    mockGLTFLoad.mockImplementation(() => ({
-      scene: { userData: { type: 'result' } }
-    }))
     const { unmount } = render(
       <Context.Provider value={contextValue}>
         <PartLoader part={part} uuid="uuid" />
