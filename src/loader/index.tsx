@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Buffer } from 'buffer'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -63,6 +63,9 @@ const Meshes = ({ scene }: MeshesProps): React.JSX.Element => {
  * @returns PartLoader
  */
 const PartLoader = ({ part }: PartLoaderProps): React.JSX.Element | null => {
+  // Ref
+  const currentGLTF = useRef<GLTF>()
+
   // State
   const [gltf, setGltf] = useState<GLTF>()
 
@@ -94,6 +97,8 @@ const PartLoader = ({ part }: PartLoaderProps): React.JSX.Element | null => {
   // Zoom to fit
   useEffect(() => {
     if (!mainView.scene || !mainView.camera || !mainView.controls) return
+    if (currentGLTF.current === gltf) return
+    currentGLTF.current = gltf
 
     zoomToFit(mainView.scene, mainView.camera, mainView.controls)
   }, [mainView.scene, mainView.camera, mainView.controls, gltf])

@@ -373,12 +373,12 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
 
   // Dimension
   useEffect(() => {
-    if (dimension !== 2) return
     if (dimension === currentDimension.current) return
-
     currentDimension.current = dimension
 
-    setHover({ index: 0, distance: Infinity })
+    if (dimension !== 2) return
+
+    setHover({ index: 0, distance: Infinity }) // Front
     onClick()
   }, [dimension, onClick])
 

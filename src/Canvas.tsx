@@ -85,7 +85,6 @@ export const Tanatloc3D = (): React.JSX.Element => {
       <div ref={containerDiv} style={style.container}>
         <Canvas
           frameloop="demand"
-          // eventSource={containerDiv} // needed for section view ? // Bug on hot reload
           gl={{
             preserveDrawingBuffer: true,
             localClippingEnabled: true
@@ -96,7 +95,7 @@ export const Tanatloc3D = (): React.JSX.Element => {
             <MainContextFiller controls={mainViewControls.current} />
             <PerspectiveCamera
               makeDefault
-              position={dimension === 3 ? [-1, -1, -5] : [0, 0, -5]}
+              position={dimension === 3 ? [1, 1, 5] : [0, 0, 5]}
             />
             <Grid update={controlsUpdate} />
             <ZoomToSelection />

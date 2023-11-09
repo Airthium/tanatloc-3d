@@ -58,45 +58,69 @@ const ZoomToSelection = (): null => {
    * Pointer down
    * @param event Event
    */
-  const onPointerDown = useCallback((event: MouseEvent) => {
-    // x, y
-    const x = event.clientX
-    const y = event.clientY
+  const onPointerDown = useCallback(
+    (event: MouseEvent) => {
+      if (!parentElement) return
 
-    // Selection box
-    div.style.display = 'block'
-    div.style.left = x + 'px'
-    div.style.top = y + 'px'
-    div.style.width = '0'
-    div.style.height = '0'
+      // x, y
+      const x = event.clientX
+      const y = event.clientY
 
-    // Save start point
-    startPoint.x = x
-    startPoint.y = y
-  }, [])
+      // Rect
+      const rect = parentElement.getBoundingClientRect()
+
+      // Left, top
+      const left = x - rect.left
+      const top = y - rect.top
+
+      // Selection box
+      div.style.display = 'block'
+      div.style.left = left + 'px'
+      div.style.top = top + 'px'
+      div.style.width = '0'
+      div.style.height = '0'
+
+      // Save start point
+      startPoint.x = left
+      startPoint.y = top
+    },
+    [parentElement]
+  )
 
   /**
    * Pointer move
    * @param event Event
    */
-  const onPointerMove = useCallback((event: MouseEvent) => {
-    // x, y
-    const x = event.clientX
-    const y = event.clientY
+  const onPointerMove = useCallback(
+    (event: MouseEvent) => {
+      if (!parentElement) return
 
-    // Bottom point
-    const bottomRightX = Math.max(startPoint.x, x)
-    const bottomRightY = Math.max(startPoint.y, y)
+      // x, y
+      const x = event.clientX
+      const y = event.clientY
 
-    // Top left
-    const topLeftX = Math.min(startPoint.x, x)
-    const topLeftY = Math.min(startPoint.y, y)
+      // Rect
+      const rect = parentElement.getBoundingClientRect()
 
-    div.style.left = topLeftX + 'px'
-    div.style.top = topLeftY + 'px'
-    div.style.width = bottomRightX - topLeftX + 'px'
-    div.style.height = bottomRightY - topLeftY + 'px'
-  }, [])
+      // Left, top
+      const left = x - rect.left
+      const top = y - rect.top
+
+      // Bottom point
+      const bottomRightX = Math.max(startPoint.x, left)
+      const bottomRightY = Math.max(startPoint.y, top)
+
+      // Top left
+      const topLeftX = Math.min(startPoint.x, left)
+      const topLeftY = Math.min(startPoint.y, top)
+
+      div.style.left = topLeftX + 'px'
+      div.style.top = topLeftY + 'px'
+      div.style.width = bottomRightX - topLeftX + 'px'
+      div.style.height = bottomRightY - topLeftY + 'px'
+    },
+    [parentElement]
+  )
 
   /**
    * Pointer up
@@ -104,6 +128,7 @@ const ZoomToSelection = (): null => {
    */
   const onPointerUp = useCallback(
     (event: MouseEvent) => {
+      if (!parentElement) return
       if (
         !mainView.gl ||
         !mainView.scene ||
@@ -116,6 +141,13 @@ const ZoomToSelection = (): null => {
       const x = event.clientX
       const y = event.clientY
 
+      // Rect
+      const rect = parentElement.getBoundingClientRect()
+
+      // Left, top
+      const left = x - rect.left
+      const top = y - rect.top
+
       // Selection box
       div.style.display = 'none'
       div.style.left = '0'
@@ -123,7 +155,10 @@ const ZoomToSelection = (): null => {
       div.style.width = '0'
       div.style.height = '0'
 
-      // End point
+      // Start, end point
+      startPoint.x = startPoint.x + left
+      startPoint.y = startPoint.y + top
+
       endPoint.x = x
       endPoint.y = y
 
@@ -139,7 +174,14 @@ const ZoomToSelection = (): null => {
       // Disabled zoom to selection
       dispatch(setZoomToSelectionEnabled(false))
     },
-    [mainView.gl, mainView.scene, mainView.camera, mainView.controls, dispatch]
+    [
+      parentElement,
+      mainView.gl,
+      mainView.scene,
+      mainView.camera,
+      mainView.controls,
+      dispatch
+    ]
   )
 
   // Event initialization
