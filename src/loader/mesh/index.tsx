@@ -3,7 +3,7 @@ import { LineBasicMaterial, WireframeGeometry } from 'three'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { Context } from '../../context'
+import { Context } from '@context/renderer'
 
 /**
  * Props

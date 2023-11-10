@@ -7,7 +7,7 @@ import {
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { Context, ContextState } from '../../context'
+import { Context, ContextState } from '@context/renderer'
 
 import Mesh from '.'
 

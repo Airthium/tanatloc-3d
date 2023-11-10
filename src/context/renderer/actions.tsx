@@ -2,12 +2,12 @@ import { TrackballControlsProps } from '@react-three/drei'
 
 import {
   Tanatloc3DPart,
-  Tanatloc3DProps,
-  Tanatloc3DPropsSnapshot,
+  Tanatloc3DRendererProps,
+  Tanatloc3DRendererPropsSnapshot,
   Tanatloc3DSelection
-} from '../..'
+} from '@index'
 
-import { ContextState, actionTypes } from './index'
+import { ContextState, actionTypes } from '.'
 
 /**
  * Set props parts
@@ -34,7 +34,7 @@ export const setPropsSelection = (selection?: Tanatloc3DSelection) => ({
  * @param data Data
  * @returns Action
  */
-export const setPropsData = (data: Tanatloc3DProps['data']) => ({
+export const setPropsData = (data: Tanatloc3DRendererProps['data']) => ({
   type: actionTypes.SETPROPSDATA,
   value: data
 })
@@ -45,7 +45,7 @@ export const setPropsData = (data: Tanatloc3DProps['data']) => ({
  * @returns Action
  */
 export const setPropsPostProcessing = (
-  postProcessing: Tanatloc3DProps['postProcessing']
+  postProcessing: Tanatloc3DRendererProps['postProcessing']
 ) => ({
   type: actionTypes.SETPROPSPOSTPROCESSING,
   value: postProcessing
@@ -57,7 +57,7 @@ export const setPropsPostProcessing = (
  * @returns Action
  */
 export const setPropsSnapshotProject = (
-  project: Tanatloc3DPropsSnapshot['project']
+  project: Tanatloc3DRendererPropsSnapshot['project']
 ) => ({
   type: actionTypes.SETPROPSSNAPSHOTPROJECT,
   value: project
@@ -69,7 +69,7 @@ export const setPropsSnapshotProject = (
  * @returns Action
  */
 export const setPropsOnHighlight = (
-  onHighlight: Tanatloc3DProps['onHighlight']
+  onHighlight: Tanatloc3DRendererProps['onHighlight']
 ) => ({
   type: actionTypes.SETPROPSONHIGHLIGHT,
   value: onHighlight
@@ -80,7 +80,9 @@ export const setPropsOnHighlight = (
  * @param onSelect On select
  * @returns Action
  */
-export const setPropsOnSelect = (onSelect: Tanatloc3DProps['onSelect']) => ({
+export const setPropsOnSelect = (
+  onSelect: Tanatloc3DRendererProps['onSelect']
+) => ({
   type: actionTypes.SETPROPSONSELECT,
   value: onSelect
 })
@@ -90,7 +92,7 @@ export const setPropsOnSelect = (onSelect: Tanatloc3DProps['onSelect']) => ({
  * @param onData On data
  * @returns Action
  */
-export const setPropsOnData = (onData: Tanatloc3DProps['onData']) => ({
+export const setPropsOnData = (onData: Tanatloc3DRendererProps['onData']) => ({
   type: actionTypes.SETPROPSONDATA,
   value: onData
 })
@@ -101,7 +103,7 @@ export const setPropsOnData = (onData: Tanatloc3DProps['onData']) => ({
  * @returns Action
  */
 export const setPropsOnPostprocessing = (
-  onPostprocessing: Tanatloc3DProps['onPostProcessing']
+  onPostprocessing: Tanatloc3DRendererProps['onPostProcessing']
 ) => ({
   type: actionTypes.SETPROPSONPOSTPROCESSING,
   value: onPostprocessing

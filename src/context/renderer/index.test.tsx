@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react'
 
 import Provider, { actionTypes, initialContextState, reducer } from '.'
-import { Tanatloc3DPart } from '../..'
+import { Tanatloc3DPart } from '@index'
 
 describe('context', () => {
   test('render', () => {

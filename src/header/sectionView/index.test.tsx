@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
-import { Context, ContextState } from '../../context'
+import { Context, ContextState } from '@context/renderer'
 
 import SectionView from '.'
 

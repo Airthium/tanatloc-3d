@@ -2,13 +2,13 @@ import { useThree } from '@react-three/fiber'
 import { useContext, useEffect } from 'react'
 import { TrackballControlsProps } from '@react-three/drei'
 
-import { Context } from '..'
+import { Context } from '@context/renderer'
 import {
   setMainViewCamera,
   setMainViewControls,
   setMainViewGl,
   setMainViewScene
-} from '../actions'
+} from '@context/renderer/actions'
 
 export interface MainContextFillerProps {
   controls?: TrackballControlsProps

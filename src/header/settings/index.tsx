@@ -12,8 +12,8 @@ import {
 import { Color } from 'antd/es/color-picker'
 import { SettingOutlined } from '@ant-design/icons'
 
-import { Context, defaultSettings } from '../../context'
-import { setSettings } from '../../context/actions'
+import { Context, defaultSettings } from '@context/renderer'
+import { setSettings } from '@context/renderer/actions'
 
 export interface FormValues {
   lightColor: Color | string

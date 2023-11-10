@@ -7,11 +7,11 @@ import {
   ZoomOutOutlined
 } from '@ant-design/icons'
 
-import { Context } from '../../context'
-import { setZoomToSelectionEnabled } from '../../context/actions'
+import { Context } from '@context/renderer'
+import { setZoomToSelectionEnabled } from '@context/renderer/actions'
 
-import zoomToFit from '../../tools/zoomToFit'
-import zoom from '../../tools/zoom'
+import zoomToFit from '@tools/zoomToFit'
+import zoom from '@tools/zoom'
 
 // Zoom in progress
 let zoomInProgress: number | undefined = undefined

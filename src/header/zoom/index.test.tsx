@@ -1,7 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
+import { Context, ContextState } from '@context/renderer'
+
 import Zoom from '.'
-import { Context, ContextState } from '../../context'
 
 const mockZoomToFit = jest.fn()
 jest.mock('../../tools/zoomToFit', () => () => mockZoomToFit())

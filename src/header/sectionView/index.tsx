@@ -8,15 +8,15 @@ import {
 } from '@ant-design/icons'
 import { Vector3 } from 'three'
 
-import { Context } from '../../context'
+import { Context } from '@context/renderer'
 import {
   setSectionViewEnabled,
   setSectionViewFlip,
   setSectionViewHidePlane,
   setSectionViewSnap
-} from '../../context/actions'
+} from '@context/renderer/actions'
 
-import style from '../../style/Header'
+import style from '@style/Header'
 
 // Directions
 const X = new Vector3(1, 0, 0)

@@ -6,14 +6,14 @@ import {
   ColumnWidthOutlined
 } from '@ant-design/icons'
 
-import { Context } from '../../context'
+import { Context } from '@context/renderer'
 import {
   setLutColormap,
   setLutCustomMax,
   setLutCustomMin
-} from '../../context/actions'
+} from '@context/renderer/actions'
 
-import toReadable from '../../tools/toReadable'
+import toReadable from '@tools/toReadable'
 
 /**
  * Colorbar

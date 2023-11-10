@@ -1,13 +1,13 @@
 import { Dispatch, ReactNode, createContext, useMemo, useReducer } from 'react'
 import { TrackballControlsProps } from '@react-three/drei'
 
-import { Tanatloc3DProps } from '../..'
+import { Tanatloc3DRendererProps } from '@index'
 
 /**
  * Context state interface
  */
 export interface ContextState {
-  props: Tanatloc3DProps
+  props: Tanatloc3DRendererProps
   mainView: {
     gl?: THREE.WebGLRenderer
     scene?: THREE.Scene

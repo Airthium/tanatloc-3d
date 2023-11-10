@@ -10,7 +10,7 @@ import { ThreeEvent, useFrame } from '@react-three/fiber'
 import { OrthographicCamera, Text } from '@react-three/drei'
 import { Vector3, Shape } from 'three'
 
-import { Context } from '../../context'
+import { Context } from '@context/renderer'
 
 import Arrow from '../arrow'
 
@@ -78,6 +78,12 @@ const faces: IFace[] = [
 // Variables
 const faceSize = size * (1 - corner)
 const faceRadius = size * corner
+
+// Initial hover
+const initHover = {
+  index: -1,
+  distance: Infinity
+}
 
 /**
  * Axis
@@ -285,10 +291,9 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
 
   // State
   const [aspectRatio, setAspectRatio] = useState<number>(1)
-  const [hover, setHover] = useState<{ index: number; distance: number }>({
-    index: -1,
-    distance: Infinity
-  })
+  const [hover, setHover] = useState<{ index: number; distance: number }>(
+    initHover
+  )
 
   // Camera position
   const cameraPosition: [number, number, number] = useMemo(
@@ -341,7 +346,7 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
    */
   const onPointerLeave = useCallback(
     (index: number): void => {
-      if (index === hover.index) setHover({ index: -1, distance: Infinity })
+      if (index === hover.index) setHover(initHover)
     },
     [hover]
   )
@@ -380,6 +385,7 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
 
     setHover({ index: 0, distance: Infinity }) // Front
     onClick()
+    setHover(initHover)
   }, [dimension, onClick])
 
   /**

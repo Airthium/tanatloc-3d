@@ -6,8 +6,11 @@ import {
 } from '@ant-design/icons'
 import { SwitchChangeEventHandler } from 'antd/es/switch'
 
-import { Context } from '../../context'
-import { setDisplayGrid, setDisplayTransparent } from '../../context/actions'
+import { Context } from '@context/renderer'
+import {
+  setDisplayGrid,
+  setDisplayTransparent
+} from '@context/renderer/actions'
 
 /**
  * Display

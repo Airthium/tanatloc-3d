@@ -1,13 +1,11 @@
 const style: { [key: string]: React.CSSProperties } = {
-  layout: {
-    width: '100%',
+  canvas: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 'calc(100% - 200px)',
     height: '100%',
     zIndex: 9
-  },
-  container: {
-    position: 'relative',
-    width: '100%',
-    height: '100%'
   }
 }
 

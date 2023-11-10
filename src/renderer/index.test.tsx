@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
-import { Context, ContextState } from './context'
+import { Context, ContextState } from '@context/renderer'
 
-import Tanatloc3DWithContext, { Tanatloc3D } from './Canvas'
+import RendererWithContext, { Renderer } from '.'
 
 jest.mock('@react-three/fiber', () => ({
   Canvas: (props: any) => <div>{props.children}</div>
@@ -16,23 +16,23 @@ jest.mock('@react-three/drei', () => ({
   )
 }))
 
-jest.mock('./context/mainContextFiller', () => () => <div />)
-jest.mock('./context/propsContextFiller', () => () => <div />)
+jest.mock('../context/mainContextFiller', () => () => <div />)
+jest.mock('../context/propsContextFiller', () => () => <div />)
 
-jest.mock('./helpers/frameRate', () => () => <div />)
-jest.mock('./helpers/navigation', () => () => <div />)
-jest.mock('./helpers/grid', () => () => <div />)
-jest.mock('./helpers/zoomToSelection', () => () => <div />)
-jest.mock('./helpers/sectionView', () => () => <div />)
-jest.mock('./helpers/colorbar', () => () => <div />)
-jest.mock('./helpers/light', () => () => <div />)
+jest.mock('../helpers/frameRate', () => () => <div />)
+jest.mock('../helpers/navigation', () => () => <div />)
+jest.mock('../helpers/grid', () => () => <div />)
+jest.mock('../helpers/zoomToSelection', () => () => <div />)
+jest.mock('../helpers/sectionView', () => () => <div />)
+jest.mock('../helpers/colorbar', () => () => <div />)
+jest.mock('../helpers/light', () => () => <div />)
 
-jest.mock('./header', () => () => <div />)
-jest.mock('./Parts', () => () => <div />)
+jest.mock('../header', () => () => <div />)
+jest.mock('./parts', () => () => <div />)
 
-describe('Tanatloc3DWithContext', () => {
+describe('RendererWithContext', () => {
   test('render', () => {
-    const { unmount } = render(<Tanatloc3DWithContext />)
+    const { unmount } = render(<RendererWithContext />)
 
     unmount()
   })
@@ -47,13 +47,13 @@ describe('Tanatloc3D', () => {
   } as unknown as ContextState
 
   test('render', () => {
-    const { unmount } = render(<Tanatloc3D />)
+    const { unmount } = render(<Renderer />)
 
     unmount()
   })
 
   test('controls update', () => {
-    const { unmount } = render(<Tanatloc3D />)
+    const { unmount } = render(<Renderer />)
 
     const trackballControls = screen.getByRole('TrackballControls')
     fireEvent.click(trackballControls)
@@ -62,7 +62,7 @@ describe('Tanatloc3D', () => {
   })
 
   test('resize', () => {
-    const { unmount } = render(<Tanatloc3D />)
+    const { unmount } = render(<Renderer />)
 
     fireEvent.resize(window)
 
@@ -72,7 +72,7 @@ describe('Tanatloc3D', () => {
   test('oneResult', () => {
     const { unmount } = render(
       <Context.Provider value={contextValue}>
-        <Tanatloc3D />
+        <Renderer />
       </Context.Provider>
     )
 

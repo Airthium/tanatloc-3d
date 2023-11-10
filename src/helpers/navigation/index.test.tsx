@@ -1,7 +1,7 @@
 import { Euler, Vector3 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import { Context, ContextState } from '../../context'
+import { Context, ContextState } from '@context/renderer'
 
 import Navigation from '.'
 

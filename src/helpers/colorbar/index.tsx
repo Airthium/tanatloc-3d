@@ -2,9 +2,9 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Line, OrthographicCamera, Text } from '@react-three/drei'
 import { Float32BufferAttribute } from 'three'
 
-import { Context } from '../../context'
+import { Context } from '@context/renderer'
 
-import toReadable from '../../tools/toReadable'
+import toReadable from '@tools/toReadable'
 
 const LutModule = import('three/examples/jsm/math/Lut.js')
 

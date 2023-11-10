@@ -3,8 +3,8 @@ import { Switch, Tooltip } from 'antd'
 import { TableOutlined } from '@ant-design/icons'
 import { SwitchChangeEventHandler } from 'antd/es/switch'
 
-import { Context } from '../../context'
-import { setResultMeshVisible } from '../../context/actions'
+import { Context } from '@context/renderer'
+import { setResultMeshVisible } from '@context/renderer/actions'
 
 /**
  * Results

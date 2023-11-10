@@ -7,7 +7,21 @@
     "strict": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@index": ["./index.d.ts"],
+      "@tunnel": ["./src/index.js"],
+      "@context": ["./src/context/index.js"],
+      "@context/*": ["./src/context/*"],
+      "@header": ["./src/header/index.js"],
+      "@helpers/*": ["./src/helpers/*"],
+      "@loader": ["./src/loader/index.js"],
+      "@loader/*": ["./src/loader/*"],
+      "@tools/*": ["./src/tools/*"],
+      "@style/*": ["./src/style/*"]
+    }
   },
   "include": ["./src", "index.d.ts"]
 }

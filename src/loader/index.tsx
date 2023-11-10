@@ -5,11 +5,11 @@ import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 const GLTFModule = import('three/examples/jsm/loaders/GLTFLoader.js')
 
-import { Tanatloc3DPart } from '../..'
+import { Tanatloc3DPart } from '@index'
 
-import { Context } from '../context'
+import { Context } from '@context/renderer'
 
-import zoomToFit from '../tools/zoomToFit'
+import zoomToFit from '@tools/zoomToFit'
 
 import Geometry2D from './geometry2D'
 import Geometry3D from './geometry3D'
@@ -102,8 +102,6 @@ const PartLoader = ({ part }: PartLoaderProps): React.JSX.Element | null => {
 
     zoomToFit(mainView.scene, mainView.camera, mainView.controls)
   }, [mainView.scene, mainView.camera, mainView.controls, gltf])
-
-  console.log(gltf)
 
   /**
    * Render

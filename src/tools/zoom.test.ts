@@ -1,6 +1,7 @@
 import { TrackballControlsProps } from '@react-three/drei'
-import zoom from './zoom'
 import { Mesh, Vector3 } from 'three'
+
+import zoom from './zoom'
 
 describe('tools/zoom', () => {
   const camera = {

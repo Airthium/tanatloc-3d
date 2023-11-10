@@ -1,8 +1,8 @@
 import { useContext, useEffect } from 'react'
 
-import { Tanatloc3DProps } from '../../..'
+import { Tanatloc3DRendererProps } from '@index'
 
-import { Context } from '..'
+import { Context } from '@context/renderer'
 import {
   setPropsData,
   setPropsPostProcessing,
@@ -13,14 +13,14 @@ import {
   setPropsParts,
   setPropsSelection,
   setPropsSnapshotProject
-} from '../actions'
+} from '@context/renderer/actions'
 
 /**
  * Props context filler
  * @param props Props
  * @returns PropsContextFiller
  */
-const PropsContextFiller = (props: Tanatloc3DProps): null => {
+const PropsContextFiller = (props: Tanatloc3DRendererProps): null => {
   // Context
   const { dispatch } = useContext(Context)
 

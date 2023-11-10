@@ -7,7 +7,7 @@ import {
   ToolOutlined
 } from '@ant-design/icons'
 
-import { Context } from '../context'
+import { Context } from '@context/renderer'
 
 import Snapshot from './snapshot'
 import Display from './display'
@@ -17,7 +17,7 @@ import Colorbar from './colorbar'
 import Results from './results'
 import Settings from './settings'
 
-import style from '../style/Header'
+import style from '@style/Header'
 
 /**
  * Props

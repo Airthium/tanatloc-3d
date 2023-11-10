@@ -4,7 +4,7 @@ const style: { [key: string]: React.CSSProperties } = {
     background: 'none',
     backgroundColor: 'transparent',
     height: 'unset',
-    width: '200px',
+    width: '200px !important',
     zIndex: 10,
     top: 0,
     right: 0,

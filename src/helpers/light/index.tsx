@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
 
-import { Context } from '../../context'
+import { Context } from '@context/renderer'
 
 /**
  * Props

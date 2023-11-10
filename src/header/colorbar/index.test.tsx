@@ -1,10 +1,10 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
-import { Context, ContextState } from '../../context'
+import { Context, ContextState } from '@context/renderer'
 
 import Colorbar from '.'
 
-jest.mock('../../tools/toReadable', () => () => 'value')
+jest.mock('@tools/toReadable', () => () => 'value')
 
 describe('header/colorbar', () => {
   const dispatch = jest.fn()

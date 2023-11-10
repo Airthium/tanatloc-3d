@@ -5,7 +5,7 @@ import { Tanatloc3DSelectionValue } from '../../..'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { Context } from '../../context'
+import { Context } from '@context/renderer'
 
 /**
  * Props
@@ -312,15 +312,22 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
     [scene.children]
   )
 
+  // Selectionable
+  const selectionable = useMemo(() => {
+    const uuid = scene.userData?.uuid
+    return selection?.part && uuid === selection.part
+  }, [scene.userData?.uuid, selection?.part])
+
   /**
    * On pointer move
    * @param data Selection
    */
   const onPointerMove = useCallback(
     (data: Selection) => {
+      if (!selectionable) return
       if (data.distance < hover.distance) setHover(data)
     },
-    [hover]
+    [selectionable, hover]
   )
 
   /**
@@ -328,20 +335,22 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
    */
   const onPointerLeave = useCallback(
     (index: number) => {
+      if (!selectionable) return
       if (index === hover.index) setHover(initHover)
     },
-    [hover]
+    [selectionable, hover]
   )
 
   /**
    * On click
    */
   const onClick = useCallback(() => {
+    if (!selectionable) return
     const index = selected.findIndex((s) => s.index === hover.index)
     if (index === -1) setSelected([...selected, hover])
     else
       setSelected([...selected.slice(0, index), ...selected.slice(index + 1)])
-  }, [hover, selected])
+  }, [selectionable, hover, selected])
 
   // On selection update
   useEffect(() => {

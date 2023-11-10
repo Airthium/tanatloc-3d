@@ -2,9 +2,9 @@ import { useCallback, useContext } from 'react'
 import { Button, Dropdown, Tooltip } from 'antd'
 import { FundProjectionScreenOutlined } from '@ant-design/icons'
 
-import { Tanatloc3DPropsSnapshot } from '../../..'
+import { Tanatloc3DRendererPropsSnapshot } from '@index'
 
-import { Context } from '../../context'
+import { Context } from '@context/renderer'
 
 // Snapshot keys
 const projectSnapshotKey = 'projectSnapshot'
@@ -20,7 +20,7 @@ const projectSnapshot = (
   gl: THREE.WebGLRenderer,
   scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
-  propsSnapshotProject: Tanatloc3DPropsSnapshot['project']
+  propsSnapshotProject: Tanatloc3DRendererPropsSnapshot['project']
 ) => {
   // Initial data
   const width = gl.domElement.width

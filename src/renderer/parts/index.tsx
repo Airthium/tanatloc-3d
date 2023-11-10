@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from 'react'
 
-import { Context } from './context'
-import { setGeometryDimension } from './context/actions'
+import { Context } from '@context/renderer'
+import { setGeometryDimension } from '@context/renderer/actions'
 
-import PartLoader from './loader'
+import PartLoader from '@loader'
 
 /**
  * Parts

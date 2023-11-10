@@ -11,10 +11,10 @@ import {
 import { ThreeEvent } from '@react-three/fiber'
 import { TrackballControlsProps } from '@react-three/drei'
 
-import { Context } from '../../context'
-import { setSectionViewClippingPlane } from '../../context/actions'
+import { Context } from '@context/renderer'
+import { setSectionViewClippingPlane } from '@context/renderer/actions'
 
-import computeSceneBoundingBox from '../../tools/computeSceneBoundingBox'
+import computeSceneBoundingBox from '@tools/computeSceneBoundingBox'
 
 /**
  * Props

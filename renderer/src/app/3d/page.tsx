@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-//@ts-ignore
-import Tanatloc3D from '../../../../dist/Canvas'
+
+import * as Tanatloc3D from '../../../../dist'
 import { Tanatloc3DPart } from '../../../../index.d'
 
 import geometry2D from '../../assets/geometry2D'
@@ -37,9 +37,20 @@ const ThreeD = () => {
         <Button onClick={changePart}>Change part</Button>
       </div>
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-        <Tanatloc3D
+        <Tanatloc3D.default.Renderer
           parts={[part]}
-          // selection="face"
+          selection={{
+            enabled: true,
+            part: geometry3D.summary.uuid,
+            type: 'faces',
+            highlighted: undefined,
+            selected: [
+              {
+                uuid: geometry3D.summary.faces![0].uuid,
+                label: geometry3D.summary.faces![0].label
+              }
+            ]
+          }}
           data={true}
           postProcessing={true}
           snapshot={{

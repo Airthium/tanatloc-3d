@@ -2,7 +2,7 @@ import { render, waitFor } from '@testing-library/react'
 
 import { Tanatloc3DPart } from '../..'
 
-import { Context, ContextState } from '../context'
+import { Context, ContextState } from '@context/renderer'
 
 jest.mock('three/examples/jsm/loaders/GLTFLoader', () => {
   class GLTFLoader {
@@ -22,7 +22,7 @@ jest.mock('three/examples/jsm/loaders/GLTFLoader', () => {
   return { GLTFLoader }
 })
 
-jest.mock('../tools/zoomToFit', () => () => undefined)
+jest.mock('@tools/zoomToFit', () => () => undefined)
 
 jest.mock('./geometry2D', () => () => <mesh />)
 jest.mock('./geometry3D', () => () => <mesh />)

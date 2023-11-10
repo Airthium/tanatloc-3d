@@ -1,11 +1,24 @@
 {
   "$schema": "https://json.schemastore.org/swcrc",
-  "minify": true,
+  // "minify": true,
   "exclude": [".*\\.test.tsx"],
   "jsc": {
     "parser": {
       "syntax": "typescript",
       "jsx": true
+    },
+    "baseUrl": "../",
+    "paths": {
+      "@index": ["./index.d.ts"],
+      "@tunnel": ["./src/index.js"],
+      "@context": ["./src/context/index.js"],
+      "@context/*": ["./src/context/*"],
+      "@header": ["./src/header/index.js"],
+      "@helpers/*": ["./src/helpers/*"],
+      "@loader": ["./src/loader/index.js"],
+      "@loader/*": ["./src/loader/*"],
+      "@tools/*": ["./src/tools/*"],
+      "@style/*": ["./src/style/*"]
     },
     "transform": {
       "react": {

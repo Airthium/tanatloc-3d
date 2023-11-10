@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react'
 
-import { Context, ContextState } from './context'
+import { Context, ContextState } from '@context/renderer'
 
-import Parts from './Parts'
+import Parts from '.'
 
-jest.mock('./loader', () => () => <div />)
+jest.mock('@loader', () => () => <div />)
 
 describe('Parts', () => {
   const parts = [

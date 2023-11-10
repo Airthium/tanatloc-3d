@@ -1,7 +1,7 @@
 import { Color } from 'antd/es/color-picker'
 import { fireEvent, render, screen } from '@testing-library/react'
 
-import { Context, ContextState } from '../../context'
+import { Context, ContextState } from '@context/renderer'
 
 import Settings, { colorToHex } from '.'
 

@@ -1,6 +1,6 @@
 import { screen, render } from '@testing-library/react'
 
-import { Context, ContextState } from '../context'
+import { Context, ContextState } from '@context/renderer'
 
 import Header from '.'
 

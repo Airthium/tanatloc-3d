@@ -2,7 +2,7 @@
   "name": "@airthium/tanatloc-3d",
   "version": "0.9.10",
   "types": "index.d.ts",
-  "main": "dist/Canvas.js",
+  "main": "dist/index.js",
   "scripts": {
     "depcheck": "node config/depcheck.js",
     "prettier": "prettier -l '**/*.{js,ts,json,md}'",
@@ -25,7 +25,8 @@
     "@react-three/drei": "9.88.11",
     "@react-three/fiber": "8.15.9",
     "antd": "5.11.0",
-    "three": "0.158.0"
+    "three": "0.158.0",
+    "tunnel-rat": "0.1.2"
   },
   "devDependencies": {
     "@babel/core": "7.23.2",

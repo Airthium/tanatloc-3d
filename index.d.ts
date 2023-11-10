@@ -1,21 +1,22 @@
+import { CanvasProps } from '@react-three/fiber'
 import { ThemeConfig } from 'antd'
 
 /**
- * Tanatloc3D props
+ * Tanatloc3D renderer props
  */
-export interface Tanatloc3DProps {
+export interface Tanatloc3DRendererProps {
   parts?: Tanatloc3DPart[]
   selection?: Tanatloc3DSelection
   data?: boolean
   postProcessing?: boolean
-  snapshot?: Tanatloc3DPropsSnapshot
+  snapshot?: Tanatloc3DRendererPropsSnapshot
   onHighlight?: (highlighted: Tanatloc3DSelectionValue) => void
   onSelect?: (selected: Tanatloc3DSelectionValue[]) => void
   onData?: () => void
   onPostProcessing?: () => void
 }
 
-export interface Tanatloc3DPropsSnapshot {
+export interface Tanatloc3DRendererPropsSnapshot {
   project?: {
     apiRoute: (image: string) => Promise<void>
     size?: { width: number; height: number }
@@ -85,12 +86,18 @@ export interface Tanatloc3DPartUnit {
 }
 
 export type {
-  Tanatloc3DProps,
+  Tanatloc3DRendererProps,
   Tanatloc3DPart,
   Tanatloc3DSelection,
   Tanatloc3DSelectionValue
 }
 
-export default function Tanatloc3D(
-  props: Tanatloc3DProps & { theme?: ThemeConfig }
-): React.JSX.Element
+const Canvas = () => React.JSX.Element
+
+const Renderer = (props: Tanatloc3DRendererProps & { theme?: ThemeConfig }) =>
+  React.JSX.Element
+
+export default {
+  Canvas,
+  Renderer
+}

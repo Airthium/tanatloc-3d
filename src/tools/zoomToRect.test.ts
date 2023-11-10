@@ -1,7 +1,7 @@
 import { TrackballControlsProps } from '@react-three/drei'
+import { Vector3 } from 'three'
 
 import zoomToRect from './zoomToRect'
-import { Vector3 } from 'three'
 
 const mockIntersectObjects = jest.fn()
 jest.mock('three', () => {
