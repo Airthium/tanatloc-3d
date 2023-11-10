@@ -1,4 +1,6 @@
-const mesh = {
+import { Tanatloc3DPart } from '../../..'
+
+const mesh: Tanatloc3DPart = {
   summary: {
     dimension: 3,
     faces: [

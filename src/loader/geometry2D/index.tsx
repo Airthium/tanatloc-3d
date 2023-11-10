@@ -99,26 +99,26 @@ const Geometry2DEdge = ({
    * On pointer move
    */
   const onInternalPointerMove = useCallback((): void => {
-    if (selection == 'edge') onPointerMove(index, uuid)
+    if (selection == 'edges') onPointerMove(index, uuid)
   }, [selection, uuid, index, onPointerMove])
 
   /**
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
-    if (selection === 'edge') onPointerLeave(index)
+    if (selection === 'edges') onPointerLeave(index)
   }, [selection, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
-    if (selection === 'edge') onClick()
+    if (selection === 'edges') onClick()
   }, [selection, onClick])
 
   // Material color
   const materialColor = useMemo(() => {
-    if (selection !== 'edge') return material.color
+    if (selection !== 'edges') return material.color
     else if (selected.find((s) => s.index === index))
       return hover.index === index ? hoverSelectColor : selectColor
     else return hover.index === index ? hoverColor : material.color
@@ -207,26 +207,26 @@ const Geometry2DFace = ({
    * On pointer move
    */
   const onInternalPointerMove = useCallback((): void => {
-    if (selection === 'face') onPointerMove(index, uuid)
+    if (selection === 'faces') onPointerMove(index, uuid)
   }, [selection, uuid, index, onPointerMove])
 
   /**
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
-    if (selection === 'face') onPointerLeave(index)
+    if (selection === 'faces') onPointerLeave(index)
   }, [selection, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
-    if (selection === 'face') onClick()
+    if (selection === 'faces') onClick()
   }, [selection, onClick])
 
   // Material color
   const materialColor = useMemo(() => {
-    if (selection !== 'face') return material.color
+    if (selection !== 'faces') return material.color
     else if (selected.find((s) => s.index === index))
       return hover.index === index ? hoverSelectColor : selectColor
     else return hover.index === index ? hoverColor : material.color

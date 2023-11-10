@@ -12,6 +12,8 @@ jest.mock('three/examples/jsm/math/Lut', () => {
 
     constructor(colormap: string) {
       this.colormap = colormap
+      this.min = 0
+      this.max = 0
     }
     setMin(min: number) {
       this.min = min

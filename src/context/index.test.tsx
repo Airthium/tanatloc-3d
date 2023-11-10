@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react'
 
 import Provider, { actionTypes, initialContextState, reducer } from '.'
+import { Tanatloc3DPart } from '../..'
 
 describe('context', () => {
   test('render', () => {
@@ -14,7 +15,7 @@ describe('context', () => {
   })
 
   test('reducer', () => {
-    const parts = []
+    const parts: Tanatloc3DPart[] = []
     expect(
       reducer(initialContextState, {
         type: actionTypes.SETPROPSPARTS,
@@ -25,7 +26,7 @@ describe('context', () => {
       props: { ...initialContextState.props, parts }
     })
 
-    const selection = 'face'
+    const selection = 'faces'
     expect(
       reducer(initialContextState, {
         type: actionTypes.SETPROPSSELECTION,

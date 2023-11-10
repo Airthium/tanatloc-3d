@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+//@ts-ignore
 import Tanatloc3D from '../../../../dist/Canvas'
 import { Tanatloc3DPart } from '../../../../index.d'
 
@@ -43,7 +44,7 @@ const ThreeD = () => {
           postProcessing={true}
           snapshot={{
             project: {
-              apiRoute: async (image) => console.log(image),
+              apiRoute: async (image: string) => console.log(image),
               size: { width: 255, height: 255 }
             }
           }}

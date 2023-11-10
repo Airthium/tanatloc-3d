@@ -3,3 +3,4 @@ node_modules
 renderer/.next
 coverage
 dist
+docs

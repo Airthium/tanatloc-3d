@@ -3,6 +3,7 @@
 .yarn
 config
 coverage
+docs
 node_modules
 renderer
 src

@@ -1,4 +1,6 @@
-const result = {
+import { Tanatloc3DPart } from '../../..'
+
+const result: Tanatloc3DPart = {
   summary: {
     dimension: 3,
     edges: [

@@ -114,7 +114,7 @@ const Geometry3DFace = ({
    */
   const onInternalPointerMove = useCallback(
     (event: ThreeEvent<PointerEvent>): void => {
-      if (selection === 'face') onPointerMove(event, index, uuid)
+      if (selection === 'faces') onPointerMove(event, index, uuid)
     },
     [selection, uuid, index, onPointerMove]
   )
@@ -123,21 +123,21 @@ const Geometry3DFace = ({
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
-    if (selection === 'face') onPointerLeave(index)
+    if (selection === 'faces') onPointerLeave(index)
   }, [selection, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
-    if (selection === 'face') onClick()
+    if (selection === 'faces') onClick()
   }, [onClick])
 
   // Material color
   const materialColor = useMemo(() => {
     if (solid.selected) return solid.hover ? hoverSelectColor : selectColor
     else if (solid.hover) return hoverColor
-    else if (selection !== 'face') return material.color
+    else if (selection !== 'faces') return material.color
     else if (selected.find((s) => s.index === index))
       return hover.index === index ? hoverSelectColor : selectColor
     else return hover.index === index ? hoverColor : material.color
@@ -215,7 +215,7 @@ const Geometry3DSolid = ({
    */
   const onInternalPointerMove = useCallback(
     (event: ThreeEvent<PointerEvent>): void => {
-      if (selection === 'solid') onPointerMove(event, index, uuid)
+      if (selection === 'solids') onPointerMove(event, index, uuid)
     },
     [selection, uuid, index, onPointerMove]
   )
@@ -224,24 +224,24 @@ const Geometry3DSolid = ({
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
-    if (selection === 'solid') onPointerLeave(index)
+    if (selection === 'solids') onPointerLeave(index)
   }, [selection, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
-    if (selection === 'solid') onClick()
+    if (selection === 'solids') onClick()
   }, [selection, onClick])
 
   // Hover
   const hoverSolid = useMemo(() => {
-    return selection === 'solid' && hover.index === index
+    return selection === 'solids' && hover.index === index
   }, [selection, hover, index])
 
   // Selected
   const selectedSolid = useMemo(() => {
-    return selection === 'solid' && !!selected.find((s) => s.index === index)
+    return selection === 'solids' && !!selected.find((s) => s.index === index)
   }, [selection, selected, index])
 
   /**

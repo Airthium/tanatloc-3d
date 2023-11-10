@@ -1,4 +1,6 @@
-const geometry3D = {
+import { Tanatloc3DPart } from '../../..'
+
+const geometry3D: Tanatloc3DPart = {
   summary: {
     type: 'geometry3D',
     uuid: '8FC19379-3B5C-47A4-8CC8-AB7BE004C7A6',

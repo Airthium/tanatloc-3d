@@ -34,7 +34,7 @@ describe('loader/Geometry3D', () => {
   const onSelect = jest.fn()
   const contextValue = {
     props: {
-      selection: 'solid',
+      selection: 'solids',
       onHighlight,
       onSelect
     },
@@ -88,7 +88,7 @@ describe('loader/Geometry3D', () => {
       <Context.Provider
         value={{
           ...contextValue,
-          props: { ...contextValue.props, selection: 'face' }
+          props: { ...contextValue.props, selection: 'faces' }
         }}
       >
         <Geometry3D scene={scene} />

@@ -1,11 +1,12 @@
 {
   "name": "@airthium/tanatloc-3d",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "types": "index.d.ts",
   "main": "dist/Canvas.js",
   "scripts": {
     "depcheck": "node config/depcheck.js",
     "prettier": "prettier -l '**/*.{js,ts,json,md}'",
+    "doc": "typedoc --options ./config/typedoc.config.js",
     "testw": "jest --config config/jest.config.js --watch",
     "test": "jest --config config/jest.config.js --silent",
     "minify": "uglifyjs-folder dist -e -o dist -x .js -c -m",
@@ -48,6 +49,7 @@
     "prettier": "3.0.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "typedoc": "0.25.2",
     "typescript": "5.2.2"
   },
   "packageManager": "yarn@4.0.1"

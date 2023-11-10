@@ -25,7 +25,7 @@ export interface Tanatloc3DPropsSnapshot {
 /**
  * Selection
  */
-export type Selection = 'solid' | 'face' | 'edge'
+export type Selection = 'solids' | 'faces' | 'edges'
 
 /**
  * Tanatloc3D part
