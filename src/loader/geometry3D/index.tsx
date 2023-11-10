@@ -1,6 +1,8 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ThreeEvent } from '@react-three/fiber'
 
+import { Tanatloc3DSelectionValue } from '../../..'
+
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { Context } from '../../context'
@@ -20,52 +22,39 @@ export interface Geometry3DSolidProps {
     children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
   }
   index: number
-  hover: Hover
-  selected: { index: number; uuid: string }[]
-  onPointerMove: (
-    event: ThreeEvent<PointerEvent>,
-    index: number,
-    uuid: string
-  ) => void
+  hover: Selection
+  selected: Selection[]
+  onPointerMove: (data: Selection) => void
   onPointerLeave: (index: number) => void
   onClick: () => void
 }
 
 export interface Geometry3DFaceProps {
-  solid: { hover: boolean; selected: boolean }
+  solid: { hover?: boolean; selected?: boolean }
   child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
   index: number
-  hover: Hover
-  selected: { index: number; uuid: string }[]
-  onPointerMove: (
-    event: ThreeEvent<PointerEvent>,
-    index: number,
-    uuid: string
-  ) => void
+  hover: Selection
+  selected: Selection[]
+  onPointerMove: (data: Selection) => void
   onPointerLeave: (index: number) => void
   onClick: () => void
 }
 
-export interface Hover {
+export interface Selection extends Tanatloc3DSelectionValue {
   index: number
-  uuid: string
   distance: number
 }
 
-export interface Select {
-  index: number
-  uuid: string
-}
-
 // Initial hover
-const initHover: Hover = {
+const initHover: Selection = {
   index: -1,
   uuid: '',
+  label: 0,
   distance: Infinity
 }
 
 // Initial selected
-const initSelected: Select[] = []
+const initSelected: Selection[] = []
 
 /**
  * Geometry 3D face
@@ -108,13 +97,20 @@ const Geometry3DFace = ({
     [child.userData.uuid]
   )
 
+  // Label
+  const label = useMemo(
+    () => child.userData.label as number,
+    [child.userData.label]
+  )
+
   /**
    * On pointer move
    * @param event Event
    */
   const onInternalPointerMove = useCallback(
     (event: ThreeEvent<PointerEvent>): void => {
-      if (selection === 'faces') onPointerMove(event, index, uuid)
+      if (selection?.enabled && selection.type === 'faces')
+        onPointerMove({ index, uuid, label, distance: event.distance })
     },
     [selection, uuid, index, onPointerMove]
   )
@@ -123,21 +119,22 @@ const Geometry3DFace = ({
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
-    if (selection === 'faces') onPointerLeave(index)
+    if (selection?.enabled && selection.type === 'faces') onPointerLeave(index)
   }, [selection, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
-    if (selection === 'faces') onClick()
+    if (selection?.enabled && selection.type === 'faces') onClick()
   }, [onClick])
 
   // Material color
   const materialColor = useMemo(() => {
     if (solid.selected) return solid.hover ? hoverSelectColor : selectColor
     else if (solid.hover) return hoverColor
-    else if (selection !== 'faces') return material.color
+    else if (selection?.enabled && selection.type !== 'faces')
+      return material.color
     else if (selected.find((s) => s.index === index))
       return hover.index === index ? hoverSelectColor : selectColor
     else return hover.index === index ? hoverColor : material.color
@@ -210,12 +207,19 @@ const Geometry3DSolid = ({
     [child.userData.uuid]
   )
 
+  // Label
+  const label = useMemo(
+    () => child.userData.label as number,
+    [child.userData.label]
+  )
+
   /**
    * On pointer move
    */
   const onInternalPointerMove = useCallback(
     (event: ThreeEvent<PointerEvent>): void => {
-      if (selection === 'solids') onPointerMove(event, index, uuid)
+      if (selection?.enabled && selection.type === 'solids')
+        onPointerMove({ index, uuid, label, distance: event.distance })
     },
     [selection, uuid, index, onPointerMove]
   )
@@ -224,24 +228,30 @@ const Geometry3DSolid = ({
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
-    if (selection === 'solids') onPointerLeave(index)
+    if (selection?.enabled && selection.type === 'solids') onPointerLeave(index)
   }, [selection, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
-    if (selection === 'solids') onClick()
+    if (selection?.enabled && selection.type === 'solids') onClick()
   }, [selection, onClick])
 
   // Hover
   const hoverSolid = useMemo(() => {
-    return selection === 'solids' && hover.index === index
+    return (
+      selection?.enabled && selection.type === 'solids' && hover.index === index
+    )
   }, [selection, hover, index])
 
   // Selected
   const selectedSolid = useMemo(() => {
-    return selection === 'solids' && !!selected.find((s) => s.index === index)
+    return (
+      selection?.enabled &&
+      selection.type === 'solids' &&
+      !!selected.find((s) => s.index === index)
+    )
   }, [selection, selected, index])
 
   /**
@@ -282,9 +292,8 @@ const Geometry3DSolid = ({
  */
 const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
   // State
-  const [hover, setHover] = useState<Hover>(initHover)
-  const [selected, setSelected] =
-    useState<{ index: number; uuid: string }[]>(initSelected)
+  const [hover, setHover] = useState<Selection>(initHover)
+  const [selected, setSelected] = useState<Selection[]>(initSelected)
 
   // Context
   const {
@@ -305,14 +314,11 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
 
   /**
    * On pointer move
-   * @param event Event
-   * @param index
-   * @param uuid UUID
+   * @param data Selection
    */
   const onPointerMove = useCallback(
-    (event: ThreeEvent<PointerEvent>, index: number, uuid: string) => {
-      const distance = event.distance
-      if (distance < hover.distance) setHover({ index, distance, uuid })
+    (data: Selection) => {
+      if (data.distance < hover.distance) setHover(data)
     },
     [hover]
   )
@@ -332,8 +338,7 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
    */
   const onClick = useCallback(() => {
     const index = selected.findIndex((s) => s.index === hover.index)
-    if (index === -1)
-      setSelected([...selected, { index: hover.index, uuid: hover.uuid }])
+    if (index === -1) setSelected([...selected, hover])
     else
       setSelected([...selected.slice(0, index), ...selected.slice(index + 1)])
   }, [hover, selected])
@@ -346,12 +351,12 @@ const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
 
   // On highlight
   useEffect(() => {
-    onHighlight?.(hover.uuid)
+    onHighlight?.(hover)
   }, [hover, onHighlight])
 
   // On select
   useEffect(() => {
-    onSelect?.(selected.map((s) => s.uuid))
+    onSelect?.(selected)
   }, [selected, onSelect])
 
   /**

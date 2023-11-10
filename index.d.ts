@@ -5,12 +5,12 @@ import { ThemeConfig } from 'antd'
  */
 export interface Tanatloc3DProps {
   parts?: Tanatloc3DPart[]
-  selection?: Selection
+  selection?: Tanatloc3DSelection
   data?: boolean
   postProcessing?: boolean
   snapshot?: Tanatloc3DPropsSnapshot
-  onHighlight?: (uuid?: string) => void
-  onSelect?: (uuids: string[]) => void
+  onHighlight?: (highlighted: Tanatloc3DSelectionValue) => void
+  onSelect?: (selected: Tanatloc3DSelectionValue[]) => void
   onData?: () => void
   onPostProcessing?: () => void
 }
@@ -25,7 +25,18 @@ export interface Tanatloc3DPropsSnapshot {
 /**
  * Selection
  */
-export type Selection = 'solids' | 'faces' | 'edges'
+export interface Tanatloc3DSelection {
+  enabled?: boolean
+  part?: string
+  type?: 'solids' | 'faces' | 'edges'
+  highlighted?: Tanatloc3DSelectionValue
+  selected?: Tanatloc3DSelectionValue[]
+}
+
+export interface Tanatloc3DSelectionValue {
+  uuid: string
+  label: number
+}
 
 /**
  * Tanatloc3D part
@@ -73,7 +84,12 @@ export interface Tanatloc3DPartUnit {
   adder?: number
 }
 
-export type { Tanatloc3DProps, Tanatloc3DPart, Selection }
+export type {
+  Tanatloc3DProps,
+  Tanatloc3DPart,
+  Tanatloc3DSelection,
+  Tanatloc3DSelectionValue
+}
 
 export default function Tanatloc3D(
   props: Tanatloc3DProps & { theme?: ThemeConfig }

@@ -1,6 +1,11 @@
 import { TrackballControlsProps } from '@react-three/drei'
 
-import { Tanatloc3DPart, Tanatloc3DProps, Tanatloc3DPropsSnapshot } from '../..'
+import {
+  Tanatloc3DPart,
+  Tanatloc3DProps,
+  Tanatloc3DPropsSnapshot,
+  Tanatloc3DSelection
+} from '../..'
 
 import { ContextState, actionTypes } from './index'
 
@@ -19,7 +24,7 @@ export const setPropsParts = (parts?: Tanatloc3DPart[]) => ({
  * @param selection Selection
  * @returns Action
  */
-export const setPropsSelection = (selection?: string) => ({
+export const setPropsSelection = (selection?: Tanatloc3DSelection) => ({
   type: actionTypes.SETPROPSSELECTION,
   value: selection
 })

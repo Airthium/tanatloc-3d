@@ -1,5 +1,7 @@
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
+import { Tanatloc3DSelectionValue } from '../../..'
+
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { Context } from '../../context'
@@ -19,9 +21,9 @@ export interface Geometry2DFaceProps {
     children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
   }
   index: number
-  hover: Hover
-  selected: { index: number; uuid: string }[]
-  onPointerMove: (index: number, uuid: string) => void
+  hover: Selection
+  selected: Selection[]
+  onPointerMove: (data: Selection) => void
   onPointerLeave: (index: number) => void
   onClick: () => void
 }
@@ -29,31 +31,26 @@ export interface Geometry2DFaceProps {
 export interface Geometry2DEdgeProps {
   child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
   index: number
-  hover: Hover
-  selected: { index: number; uuid: string }[]
-  onPointerMove: (index: number, uuid: string) => void
+  hover: Selection
+  selected: Selection[]
+  onPointerMove: (data: Selection) => void
   onPointerLeave: (index: number) => void
   onClick: () => void
 }
 
-export interface Hover {
+export interface Selection extends Tanatloc3DSelectionValue {
   index: number
-  uuid: string
-}
-
-export interface Select {
-  index: number
-  uuid: string
 }
 
 // Initial hover
-const initHover: Hover = {
+const initHover: Selection = {
   index: -1,
-  uuid: ''
+  uuid: '',
+  label: 0
 }
 
 // Initial selected
-const initSelected: Select[] = []
+const initSelected: Selection[] = []
 
 /**
  * Geometry 2D edge
@@ -95,30 +92,37 @@ const Geometry2DEdge = ({
     [child.userData.uuid]
   )
 
+  // Label
+  const label = useMemo(
+    () => child.userData.label as number,
+    [child.userData.label]
+  )
+
   /**
    * On pointer move
    */
   const onInternalPointerMove = useCallback((): void => {
-    if (selection == 'edges') onPointerMove(index, uuid)
+    if (selection?.enabled && selection.type == 'edges')
+      onPointerMove({ index, uuid, label })
   }, [selection, uuid, index, onPointerMove])
 
   /**
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
-    if (selection === 'edges') onPointerLeave(index)
+    if (selection?.enabled && selection.type === 'edges') onPointerLeave(index)
   }, [selection, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
-    if (selection === 'edges') onClick()
+    if (selection?.enabled && selection.type === 'edges') onClick()
   }, [selection, onClick])
 
   // Material color
   const materialColor = useMemo(() => {
-    if (selection !== 'edges') return material.color
+    if (selection?.enabled && selection.type !== 'edges') return material.color
     else if (selected.find((s) => s.index === index))
       return hover.index === index ? hoverSelectColor : selectColor
     else return hover.index === index ? hoverColor : material.color
@@ -203,30 +207,37 @@ const Geometry2DFace = ({
     [child.userData.uuid]
   )
 
+  // Label
+  const label = useMemo(
+    () => child.userData.label as number,
+    [child.userData.label]
+  )
+
   /**
    * On pointer move
    */
   const onInternalPointerMove = useCallback((): void => {
-    if (selection === 'faces') onPointerMove(index, uuid)
+    if (selection?.enabled && selection.type === 'faces')
+      onPointerMove({ index, uuid, label })
   }, [selection, uuid, index, onPointerMove])
 
   /**
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
-    if (selection === 'faces') onPointerLeave(index)
+    if (selection?.enabled && selection.type === 'faces') onPointerLeave(index)
   }, [selection, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
-    if (selection === 'faces') onClick()
+    if (selection?.enabled && selection.type === 'faces') onClick()
   }, [selection, onClick])
 
   // Material color
   const materialColor = useMemo(() => {
-    if (selection !== 'faces') return material.color
+    if (selection?.enabled && selection.type !== 'faces') return material.color
     else if (selected.find((s) => s.index === index))
       return hover.index === index ? hoverSelectColor : selectColor
     else return hover.index === index ? hoverColor : material.color
@@ -291,8 +302,8 @@ const Geometry2DFace = ({
  */
 const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
   // State
-  const [hover, setHover] = useState<Hover>(initHover)
-  const [selected, setSelected] = useState<Select[]>(initSelected)
+  const [hover, setHover] = useState<Selection>(initHover)
+  const [selected, setSelected] = useState<Selection[]>(initSelected)
 
   // Context
   const {
@@ -313,12 +324,11 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
 
   /**
    * On pointer move
-   * @param index Index
-   * @param uuid UUID
+   * @param data Selection
    */
   const onPointerMove = useCallback(
-    (index: number, uuid: string) => {
-      setHover({ index, uuid })
+    (data: Selection) => {
+      setHover(data)
     },
     [hover]
   )
@@ -339,8 +349,7 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
    */
   const onClick = useCallback(() => {
     const index = selected.findIndex((s) => s.index === hover.index)
-    if (index === -1)
-      setSelected([...selected, { index: hover.index, uuid: hover.uuid }])
+    if (index === -1) setSelected([...selected, hover])
     else
       setSelected([...selected.slice(0, index), ...selected.slice(index + 1)])
   }, [hover, selected])
@@ -353,12 +362,12 @@ const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
 
   // On highlight
   useEffect(() => {
-    onHighlight?.(hover.uuid)
+    onHighlight?.(hover)
   }, [hover, onHighlight])
 
   // On select
   useEffect(() => {
-    onSelect?.(selected.map((s) => s.uuid))
+    onSelect?.(selected)
   }, [selected, onSelect])
 
   /**
