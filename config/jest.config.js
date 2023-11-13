@@ -16,6 +16,16 @@ const config = {
         ]
       }
     ]
+  },
+  moduleNameMapper: {
+    '^@index/(.*)$': ['<rootDir>/index.d.ts'],
+    '^@tunnel/(.*)$': ['<rootDir>/src/$1'],
+    '^@context/(.*)$': ['<rootDir>/src/context/$1'],
+    '^@header/(.*)$': ['<rootDir>/src/header/$1'],
+    '^@helpers/(.*)$': ['<rootDir>/src/helpers/$1'],
+    '^@loader/(.*)$': ['<rootDir>/src/loader/$1'],
+    '^@tools/(.*)$': ['<rootDir>/src/tools/$1'],
+    '^@style/(.*)$': ['<rootDir>/src/style/$1']
   }
 }
 
