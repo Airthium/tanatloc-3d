@@ -1,4 +1,4 @@
-import { useCallback, useContext, useState } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
 import { Button, Dropdown, Form, InputNumber, Modal, Tooltip } from 'antd'
 import {
   ArrowsAltOutlined,
@@ -6,12 +6,7 @@ import {
   ColumnWidthOutlined
 } from '@ant-design/icons'
 
-import { Context } from '@context/renderer'
-import {
-  setLutColormap,
-  setLutCustomMax,
-  setLutCustomMin
-} from '@context/renderer/actions'
+import useStore from '@store'
 
 import toReadable from '@tools/toReadable'
 
@@ -19,12 +14,12 @@ import toReadable from '@tools/toReadable'
  * Colorbar
  * @returns Colorbar
  */
-const Colorbar = () => {
+const Colorbar = (): ReactNode => {
   // State
   const [customRangeOpen, setCustomRangeOpen] = useState<boolean>(false)
 
-  // Context
-  const { lut, dispatch } = useContext(Context)
+  // Store
+  const lut = useStore((s) => s.lut)
 
   // Data
   const [form] = Form.useForm()
@@ -35,9 +30,9 @@ const Colorbar = () => {
    */
   const onColormap = useCallback(
     ({ key }: { key: string }) => {
-      dispatch(setLutColormap(key))
+      useStore.setState({ lut: { ...lut, colormap: key } })
     },
-    [dispatch]
+    [lut]
   )
 
   /**
@@ -63,13 +58,14 @@ const Colorbar = () => {
   const onCustomRange = useCallback(
     (values: { min: number; max: number }): void => {
       // Update custom min/max
-      dispatch(setLutCustomMin(values.min))
-      dispatch(setLutCustomMax(values.max))
+      useStore.setState({
+        lut: { ...lut, customMin: values.min, customMax: values.max }
+      })
 
       // Close
       setCustomRangeOpen(false)
     },
-    [dispatch]
+    [lut]
   )
 
   /**
@@ -77,9 +73,10 @@ const Colorbar = () => {
    */
   const onAutomaticRange = useCallback((): void => {
     // Remove custom min/max
-    dispatch(setLutCustomMin())
-    dispatch(setLutCustomMax())
-  }, [dispatch])
+    useStore.setState({
+      lut: { ...lut, customMin: undefined, customMax: undefined }
+    })
+  }, [lut])
 
   /**
    * Render

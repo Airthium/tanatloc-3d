@@ -2,7 +2,7 @@ import { render } from '@testing-library/react'
 
 import { Tanatloc3DPart } from '../..'
 
-import { Context, ContextState } from '@context/renderer'
+import { Context, ContextState } from '@context'
 
 import PartLoader from '.'
 

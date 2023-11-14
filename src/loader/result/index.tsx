@@ -8,8 +8,8 @@ import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 const LutModule = import('three/examples/jsm/math/Lut.js')
 
-import { Context } from '@context/renderer'
-import { setLutMax, setLutMin } from '@context/renderer/actions'
+import { Context } from '@context'
+import { setLutMax, setLutMin } from '@context/actions'
 
 /**
  * Props

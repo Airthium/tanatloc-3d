@@ -2,7 +2,7 @@ import { render, waitFor } from '@testing-library/react'
 
 import { Tanatloc3DPart } from '../..'
 
-import { Context, ContextState } from '@context/renderer'
+import { Context, ContextState } from '@context'
 
 jest.mock('three/examples/jsm/loaders/GLTFLoader', () => {
   class GLTFLoader {

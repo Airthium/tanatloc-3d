@@ -2,7 +2,7 @@ import { Line } from '@react-three/drei'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { Euler, Vector3 } from 'three'
 
-import { Context } from '@context/renderer'
+import { Context } from '@context'
 
 import computeSceneBoundingBox from '@tools/computeSceneBoundingBox'
 import toReadable from '@tools/toReadable'

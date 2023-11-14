@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 import { useThree } from '@react-three/fiber'
 
-import { Context } from '@context/renderer'
+import { Context } from '@context'
 
 /**
  * Frame rate

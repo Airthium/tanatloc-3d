@@ -1,4 +1,3 @@
-import { useContext } from 'react'
 import { Button, Collapse, Divider, Layout, Tooltip } from 'antd'
 import {
   DatabaseOutlined,
@@ -7,7 +6,7 @@ import {
   ToolOutlined
 } from '@ant-design/icons'
 
-import { Context } from '@context/renderer'
+import useStore from '@store'
 
 import Snapshot from './snapshot'
 import Display from './display'
@@ -32,10 +31,10 @@ export interface HeaderProps {
  * @returns Header
  */
 const Header = ({ oneResult }: HeaderProps) => {
-  // Context
-  const {
-    props: { data, postProcessing, onData, onPostProcessing }
-  } = useContext(Context)
+  // Store
+  const { data, postProcessing, onData, onPostProcessing } = useStore(
+    (s) => s.props
+  )
 
   /**
    * Render

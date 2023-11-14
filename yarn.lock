@@ -45,6 +45,7 @@ __metadata:
     tunnel-rat: "npm:0.1.2"
     typedoc: "npm:0.25.3"
     typescript: "npm:5.2.2"
+    zustand: "npm:4.4.6"
   peerDependencies:
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
@@ -10395,19 +10396,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:^3.5.13, zustand@npm:^3.7.1":
-  version: 3.7.2
-  resolution: "zustand@npm:3.7.2"
-  peerDependencies:
-    react: ">=16.8"
-  peerDependenciesMeta:
-    react:
-      optional: true
-  checksum: 6a56185ca67080c252dfe96039da02094cfd780bd7a45768708105f114dea39ae9abc80ffaa7f3f6104e6490db325bd443b857ab5eab8ebf9a697318cd163bb6
-  languageName: node
-  linkType: hard
-
-"zustand@npm:^4.3.2":
+"zustand@npm:4.4.6, zustand@npm:^4.3.2":
   version: 4.4.6
   resolution: "zustand@npm:4.4.6"
   dependencies:
@@ -10424,5 +10413,17 @@ __metadata:
     react:
       optional: true
   checksum: 78ed41a9e946eb5488a102fb8ed839f9ba901f45b83cec23539957939744a09d484aa430d5ef7066b007fa90dc780f8b531f0d176b3c132c8e11216ddc3dbd43
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^3.5.13, zustand@npm:^3.7.1":
+  version: 3.7.2
+  resolution: "zustand@npm:3.7.2"
+  peerDependencies:
+    react: ">=16.8"
+  peerDependenciesMeta:
+    react:
+      optional: true
+  checksum: 6a56185ca67080c252dfe96039da02094cfd780bd7a45768708105f114dea39ae9abc80ffaa7f3f6104e6490db325bd443b857ab5eab8ebf9a697318cd163bb6
   languageName: node
   linkType: hard

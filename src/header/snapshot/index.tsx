@@ -1,10 +1,10 @@
-import { useCallback, useContext } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { Button, Dropdown, Tooltip } from 'antd'
 import { FundProjectionScreenOutlined } from '@ant-design/icons'
 
 import { Tanatloc3DRendererPropsSnapshot } from '@index'
 
-import { Context } from '@context/renderer'
+import useStore from '@store'
 
 // Snapshot keys
 const projectSnapshotKey = 'projectSnapshot'
@@ -96,9 +96,10 @@ const exportSnapshot = (
  * Snapshot
  * @returns Snapshot
  */
-const Snapshot = (): React.JSX.Element => {
-  // Context
-  const { props, mainView } = useContext(Context)
+const Snapshot = (): ReactNode => {
+  // Store
+  const props = useStore((s) => s.props)
+  const mainView = useStore((s) => s.mainView)
 
   /**
    * On Snapshot

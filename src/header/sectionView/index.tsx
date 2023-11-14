@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { Button, Tooltip } from 'antd'
 import {
   EyeInvisibleOutlined,
@@ -8,13 +8,7 @@ import {
 } from '@ant-design/icons'
 import { Vector3 } from 'three'
 
-import { Context } from '@context/renderer'
-import {
-  setSectionViewEnabled,
-  setSectionViewFlip,
-  setSectionViewHidePlane,
-  setSectionViewSnap
-} from '@context/renderer/actions'
+import useStore from '@store'
 
 import style from '@style/Header'
 
@@ -27,51 +21,55 @@ const Z = new Vector3(0, 0, 1)
  * SectionView
  * @returns SectionView
  */
-const SectionView = (): React.JSX.Element => {
-  // Context
-  const { sectionView, dispatch } = useContext(Context)
+const SectionView = (): ReactNode => {
+  // Store
+  const sectionView = useStore((s) => s.sectionView)
 
   /**
    * On section view
    */
   const onSectionView = useCallback(() => {
-    dispatch(setSectionViewEnabled(!sectionView.enabled))
-  }, [sectionView.enabled, dispatch])
+    useStore.setState({
+      sectionView: { ...sectionView, enabled: !sectionView.enabled }
+    })
+  }, [sectionView])
 
   /**
    * On section view hide plane
    */
   const onSectionViewHidePlane = useCallback(() => {
-    dispatch(setSectionViewHidePlane(!sectionView.hidePlane))
-  }, [sectionView.hidePlane, dispatch])
+    useStore.setState({
+      sectionView: { ...sectionView, hidePlane: !sectionView.hidePlane }
+    })
+  }, [sectionView])
 
   /**
    * On section view snap X
    */
   const onSectionViewSnapX = useCallback(() => {
-    dispatch(setSectionViewSnap(X))
-  }, [dispatch])
+    useStore.setState({ sectionView: { ...sectionView, snap: X } })
+  }, [sectionView])
 
   /**
    * On section view snap Y
    */
   const onSectionViewSnapY = useCallback(() => {
-    dispatch(setSectionViewSnap(Y))
-  }, [dispatch])
+    useStore.setState({ sectionView: { ...sectionView, snap: Y } })
+  }, [sectionView])
 
   /**
    * On section view snap Z
    */
   const onSectionViewSnapZ = useCallback(() => {
-    dispatch(setSectionViewSnap(Z))
-  }, [dispatch])
+    useStore.setState({ sectionView: { ...sectionView, snap: Z } })
+  }, [sectionView])
 
   /**
    * On section view flip
    */
   const onSectionViewFlip = useCallback(() => {
-    dispatch(setSectionViewFlip(Math.random()))
-  }, [dispatch])
+    useStore.setState({ sectionView: { ...sectionView, flip: Math.random() } })
+  }, [sectionView])
 
   /**
    * Render

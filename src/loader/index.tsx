@@ -7,7 +7,7 @@ const GLTFModule = import('three/examples/jsm/loaders/GLTFLoader.js')
 
 import { Tanatloc3DPart } from '@index'
 
-import { Context } from '@context/renderer'
+import { Context } from '@context'
 
 import zoomToFit from '@tools/zoomToFit'
 

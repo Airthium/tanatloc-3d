@@ -2,7 +2,7 @@ import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { Line, OrthographicCamera, Text } from '@react-three/drei'
 import { Float32BufferAttribute } from 'three'
 
-import { Context } from '@context/renderer'
+import { Context } from '@context'
 
 import toReadable from '@tools/toReadable'
 

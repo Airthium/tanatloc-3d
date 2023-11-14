@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
-import { Context } from '@context/renderer'
-import { setGeometryDimension } from '@context/renderer/actions'
+import useStore from '@store'
 
 import PartLoader from '@loader'
 
@@ -9,15 +8,12 @@ import PartLoader from '@loader'
  * Parts
  * @returns Parts
  */
-const Parts = (): React.JSX.Element => {
+const Parts = (): ReactNode => {
   // State
   const [children, setChildren] = useState<React.JSX.Element[]>([])
 
-  // Context
-  const {
-    props: { parts },
-    dispatch
-  } = useContext(Context)
+  // Store
+  const { parts } = useStore((s) => s.props)
 
   // Manage parts
   useEffect(() => {
@@ -29,7 +25,7 @@ const Parts = (): React.JSX.Element => {
       const localDimension = part.summary.dimension ?? 3
       dimension = Math.min(dimension, localDimension)
     })
-    dispatch(setGeometryDimension(dimension))
+    useStore.setState({ geometry: { dimension } })
 
     // Check parts to add
     const toAdd = parts.filter(

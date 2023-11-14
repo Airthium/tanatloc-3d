@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { Button, Tooltip } from 'antd'
 import {
   CompressOutlined,
@@ -7,8 +7,7 @@ import {
   ZoomOutOutlined
 } from '@ant-design/icons'
 
-import { Context } from '@context/renderer'
-import { setZoomToSelectionEnabled } from '@context/renderer/actions'
+import useStore from '@store'
 
 import zoomToFit from '@tools/zoomToFit'
 import zoom from '@tools/zoom'
@@ -20,9 +19,10 @@ let zoomInProgress: number | undefined = undefined
  * Zoom
  * @returns Zoom
  */
-const Zoom = (): React.JSX.Element => {
-  // Context
-  const { mainView, zoomToSelection, dispatch } = useContext(Context)
+const Zoom = (): ReactNode => {
+  // Store
+  const mainView = useStore((s) => s.mainView)
+  const zoomToSelection = useStore((s) => s.zoomToSelection)
 
   /**
    * Zoom in
@@ -60,8 +60,13 @@ const Zoom = (): React.JSX.Element => {
    * On zoom to selection
    */
   const onZoomToSelection = useCallback(() => {
-    dispatch(setZoomToSelectionEnabled(!zoomToSelection.enabled))
-  }, [zoomToSelection.enabled, dispatch])
+    useStore.setState({
+      zoomToSelection: {
+        ...zoomToSelection,
+        enabled: !zoomToSelection.enabled
+      }
+    })
+  }, [zoomToSelection])
 
   /**
    * Render

@@ -1,7 +1,7 @@
 import { Vector3 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import { Context, ContextState } from '@context/renderer'
+import { Context, ContextState } from '@context'
 
 import Light from '.'
 

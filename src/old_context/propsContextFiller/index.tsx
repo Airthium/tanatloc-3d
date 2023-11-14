@@ -2,7 +2,7 @@ import { useContext, useEffect } from 'react'
 
 import { Tanatloc3DRendererProps } from '@index'
 
-import { Context } from '@context/renderer'
+import { Context } from '@context'
 import {
   setPropsData,
   setPropsPostProcessing,
@@ -13,7 +13,7 @@ import {
   setPropsParts,
   setPropsSelection,
   setPropsSnapshotProject
-} from '@context/renderer/actions'
+} from '@context/actions'
 
 /**
  * Props context filler

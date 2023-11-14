@@ -1,6 +1,6 @@
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import { Context, ContextState } from '@context/renderer'
+import { Context, ContextState } from '@context'
 
 import Colorbar from '.'
 

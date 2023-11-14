@@ -1,18 +1,17 @@
-import { useCallback, useContext } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { Switch, Tooltip } from 'antd'
 import { TableOutlined } from '@ant-design/icons'
 import { SwitchChangeEventHandler } from 'antd/es/switch'
 
-import { Context } from '@context/renderer'
-import { setResultMeshVisible } from '@context/renderer/actions'
+import useStore from '@store'
 
 /**
  * Results
  * @returns Results
  */
-const Results = () => {
-  // Context
-  const { result, dispatch } = useContext(Context)
+const Results = (): ReactNode => {
+  // Store
+  const result = useStore((s) => s.result)
 
   /**
    * On mesh visible change
@@ -20,9 +19,9 @@ const Results = () => {
    */
   const onMeshVisibleChange: SwitchChangeEventHandler = useCallback(
     (checked) => {
-      dispatch(setResultMeshVisible(checked))
+      useStore.setState({ result: { ...result, meshVisible: checked } })
     },
-    [dispatch]
+    [result]
   )
 
   /**

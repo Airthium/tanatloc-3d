@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react'
+import { ReactNode, useCallback } from 'react'
 import { Switch, Tooltip } from 'antd'
 import {
   BorderlessTableOutlined,
@@ -6,19 +6,15 @@ import {
 } from '@ant-design/icons'
 import { SwitchChangeEventHandler } from 'antd/es/switch'
 
-import { Context } from '@context/renderer'
-import {
-  setDisplayGrid,
-  setDisplayTransparent
-} from '@context/renderer/actions'
+import useStore from '@store'
 
 /**
  * Display
  * @returns Display
  */
-const Display = (): React.JSX.Element => {
-  // Context
-  const { display, dispatch } = useContext(Context)
+const Display = (): ReactNode => {
+  // Store
+  const display = useStore((s) => s.display)
 
   /**
    * Toggle grid visibility
@@ -27,9 +23,9 @@ const Display = (): React.JSX.Element => {
   const toggleGridVisible: SwitchChangeEventHandler = useCallback(
     (e): void => {
       const visible = e.valueOf()
-      dispatch(setDisplayGrid(visible))
+      useStore.setState({ display: { ...display, grid: visible } })
     },
-    [dispatch]
+    [display]
   )
 
   /**
@@ -39,9 +35,9 @@ const Display = (): React.JSX.Element => {
   const toggleTransparency: SwitchChangeEventHandler = useCallback(
     (e): void => {
       const transparent = e.valueOf()
-      dispatch(setDisplayTransparent(transparent))
+      useStore.setState({ display: { ...display, transparent } })
     },
-    [dispatch]
+    [display]
   )
 
   /**

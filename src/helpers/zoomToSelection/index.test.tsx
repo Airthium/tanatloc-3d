@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react'
 
-import { Context, ContextState } from '@context/renderer'
+import { Context, ContextState } from '@context'
 
 import ZoomToSelection from '.'
 

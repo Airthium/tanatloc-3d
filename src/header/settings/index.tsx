@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useState } from 'react'
 import {
   Button,
   ColorPicker,
@@ -12,9 +12,12 @@ import {
 import { Color } from 'antd/es/color-picker'
 import { SettingOutlined } from '@ant-design/icons'
 
-import { Context, defaultSettings } from '@context/renderer'
-import { setSettings } from '@context/renderer/actions'
+import useStore from '@store'
+import { defaultSettings } from '@store/defaults'
 
+/**
+ * Props
+ */
 export interface FormValues {
   lightColor: Color | string
   lightIntensity: number
@@ -40,12 +43,12 @@ export const colorToHex = (color: Color | string): string => {
  * Settings
  * @returns Settings
  */
-const Settings = () => {
+const Settings = (): ReactNode => {
   // State
   const [open, setOpen] = useState<boolean>(false)
 
-  // Context
-  const { settings, dispatch } = useContext(Context)
+  // Store
+  const settings = useStore((s) => s.settings)
 
   // Data
   const [form] = Form.useForm()
@@ -83,8 +86,8 @@ const Settings = () => {
    */
   const onApply = useCallback(
     (values: FormValues) => {
-      dispatch(
-        setSettings({
+      useStore.setState({
+        settings: {
           light: {
             color: colorToHex(values.lightColor),
             intensity: values.lightIntensity,
@@ -100,12 +103,12 @@ const Settings = () => {
             fps: values.fps
           },
           localStorage: values.localStorage
-        })
-      )
+        }
+      })
 
       onClose()
     },
-    [onClose, dispatch]
+    [onClose]
   )
 
   // Local storage

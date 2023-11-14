@@ -6,7 +6,7 @@ const ClientLayout = ({ children }) => {
   return (
     <>
       {children}
-      <Tanatloc3D.default.Canvas></Tanatloc3D.default.Canvas>
+      <Tanatloc3D.default.Canvas />
     </>
   )
 }

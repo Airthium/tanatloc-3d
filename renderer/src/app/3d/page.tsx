@@ -24,48 +24,51 @@ const ThreeD = () => {
   }, [])
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        width: '100%',
-        height: '100%'
-      }}
-    >
-      <div>
+    <>
+      <div
+        style={{
+          width: '200px',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '20px',
+          padding: '20px',
+          borderRight: '2px solid #abcdef'
+        }}
+      >
         <Link href="/">Previous</Link>
         <Button onClick={changePart}>Change part</Button>
       </div>
-      <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-        <Tanatloc3D.default.Renderer
-          parts={[part]}
-          selection={{
-            enabled: true,
-            part: geometry3D.summary.uuid,
-            type: 'faces',
-            highlighted: undefined,
-            selected: [
-              {
-                uuid: geometry3D.summary.faces![0].uuid,
-                label: geometry3D.summary.faces![0].label
-              }
-            ]
-          }}
-          data={true}
-          postProcessing={true}
-          snapshot={{
-            project: {
-              apiRoute: async (image: string) => console.log(image),
-              size: { width: 255, height: 255 }
+
+      <Tanatloc3D.default.Renderer
+        parts={[part]}
+        selection={{
+          enabled: true,
+          part: geometry3D.summary.uuid,
+          type: 'faces',
+          highlighted: undefined,
+          selected: [
+            {
+              uuid: geometry3D.summary.faces![0].uuid,
+              label: geometry3D.summary.faces![0].label
             }
-          }}
-          onHighlight={console.log}
-          onSelect={console.log}
-          onData={() => console.log('data')}
-          onPostProcessing={() => console.log('post-processing')}
-        />
-      </div>
-    </div>
+          ]
+        }}
+        data={true}
+        postProcessing={true}
+        snapshot={{
+          project: {
+            apiRoute: async (image: string) => console.log(image),
+            size: { width: 255, height: 255 }
+          }
+        }}
+        onHighlight={console.log}
+        onSelect={console.log}
+        onData={() => console.log('data')}
+        onPostProcessing={() => console.log('post-processing')}
+      />
+    </>
   )
 }
 

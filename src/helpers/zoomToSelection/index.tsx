@@ -1,8 +1,8 @@
 import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { Box2, Vector2 } from 'three'
 
-import { Context } from '@context/renderer'
-import { setZoomToSelectionEnabled } from '@context/renderer/actions'
+import { Context } from '@context'
+import { setZoomToSelectionEnabled } from '@context/actions'
 
 import zoomToRect from '@tools/zoomToRect'
 

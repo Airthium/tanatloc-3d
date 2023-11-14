@@ -10,7 +10,7 @@
     "baseUrl": "../",
     "paths": {
       "@index": ["./index.d.ts"],
-      "@tunnel": ["./src/index.js"],
+      "@tunnel": ["./src/helpers/tunnel/index.js"],
       "@context": ["./src/context/index.js"],
       "@context/*": ["./src/context/*"],
       "@header": ["./src/header/index.js"],
@@ -18,6 +18,8 @@
       "@loader": ["./src/loader/index.js"],
       "@loader/*": ["./src/loader/*"],
       "@tools/*": ["./src/tools/*"],
+      "@store": ["./src/store/index.js"],
+      "@store/*": ["./src/store/*"],
       "@style/*": ["./src/style/*"]
     },
     "transform": {

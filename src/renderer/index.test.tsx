@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
-import { Context, ContextState } from '@context/renderer'
+import { Context, ContextState } from '@context'
 
 import RendererWithContext, { Renderer } from '.'
 
@@ -12,7 +12,11 @@ jest.mock('@react-three/drei', () => ({
   Hud: (props: any) => <div>{props.children}</div>,
   PerspectiveCamera: () => <div />,
   TrackballControls: (props: any) => (
-    <div role="TrackballControls" onClick={props.onChange} />
+    <div
+      role="TrackballControls"
+      onClick={props.onChange}
+      onKeyUp={console.log}
+    />
   )
 }))
 

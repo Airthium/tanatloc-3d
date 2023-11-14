@@ -10,7 +10,7 @@ import { ThreeEvent, useFrame } from '@react-three/fiber'
 import { OrthographicCamera, Text } from '@react-three/drei'
 import { Vector3, Shape } from 'three'
 
-import { Context } from '@context/renderer'
+import { Context } from '@context'
 
 import Arrow from '../arrow'
 
