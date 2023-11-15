@@ -2,9 +2,13 @@ import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import { Context, ContextState } from '@context'
-
 import Geometry2D from '.'
+
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  return useStore
+})
 
 describe('loader/Geometry2D', () => {
   const geometry = new BoxGeometry(1, 1, 1)
@@ -27,28 +31,34 @@ describe('loader/Geometry2D', () => {
   face.children = [edge1, edge2]
 
   const scene = {
-    children: [face]
+    children: [face],
+    userData: { uuid: 'uuid' }
   } as unknown as GLTF['scene']
 
   const onHighlight = jest.fn()
   const onSelect = jest.fn()
-  const contextValue = {
-    props: {
-      selection: { enabled: true, type: 'faces' },
-      onHighlight,
-      onSelect
-    },
-    display: {
-      transparent: true
-    },
-    sectionView: {
-      enabled: true,
-      clippingPlane: 'plane'
-    },
-    settings: {
-      colors: {}
-    }
-  } as unknown as ContextState
+  const props = {
+    selection: { enabled: true, part: 'uuid', type: 'faces' },
+    onHighlight,
+    onSelect
+  }
+  const display = {
+    transparent: true
+  }
+  const sectionView = {
+    enabled: true,
+    clippingPlane: 'plane'
+  }
+  const settings = {
+    colors: {}
+  }
+
+  beforeEach(() => {
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return settings
+    })
+  })
 
   test('render', async () => {
     const renderer = await ReactThreeTestRenderer.create(
@@ -58,11 +68,15 @@ describe('loader/Geometry2D', () => {
     await renderer.unmount()
   })
 
-  test('with context - face', async () => {
+  test('with store - face', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...props,
+      ...display,
+      ...sectionView,
+      ...settings
+    }))
     const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider value={contextValue}>
-        <Geometry2D scene={scene} />
-      </Context.Provider>
+      <Geometry2D scene={scene} />
     )
 
     const mesh = renderer.scene.children[0]
@@ -82,19 +96,16 @@ describe('loader/Geometry2D', () => {
     await renderer.unmount()
   })
 
-  test('with context - face', async () => {
+  test('with store - edge', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...props,
+      selection: { enabled: true, part: 'uuid', type: 'edges' },
+      ...display,
+      ...sectionView,
+      ...settings
+    }))
     const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          props: {
-            ...contextValue.props,
-            selection: { enabled: true, type: 'edges' }
-          }
-        }}
-      >
-        <Geometry2D scene={scene} />
-      </Context.Provider>
+      <Geometry2D scene={scene} />
     )
 
     const mesh = renderer.scene.children[0]
@@ -112,6 +123,28 @@ describe('loader/Geometry2D', () => {
     await renderer.fireEvent(edge1, 'pointerLeave')
     await renderer.fireEvent(edge1, 'pointerMove')
     await renderer.fireEvent(edge1, 'click')
+
+    await renderer.unmount()
+  })
+
+  test('with store - no selectionable', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...props,
+      selection: { enabled: true, type: 'faces' },
+      ...display,
+      ...sectionView,
+      ...settings
+    }))
+    const renderer = await ReactThreeTestRenderer.create(
+      <Geometry2D scene={scene} />
+    )
+
+    const mesh = renderer.scene.children[0]
+    const face = mesh.children[0]
+
+    await renderer.fireEvent(face, 'pointerMove')
+    await renderer.fireEvent(face, 'click')
+    await renderer.fireEvent(face, 'pointerLeave')
 
     await renderer.unmount()
   })

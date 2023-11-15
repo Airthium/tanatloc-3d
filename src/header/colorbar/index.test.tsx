@@ -1,24 +1,31 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
-import { Context, ContextState } from '@context'
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
 
 import Colorbar from '.'
 
 jest.mock('@tools/toReadable', () => () => 'value')
 
 describe('header/colorbar', () => {
-  const dispatch = jest.fn()
-  const contextValue = {
-    lut: {
-      colormap: 'rainbow',
-      min: 0,
-      max: 1
-    },
-    dispatch
-  } as unknown as ContextState
+  const lut = {
+    colormap: 'rainbow',
+    min: 0,
+    max: 1
+  }
 
   beforeEach(() => {
-    dispatch.mockReset()
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
   })
 
   test('render', () => {
@@ -28,11 +35,8 @@ describe('header/colorbar', () => {
   })
 
   test('onColormap', async () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <Colorbar />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => lut)
+    const { unmount } = render(<Colorbar />)
 
     const button = screen.getByRole('button', { name: 'bg-colors' })
     fireEvent.mouseEnter(button)
@@ -41,17 +45,14 @@ describe('header/colorbar', () => {
     const menuItem = screen.getByRole('menuitem', { name: 'Rainbow' })
     fireEvent.click(menuItem)
 
-    expect(dispatch).toHaveBeenCalledTimes(1)
+    expect(mockSetState).toHaveBeenCalledTimes(1)
 
     unmount()
   })
 
   test('onCustomRange', async () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <Colorbar />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => lut)
+    const { unmount } = render(<Colorbar />)
 
     // Open
     const button = screen.getByRole('button', { name: 'column-width' })
@@ -67,7 +68,7 @@ describe('header/colorbar', () => {
     const form = screen.getByRole('button', { name: 'Apply' })
     fireEvent.click(form)
 
-    await waitFor(() => expect(dispatch).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(mockSetState).toHaveBeenCalledTimes(1))
 
     // Open
     fireEvent.click(button)
@@ -80,16 +81,13 @@ describe('header/colorbar', () => {
   })
 
   test('onAutomaticRange', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <Colorbar />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => lut)
+    const { unmount } = render(<Colorbar />)
 
     const button = screen.getByRole('button', { name: 'arrows-alt' })
     fireEvent.click(button)
 
-    expect(dispatch).toHaveBeenCalledTimes(2)
+    expect(mockSetState).toHaveBeenCalledTimes(1)
 
     unmount()
   })

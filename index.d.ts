@@ -1,3 +1,4 @@
+import { ReactNode } from 'react'
 import { CanvasProps } from '@react-three/fiber'
 import { ThemeConfig } from 'antd'
 
@@ -92,10 +93,10 @@ export type {
   Tanatloc3DSelectionValue
 }
 
-const Canvas = () => React.JSX.Element
+const Canvas = () => ReactNode
 
 const Renderer = (props: Tanatloc3DRendererProps & { theme?: ThemeConfig }) =>
-  React.JSX.Element
+  ReactNode
 
 export default {
   Canvas,

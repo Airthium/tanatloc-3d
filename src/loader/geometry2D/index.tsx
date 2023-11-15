@@ -1,10 +1,10 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 
-import { Tanatloc3DSelectionValue } from '../../..'
+import { Tanatloc3DSelectionValue } from '@index'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { Context } from '@context'
+import useStore from '@store'
 
 /**
  * Props
@@ -66,15 +66,13 @@ const Geometry2DEdge = ({
   onPointerLeave,
   onClick
 }: Geometry2DEdgeProps) => {
-  // Context
+  // Store
+  const { selection } = useStore((s) => s.props)
+  const display = useStore((s) => s.display)
+  const sectionView = useStore((s) => s.sectionView)
   const {
-    props: { selection },
-    display,
-    sectionView,
-    settings: {
-      colors: { hoverColor, selectColor, hoverSelectColor }
-    }
-  } = useContext(Context)
+    colors: { hoverColor, selectColor, hoverSelectColor }
+  } = useStore((s) => s.settings)
 
   // Geometry
   const geometry = useMemo(() => {
@@ -178,15 +176,13 @@ const Geometry2DFace = ({
   onPointerLeave,
   onClick
 }: Geometry2DFaceProps) => {
-  // Context
+  // Store
+  const { selection } = useStore((s) => s.props)
+  const display = useStore((s) => s.display)
+  const sectionView = useStore((s) => s.sectionView)
   const {
-    props: { selection },
-    display,
-    sectionView,
-    settings: {
-      colors: { hoverColor, selectColor, hoverSelectColor }
-    }
-  } = useContext(Context)
+    colors: { hoverColor, selectColor, hoverSelectColor }
+  } = useStore((s) => s.settings)
 
   // Geometry
   const geometry = useMemo(() => {
@@ -300,15 +296,13 @@ const Geometry2DFace = ({
  * @param props Props
  * @returns Geometry2D
  */
-const Geometry2D = ({ scene }: Geometry2DProps): React.JSX.Element => {
+const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
   // State
   const [hover, setHover] = useState<Selection>(initHover)
   const [selected, setSelected] = useState<Selection[]>(initSelected)
 
-  // Context
-  const {
-    props: { selection, onHighlight, onSelect }
-  } = useContext(Context)
+  // Store
+  const { selection, onHighlight, onSelect } = useStore((s) => s.props)
 
   // Children
   const children = useMemo(

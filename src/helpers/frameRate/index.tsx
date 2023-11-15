@@ -1,19 +1,17 @@
-import { useContext, useEffect } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { useThree } from '@react-three/fiber'
 
-import { Context } from '@context'
+import useStore from '@store'
 
 /**
  * Frame rate
  * @returns FrameRate
  */
-const FrameRate = () => {
-  // Context
+const FrameRate = (): ReactNode => {
+  // Store
   const {
-    settings: {
-      frameRate: { fps }
-    }
-  } = useContext(Context)
+    frameRate: { fps }
+  } = useStore((s) => s.settings)
 
   // Data
   const { invalidate } = useThree()

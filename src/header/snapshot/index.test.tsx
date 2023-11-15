@@ -1,35 +1,42 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
-import { Context, ContextState } from '@context'
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
 
 import Snapshot from '.'
 
 describe('header/snapshot', () => {
-  const dispatch = jest.fn()
-  const contextValue = {
-    props: {},
-    mainView: {
-      gl: {
-        domElement: {
-          width: 100,
-          height: 100,
-          toDataURL: () => 'image'
-        },
-        clear: jest.fn,
-        setViewport: jest.fn,
-        render: jest.fn
+  const props = {}
+  const mainView = {
+    gl: {
+      domElement: {
+        width: 100,
+        height: 100,
+        toDataURL: () => 'image'
       },
-      scene: {},
-      camera: {
-        aspect: 1,
-        updateProjectionMatrix: jest.fn
-      }
+      clear: jest.fn,
+      setViewport: jest.fn,
+      render: jest.fn
     },
-    dispatch
-  } as unknown as ContextState
+    scene: {},
+    camera: {
+      aspect: 1,
+      updateProjectionMatrix: jest.fn
+    }
+  }
 
   beforeEach(() => {
-    dispatch.mockReset()
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
   })
 
   test('render', () => {
@@ -38,7 +45,7 @@ describe('header/snapshot', () => {
     unmount()
   })
 
-  test('export snapshot - no context', () => {
+  test('export snapshot - no store', () => {
     const { unmount } = render(<Snapshot />)
 
     const button = screen.getByRole('button')
@@ -48,11 +55,10 @@ describe('header/snapshot', () => {
   })
 
   test('export snapshot', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <Snapshot />
-      </Context.Provider>
-    )
+    mockUseStore
+      .mockImplementationOnce(() => props)
+      .mockImplementationOnce(() => mainView)
+    const { unmount } = render(<Snapshot />)
 
     const button = screen.getByRole('button', {
       name: 'fund-projection-screen'
@@ -63,28 +69,17 @@ describe('header/snapshot', () => {
   })
 
   test('project snapshot - no mainView', async () => {
-    const { unmount } = render(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          props: {
-            ...contextValue.props,
-            snapshot: {
-              project: {
-                size: {
-                  width: 100,
-                  height: 100
-                },
-                apiRoute: async () => undefined
-              }
-            }
-          },
-          mainView: {}
-        }}
-      >
-        <Snapshot />
-      </Context.Provider>
-    )
+    mockUseStore
+      .mockImplementationOnce(() => ({
+        ...props,
+        snapshot: {
+          project: {
+            apiRoute: async () => undefined
+          }
+        }
+      }))
+      .mockImplementationOnce(() => ({}))
+    const { unmount } = render(<Snapshot />)
 
     // Open dropdown
     const button = screen.getByRole('button', {
@@ -103,23 +98,17 @@ describe('header/snapshot', () => {
   })
 
   test('project snapshot - no size', async () => {
-    const { unmount } = render(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          props: {
-            ...contextValue.props,
-            snapshot: {
-              project: {
-                apiRoute: async () => undefined
-              }
-            }
+    mockUseStore
+      .mockImplementationOnce(() => ({
+        ...props,
+        snapshot: {
+          project: {
+            apiRoute: async () => undefined
           }
-        }}
-      >
-        <Snapshot />
-      </Context.Provider>
-    )
+        }
+      }))
+      .mockImplementationOnce(() => mainView)
+    const { unmount } = render(<Snapshot />)
 
     // Open dropdown
     const button = screen.getByRole('button', {
@@ -138,27 +127,21 @@ describe('header/snapshot', () => {
   })
 
   test('project snapshot', async () => {
-    const { unmount } = render(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          props: {
-            ...contextValue.props,
-            snapshot: {
-              project: {
-                size: {
-                  width: 100,
-                  height: 100
-                },
-                apiRoute: async () => undefined
-              }
-            }
+    mockUseStore
+      .mockImplementationOnce(() => ({
+        ...props,
+        snapshot: {
+          project: {
+            size: {
+              width: 100,
+              height: 100
+            },
+            apiRoute: async () => undefined
           }
-        }}
-      >
-        <Snapshot />
-      </Context.Provider>
-    )
+        }
+      }))
+      .mockImplementationOnce(() => mainView)
+    const { unmount } = render(<Snapshot />)
 
     {
       // Open dropdown

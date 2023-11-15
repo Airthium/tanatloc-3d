@@ -1,11 +1,11 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { ThreeEvent } from '@react-three/fiber'
 
-import { Tanatloc3DSelectionValue } from '../../..'
+import { Tanatloc3DSelectionValue } from '@index'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { Context } from '@context'
+import useStore from '@store'
 
 /**
  * Props
@@ -71,15 +71,13 @@ const Geometry3DFace = ({
   onPointerLeave,
   onClick
 }: Geometry3DFaceProps) => {
-  // Context
+  // Store
+  const { selection } = useStore((s) => s.props)
+  const display = useStore((s) => s.display)
+  const sectionView = useStore((s) => s.sectionView)
   const {
-    props: { selection },
-    display,
-    sectionView,
-    settings: {
-      colors: { hoverColor, selectColor, hoverSelectColor }
-    }
-  } = useContext(Context)
+    colors: { hoverColor, selectColor, hoverSelectColor }
+  } = useStore((s) => s.settings)
 
   // Geometry
   const geometry = useMemo(() => {
@@ -192,11 +190,9 @@ const Geometry3DSolid = ({
   onPointerMove,
   onPointerLeave,
   onClick
-}: Geometry3DSolidProps): React.JSX.Element => {
-  // Context
-  const {
-    props: { selection }
-  } = useContext(Context)
+}: Geometry3DSolidProps): ReactNode => {
+  // Store
+  const { selection } = useStore((s) => s.props)
 
   // Children
   const children = useMemo(() => child.children, [child.children])
@@ -290,15 +286,13 @@ const Geometry3DSolid = ({
  * @param props Props
  * @returns Geometry3D
  */
-const Geometry3D = ({ scene }: Geometry3DProps): React.JSX.Element => {
+const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
   // State
   const [hover, setHover] = useState<Selection>(initHover)
   const [selected, setSelected] = useState<Selection[]>(initSelected)
 
-  // Context
-  const {
-    props: { selection, onHighlight, onSelect }
-  } = useContext(Context)
+  // Store
+  const { selection, onHighlight, onSelect } = useStore((s) => s.props)
 
   // Children
   const children = useMemo(

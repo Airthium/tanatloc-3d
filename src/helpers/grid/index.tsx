@@ -1,8 +1,8 @@
 import { Line } from '@react-three/drei'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Euler, Vector3 } from 'three'
 
-import { Context } from '@context'
+import useStore from '@store'
 
 import computeSceneBoundingBox from '@tools/computeSceneBoundingBox'
 import toReadable from '@tools/toReadable'
@@ -94,9 +94,9 @@ const getNumberOfDivisions = (
  * @param props Props
  * @returns AxisLine
  */
-const AxisLine = ({ start, stop }: AxisLineProps): React.JSX.Element => {
-  return <Line points={[start, stop]} color={lineColor} />
-}
+const AxisLine = ({ start, stop }: AxisLineProps): ReactNode => (
+  <Line points={[start, stop]} color={lineColor} />
+)
 
 /**
  * AxisGrid
@@ -109,7 +109,7 @@ const AxisGrid = ({
   size,
   divisions,
   offset
-}: AxisGridProps): React.JSX.Element => {
+}: AxisGridProps): ReactNode => {
   // Width
   const width = useMemo(() => {
     switch (axis) {
@@ -235,7 +235,7 @@ const AxisLabels = ({
   range,
   division,
   offset
-}: AxisLabelsProps): React.JSX.Element => {
+}: AxisLabelsProps): ReactNode => {
   // Width
   const width = useMemo(() => {
     switch (axis) {
@@ -340,13 +340,11 @@ const AxisLabels = ({
  * @param props Props
  * @returns Grid
  */
-const Grid = ({ update }: GridProps): React.JSX.Element | null => {
-  // Context
-  const {
-    mainView,
-    display,
-    geometry: { dimension }
-  } = useContext(Context)
+const Grid = ({ update }: GridProps): ReactNode => {
+  // Store
+  const mainView = useStore((s) => s.mainView)
+  const display = useStore((s) => s.display)
+  const { dimension } = useStore((s) => s.geometry)
 
   // State
   const [center, setCenter] = useState<[number, number, number]>([0, 0, 0])

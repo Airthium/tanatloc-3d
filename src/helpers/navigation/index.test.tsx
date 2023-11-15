@@ -1,32 +1,41 @@
 import { Euler, Vector3 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import { Context, ContextState } from '@context'
-
 import Navigation from '.'
+
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  return useStore
+})
 
 jest.mock('../arrow', () => () => <mesh />)
 
 describe('helpers/navigation', () => {
-  const contextValue = {
-    mainView: {
-      camera: {
-        aspect: 1,
-        position: new Vector3(0, 0, 5),
-        up: new Vector3(0, 0, 1),
-        rotation: new Euler(0, 0, 0)
-      },
-      controls: {
-        target: new Vector3(0, 0, 0)
-      }
+  const mainView = {
+    camera: {
+      aspect: 1,
+      position: new Vector3(0, 0, 5),
+      up: new Vector3(0, 0, 1),
+      rotation: new Euler(0, 0, 0)
     },
-    geometry: {
-      dimension: 3
-    },
-    settings: {
-      colors: {}
+    controls: {
+      target: new Vector3(0, 0, 0)
     }
-  } as unknown as ContextState
+  }
+  const geometry = {
+    dimension: 3
+  }
+  const settings = {
+    colors: {}
+  }
+
+  beforeEach(() => {
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return settings
+    })
+  })
 
   test('empty render', async () => {
     const renderer = await ReactThreeTestRenderer.create(<Navigation />)
@@ -38,12 +47,13 @@ describe('helpers/navigation', () => {
     await renderer.unmount()
   })
 
-  test('with context', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider value={contextValue}>
-        <Navigation />
-      </Context.Provider>
-    )
+  test('with store', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...settings,
+      ...geometry,
+      ...mainView
+    }))
+    const renderer = await ReactThreeTestRenderer.create(<Navigation />)
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Navigation')
 
@@ -63,12 +73,14 @@ describe('helpers/navigation', () => {
     await renderer.unmount()
   })
 
-  test('with context - 2D', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider value={{ ...contextValue, geometry: { dimension: 2 } }}>
-        <Navigation />
-      </Context.Provider>
-    )
+  test('with store - 2D', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...settings,
+      ...geometry,
+      dimension: 2,
+      ...mainView
+    }))
+    const renderer = await ReactThreeTestRenderer.create(<Navigation />)
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Navigation')
 
@@ -88,20 +100,14 @@ describe('helpers/navigation', () => {
     await renderer.unmount()
   })
 
-  test('with context - no camera', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          mainView: {
-            ...contextValue.mainView,
-            camera: undefined
-          }
-        }}
-      >
-        <Navigation />
-      </Context.Provider>
-    )
+  test('with store - no camera', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...settings,
+      ...geometry,
+      ...mainView,
+      camera: undefined
+    }))
+    const renderer = await ReactThreeTestRenderer.create(<Navigation />)
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Navigation')
 

@@ -1,20 +1,27 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
-import { Context, ContextState } from '@context'
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
 
 import Results from '.'
 
 describe('header/results', () => {
-  const dispatch = jest.fn()
-  const contextValue = {
-    result: {
-      meshVisible: true
-    },
-    dispatch
-  } as unknown as ContextState
+  const result = {
+    meshVisible: true
+  }
 
   beforeEach(() => {
-    dispatch.mockReset()
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
   })
 
   test('render', () => {
@@ -24,16 +31,13 @@ describe('header/results', () => {
   })
 
   test('set mesh visible', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <Results />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => result)
+    const { unmount } = render(<Results />)
 
     const switchButton = screen.getByRole('switch')
     fireEvent.click(switchButton)
 
-    expect(dispatch).toHaveBeenCalledTimes(1)
+    expect(mockSetState).toHaveBeenCalledTimes(1)
 
     unmount()
   })

@@ -1,8 +1,7 @@
-import { useCallback, useContext, useEffect, useMemo } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { Box2, Vector2 } from 'three'
 
-import { Context } from '@context'
-import { setZoomToSelectionEnabled } from '@context/actions'
+import useStore from '@store'
 
 import zoomToRect from '@tools/zoomToRect'
 
@@ -19,9 +18,11 @@ const endPoint = new Vector2()
  * ZoomToSelection
  * @returns ZoomToSelection
  */
-const ZoomToSelection = (): null => {
-  // Context
-  const { mainView, zoomToSelection, dispatch } = useContext(Context)
+const ZoomToSelection = (): ReactNode => {
+  // Store
+
+  const mainView = useStore((s) => s.mainView)
+  const zoomToSelection = useStore((s) => s.zoomToSelection)
 
   // Parent
   const parentElement = useMemo(() => {
@@ -167,7 +168,9 @@ const ZoomToSelection = (): null => {
       )
 
       // Disabled zoom to selection
-      dispatch(setZoomToSelectionEnabled(false))
+      useStore.setState({
+        zoomToSelection: { ...zoomToSelection, enabled: false }
+      })
     },
     [
       parentElement,
@@ -175,7 +178,7 @@ const ZoomToSelection = (): null => {
       mainView.scene,
       mainView.camera,
       mainView.controls,
-      dispatch
+      zoomToSelection
     ]
   )
 

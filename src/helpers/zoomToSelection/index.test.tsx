@@ -1,13 +1,18 @@
 import { fireEvent, render } from '@testing-library/react'
 
-import { Context, ContextState } from '@context'
-
 import ZoomToSelection from '.'
 
-jest.mock('../../tools/zoomToRect', () => () => undefined)
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
+
+jest.mock('@tools/zoomToRect', () => () => undefined)
 
 describe('helpers/zoomToSelection', () => {
-  const dispatch = jest.fn()
   const parentElement = {
     appendChild: jest.fn(),
     removeChild: jest.fn(),
@@ -16,21 +21,23 @@ describe('helpers/zoomToSelection', () => {
       top: 0
     })
   }
-  const contextValue = {
-    mainView: {
-      gl: { domElement: { parentElement } },
-      scene: {},
-      camera: {},
-      controls: {}
-    },
-    zoomToSelection: {
-      enabled: true
-    },
-    dispatch
-  } as unknown as ContextState
+  const mainView = {
+    gl: { domElement: { parentElement } },
+    scene: {},
+    camera: {},
+    controls: {}
+  }
+  const zoomToSelection = {
+    enabled: true
+  }
 
   beforeEach(() => {
-    dispatch.mockReset()
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
   })
 
   test('empty render', () => {
@@ -39,12 +46,11 @@ describe('helpers/zoomToSelection', () => {
     unmount()
   })
 
-  test('with context', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <ZoomToSelection />
-      </Context.Provider>
-    )
+  test('with store', () => {
+    mockUseStore
+      .mockImplementationOnce(() => mainView)
+      .mockImplementationOnce(() => zoomToSelection)
+    const { unmount } = render(<ZoomToSelection />)
 
     // Events
     fireEvent.pointerDown(document)
@@ -54,55 +60,29 @@ describe('helpers/zoomToSelection', () => {
     unmount()
   })
 
-  test('with context - disabled', () => {
-    const { unmount } = render(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          zoomToSelection: {
-            enabled: false
-          }
-        }}
-      >
-        <ZoomToSelection />
-      </Context.Provider>
-    )
+  test('with store - disabled', () => {
+    mockUseStore
+      .mockImplementationOnce(() => mainView)
+      .mockImplementationOnce(() => ({ ...zoomToSelection, enabled: false }))
+    const { unmount } = render(<ZoomToSelection />)
 
     unmount()
   })
 
-  test('with context - no controls', () => {
-    const { unmount } = render(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          mainView: {
-            ...contextValue.mainView,
-            controls: undefined
-          }
-        }}
-      >
-        <ZoomToSelection />
-      </Context.Provider>
-    )
+  test('with store - no controls', () => {
+    mockUseStore
+      .mockImplementationOnce(() => ({ ...mainView, controls: undefined }))
+      .mockImplementationOnce(() => zoomToSelection)
+    const { unmount } = render(<ZoomToSelection />)
 
     unmount()
   })
 
-  test('with context - no camera', () => {
-    const { unmount } = render(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          mainView: {
-            ...contextValue.mainView,
-            camera: undefined
-          }
-        }}
-      >
-        <ZoomToSelection />
-      </Context.Provider>
-    )
+  test('with store - no camera', () => {
+    mockUseStore
+      .mockImplementationOnce(() => ({ ...mainView, camera: undefined }))
+      .mockImplementationOnce(() => zoomToSelection)
+    const { unmount } = render(<ZoomToSelection />)
 
     // Events
     fireEvent.pointerUp(document)

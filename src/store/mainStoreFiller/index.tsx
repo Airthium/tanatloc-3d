@@ -12,7 +12,7 @@ export interface MainStoreFillerProps {
 }
 
 /**
- * Main context filler
+ * Main store filler
  * @returns MainStoreFiller
  */
 const MainStoreFiller = ({ controls }: MainStoreFillerProps): null => {

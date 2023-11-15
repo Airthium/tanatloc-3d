@@ -1,4 +1,4 @@
-describe('context', () => {
+describe('store', () => {
   const { window } = global
 
   beforeAll(() => {
@@ -10,7 +10,7 @@ describe('context', () => {
     global.window = window
   })
 
-  test('import', async () => {
+  test('exists', async () => {
     await import('.')
   })
 })

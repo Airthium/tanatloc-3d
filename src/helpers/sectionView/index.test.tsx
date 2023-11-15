@@ -1,9 +1,15 @@
 import { Box3, Vector2, Vector3 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import { Context, ContextState } from '@context'
-
 import SectionView from '.'
+
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
 
 jest.mock('three', () => {
   class Raycaster {
@@ -25,37 +31,38 @@ jest.mock('three', () => {
 })
 
 const mockBox = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 1))
-jest.mock('../../tools/computeSceneBoundingBox', () => () => mockBox)
+jest.mock('@tools/computeSceneBoundingBox', () => () => mockBox)
 
 describe('helpers/sectionView', () => {
   const intersectionPoint = new Vector3(0, 0, 0)
   const intersectionPointer = new Vector2(0, 0)
-  const dispatch = jest.fn()
-  const contextValue = {
-    mainView: {
-      scene: {
-        children: []
-      },
-      camera: {
-        getWorldDirection: jest.fn(),
-        up: new Vector3(0, 0, 1)
-      },
-      controls: {}
+  const mainView = {
+    scene: {
+      children: []
     },
-    sectionView: {
-      enabled: true,
-      snap: new Vector3(0, 0, 1),
-      flip: 1,
-      hidePlane: false
+    camera: {
+      getWorldDirection: jest.fn(),
+      up: new Vector3(0, 0, 1)
     },
-    settings: {
-      colors: {}
-    },
-    dispatch
-  } as unknown as ContextState
+    controls: {}
+  }
+  const sectionView = {
+    enabled: true,
+    snap: new Vector3(0, 0, 1),
+    flip: 1,
+    hidePlane: false
+  }
+  const settings = {
+    colors: {}
+  }
 
   beforeEach(() => {
-    dispatch.mockReset()
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return settings
+    })
   })
 
   test('empty render', async () => {
@@ -66,12 +73,13 @@ describe('helpers/sectionView', () => {
     await renderer.unmount()
   })
 
-  test('with context', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider value={contextValue}>
-        <SectionView />
-      </Context.Provider>
-    )
+  test('with store', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...mainView,
+      ...sectionView,
+      ...settings
+    }))
+    const renderer = await ReactThreeTestRenderer.create(<SectionView />)
     const group = renderer.scene.children[0]
     expect(group.type).toBe('SectionView')
 
@@ -120,17 +128,14 @@ describe('helpers/sectionView', () => {
     await renderer.unmount()
   })
 
-  test('with context - no controls', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          mainView: { ...contextValue.mainView, controls: undefined }
-        }}
-      >
-        <SectionView />
-      </Context.Provider>
-    )
+  test('with store - no controls', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...mainView,
+      controls: undefined,
+      ...sectionView,
+      ...settings
+    }))
+    const renderer = await ReactThreeTestRenderer.create(<SectionView />)
     const group = renderer.scene.children[0]
     expect(group.type).toBe('SectionView')
 

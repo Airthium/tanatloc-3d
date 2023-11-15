@@ -22,10 +22,7 @@ import Light from '@helpers/light'
 
 import Parts from './parts'
 
-import style from '@style/Renderer'
-
-// Missing events
-// See https://github.com/pmndrs/react-three-next/blob/v1.6.0/src/helpers/store.js
+import style from '@style/Canvas'
 
 /**
  * Canvas
@@ -33,7 +30,6 @@ import style from '@style/Renderer'
  */
 const Canvas = (): ReactNode => {
   console.log('render canvas')
-
   // Ref
   const mainViewControls = useRef(null!)
 
@@ -89,10 +85,7 @@ const Canvas = (): ReactNode => {
       <FrameRate />
       <Hud renderPriority={1}>
         <MainStoreFiller controls={mainViewControls.current} />
-        <PerspectiveCamera
-          makeDefault
-          position={dimension === 3 ? [1, 1, 5] : [0, 0, 5]}
-        />
+        <PerspectiveCamera makeDefault position={[1, 1, 5]} />
         <Grid update={controlsUpdate} />
         <ZoomToSelection />
         <SectionView />

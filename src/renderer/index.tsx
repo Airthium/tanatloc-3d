@@ -1,4 +1,4 @@
-// import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { ConfigProvider, Layout, ThemeConfig } from 'antd'
 
 import { Tanatloc3DRendererProps } from '@index'
@@ -8,7 +8,6 @@ import useStore from '@store'
 import Header from '@header'
 
 import style from '@style/Renderer'
-import { useEffect } from 'react'
 
 /**
  * Renderer
@@ -16,17 +15,23 @@ import { useEffect } from 'react'
  */
 const Renderer = (props: Tanatloc3DRendererProps & { theme?: ThemeConfig }) => {
   console.log('render renderer')
+  // Store
+  const { parts } = useStore((s) => s.props)
+
+  // Store update & clean
   useEffect(() => {
     useStore.setState({ props })
+
+    return () => {
+      useStore.setState({ props: {} })
+    }
   }, [props])
 
-  // TODO
-  // // Clean
-  // useEffect(() => {
-  //   return () => {
-  //     useStore.setState({ props: {} })
-  //   }
-  // }, [])
+  // At least one part
+  const oneResult = useMemo(
+    () => !!parts?.find((part) => part.summary.type === 'result'),
+    [parts]
+  )
 
   /**
    * Render
@@ -34,7 +39,7 @@ const Renderer = (props: Tanatloc3DRendererProps & { theme?: ThemeConfig }) => {
   return (
     <ConfigProvider theme={props.theme}>
       <Layout style={style.layout}>
-        <Header />
+        <Header oneResult={oneResult} />
       </Layout>
     </ConfigProvider>
   )

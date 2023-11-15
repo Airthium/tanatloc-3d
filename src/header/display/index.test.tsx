@@ -1,21 +1,28 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
-import { Context, ContextState } from '@context'
-
 import Display from '.'
 
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
+
 describe('header/display', () => {
-  const dispatch = jest.fn()
-  const contextValue = {
-    display: {
-      grid: true,
-      transparent: false
-    },
-    dispatch
-  } as unknown as ContextState
+  const display = {
+    grid: true,
+    transparent: false
+  }
 
   beforeEach(() => {
-    dispatch.mockReset()
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
   })
 
   test('render', () => {
@@ -25,35 +32,29 @@ describe('header/display', () => {
   })
 
   test('display grid', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <Display />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => display)
+    const { unmount } = render(<Display />)
 
     const switchButton = screen.getByRole('switch', {
       name: 'radius-upright radius-upright'
     })
     fireEvent.click(switchButton)
 
-    expect(dispatch).toHaveBeenCalledTimes(1)
+    expect(mockSetState).toHaveBeenCalledTimes(1)
 
     unmount()
   })
 
   test('set transparent', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <Display />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => display)
+    const { unmount } = render(<Display />)
 
     const switchButton = screen.getByRole('switch', {
       name: 'borderless-table borderless-table'
     })
     fireEvent.click(switchButton)
 
-    expect(dispatch).toHaveBeenCalledTimes(1)
+    expect(mockSetState).toHaveBeenCalledTimes(1)
 
     unmount()
   })

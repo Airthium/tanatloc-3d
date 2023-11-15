@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import {
   Euler,
   Line3,
@@ -11,8 +11,7 @@ import {
 import { ThreeEvent } from '@react-three/fiber'
 import { TrackballControlsProps } from '@react-three/drei'
 
-import { Context } from '@context'
-import { setSectionViewClippingPlane } from '@context/actions'
+import useStore from '@store'
 
 import computeSceneBoundingBox from '@tools/computeSceneBoundingBox'
 
@@ -209,7 +208,7 @@ const setInitialData = (
  * Update clipping plane
  * @param controller Controller
  */
-const updateClippingPlane = (controller: THREE.Group) => {
+const updateClippingPlane = (controller: THREE.Group): void => {
   const normal = defaultNormal.clone().applyQuaternion(controller.quaternion)
   clippingPlane.setFromNormalAndCoplanarPoint(normal, controller.position)
 }
@@ -291,7 +290,7 @@ const _onPointerMove = (
   plane: THREE.Mesh,
   type: Type,
   camera?: PerspectiveCamera
-) => {
+): void => {
   if (!enabled || !camera) return
 
   /* istanbul ignore else */
@@ -334,7 +333,7 @@ const _onPointerMove = (
  * On pointer up
  * @param controls Controls
  */
-const _onPointerUp = (controls?: TrackballControlsProps) => {
+const _onPointerUp = (controls?: TrackballControlsProps): void => {
   if (!controls) return
   controls.enabled = true
 }
@@ -343,7 +342,7 @@ const _onPointerUp = (controls?: TrackballControlsProps) => {
  * SectionView
  * @returns SectionView
  */
-const SectionView = (): React.JSX.Element | null => {
+const SectionView = (): ReactNode => {
   // Ref
   const ref = useRef<THREE.Group>(null!)
   const planeRef = useRef<THREE.Mesh>(null!)
@@ -358,15 +357,12 @@ const SectionView = (): React.JSX.Element | null => {
   const [enabled, setEnabled] = useState<boolean>(false)
   const [type, setType] = useState<Type>()
 
-  // Context
+  // Store
+  const mainView = useStore((s) => s.mainView)
+  const sectionView = useStore((s) => s.sectionView)
   const {
-    mainView,
-    sectionView,
-    settings: {
-      colors: { hoverColor: baseColor, selectColor: hoverColor }
-    },
-    dispatch
-  } = useContext(Context)
+    colors: { hoverColor: baseColor, selectColor: hoverColor }
+  } = useStore((s) => s.settings)
 
   /**
    * On pointer down
@@ -452,8 +448,9 @@ const SectionView = (): React.JSX.Element | null => {
 
   // Intialization
   useEffect(() => {
-    dispatch(setSectionViewClippingPlane(clippingPlane))
-  }, [dispatch])
+    if (sectionView.clippingPlane !== clippingPlane)
+      useStore.setState({ sectionView: { ...sectionView, clippingPlane } })
+  }, [sectionView])
 
   // Start
   useEffect(() => {
@@ -462,7 +459,7 @@ const SectionView = (): React.JSX.Element | null => {
 
     setPosition(runtimeData.position)
     setScale(runtimeData.scale)
-  }, [mainView.scene?.children, sectionView.enabled, dispatch])
+  }, [mainView.scene?.children, sectionView.enabled])
 
   // Snap
   useEffect(() => {

@@ -1,11 +1,47 @@
 import { Color } from 'antd/es/color-picker'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
-import { Context, ContextState } from '@context'
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
+
+const defaultSettings = {
+  light: {
+    color: '#ffffff',
+    intensity: 1,
+    decay: 0
+  },
+  colors: {
+    baseColor: '#d3d3d3',
+    hoverColor: '#fad114',
+    selectColor: '#fa9814',
+    hoverSelectColor: '#fa5f14'
+  },
+  frameRate: {
+    fps: 30
+  },
+  localStorage: false
+}
+jest.mock('@store/defaults', () => ({
+  defaultSettings: defaultSettings
+}))
 
 import Settings, { colorToHex } from '.'
 
 describe('header/settings', () => {
+  beforeEach(() => {
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return defaultSettings
+    })
+  })
+
   test('render', () => {
     const { unmount } = render(<Settings />)
 
@@ -40,7 +76,7 @@ describe('header/settings', () => {
     unmount()
   })
 
-  test('on apply', () => {
+  test('on apply', async () => {
     const { unmount } = render(<Settings />)
 
     // Open
@@ -50,35 +86,17 @@ describe('header/settings', () => {
     // Apply
     const apply = screen.getByRole('button', { name: 'Apply' })
     fireEvent.click(apply)
+    await waitFor(() => expect(mockSetState).toHaveBeenCalledTimes(1))
 
     unmount()
   })
 
   test('local storage', async () => {
-    const { unmount } = render(
-      <Context.Provider
-        value={
-          {
-            settings: {
-              light: { color: '#ffffff', intensity: 1, decay: 0 },
-              colors: {
-                baseColor: '#ffffff',
-                hoverColor: '#ffffff',
-                selectColor: '#ffffff',
-                hoverSelectColor: '#ffffff'
-              },
-              frameRate: {
-                fps: 30
-              },
-              localStorage: true
-            },
-            dispatch: jest.fn
-          } as unknown as ContextState
-        }
-      >
-        <Settings />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => ({
+      ...defaultSettings,
+      localStorage: true
+    }))
+    const { unmount } = render(<Settings />)
 
     unmount()
   })

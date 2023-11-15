@@ -1,8 +1,12 @@
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import { Context, ContextState } from '@context'
-
 import Colorbar from '.'
+
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  return useStore
+})
 
 jest.mock('three/examples/jsm/math/Lut', () => {
   class Lut {
@@ -29,22 +33,20 @@ jest.mock('three/examples/jsm/math/Lut', () => {
   return { Lut }
 })
 
-jest.mock('../../tools/toReadable', () => () => 'value')
+jest.mock('@tools/toReadable', () => () => 'value')
 
 describe('helpers/colorbar', () => {
-  const contextValue = {
-    mainView: { camera: undefined },
-    lut: { colormap: 'rainbow' },
-    dispatch: jest.fn()
-  } as unknown as ContextState
-  const resize = false
+  const mainView = { camera: { aspect: 1 } }
+
+  beforeEach(() => {
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
+  })
 
   test('empty render', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider value={contextValue}>
-        <Colorbar />
-      </Context.Provider>
-    )
+    const renderer = await ReactThreeTestRenderer.create(<Colorbar />)
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Colorbar')
 
@@ -52,16 +54,8 @@ describe('helpers/colorbar', () => {
   })
 
   test('with mainView.camera', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          mainView: { camera: { aspect: 1 } as THREE.PerspectiveCamera }
-        }}
-      >
-        <Colorbar />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => mainView)
+    const renderer = await ReactThreeTestRenderer.create(<Colorbar />)
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Colorbar')
 

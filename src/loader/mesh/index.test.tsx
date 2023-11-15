@@ -7,9 +7,13 @@ import {
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { Context, ContextState } from '@context'
-
 import Mesh from '.'
+
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  return useStore
+})
 
 describe('loader/mesh', () => {
   const geometry = new BoxGeometry(1, 1, 1)
@@ -27,21 +31,20 @@ describe('loader/mesh', () => {
     children: [mesh]
   } as unknown as GLTF['scene']
 
-  const dispatch = jest.fn
-  const contextValue = {
-    display: {
-      transparent: true
-    },
-    sectionView: {
-      enabled: true,
-      clippingPlane: 'plane'
-    },
-    result: {
-      meshVisible: true
-    },
-    lut: {},
-    dispatch
-  } as unknown as ContextState
+  const display = {
+    transparent: true
+  }
+  const sectionView = {
+    enabled: true,
+    clippingPlane: 'plane'
+  }
+
+  beforeEach(() => {
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
+  })
 
   test('render', async () => {
     const renderer = await ReactThreeTestRenderer.create(<Mesh scene={scene} />)
@@ -49,12 +52,9 @@ describe('loader/mesh', () => {
     await renderer.unmount()
   })
 
-  test('with context', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider value={contextValue}>
-        <Mesh scene={scene} />
-      </Context.Provider>
-    )
+  test('with store', async () => {
+    mockUseStore.mockImplementation(() => ({ ...display, ...sectionView }))
+    const renderer = await ReactThreeTestRenderer.create(<Mesh scene={scene} />)
 
     await renderer.unmount()
   })

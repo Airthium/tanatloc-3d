@@ -1,9 +1,9 @@
-import { useContext, useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { LineBasicMaterial, WireframeGeometry } from 'three'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { Context } from '@context'
+import useStore from '@store'
 
 /**
  * Props
@@ -22,8 +22,9 @@ export interface MeshFaceProps {
  * @returns MeshFace
  */
 const MeshFace = ({ child }: MeshFaceProps) => {
-  // Context
-  const { display, sectionView } = useContext(Context)
+  // Store
+  const display = useStore((s) => s.display)
+  const sectionView = useStore((s) => s.sectionView)
 
   // Geometry
   const mesh = useMemo(() => {
@@ -72,7 +73,7 @@ const MeshFace = ({ child }: MeshFaceProps) => {
  * @param props props
  * @returns Mesh
  */
-const Mesh = ({ scene }: MeshProps): React.JSX.Element => {
+const Mesh = ({ scene }: MeshProps): ReactNode => {
   // Children
   const children = useMemo(
     () =>

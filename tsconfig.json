@@ -12,9 +12,6 @@
     "baseUrl": "./",
     "paths": {
       "@index": ["./index.d.ts"],
-      "@tunnel": ["./src/helpers/tunnel/index.js"],
-      "@context": ["./src/context/index.js"],
-      "@context/*": ["./src/context/*"],
       "@header": ["./src/header/index.js"],
       "@helpers/*": ["./src/helpers/*"],
       "@loader": ["./src/loader/index.js"],

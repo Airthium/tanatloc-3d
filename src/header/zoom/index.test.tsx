@@ -1,27 +1,34 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
-import { Context, ContextState } from '@context'
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
 
 import Zoom from '.'
 
 const mockZoomToFit = jest.fn()
-jest.mock('../../tools/zoomToFit', () => () => mockZoomToFit())
+jest.mock('@tools/zoomToFit', () => () => mockZoomToFit())
 
 const mockZoom = jest.fn()
-jest.mock('../../tools/zoom', () => () => mockZoom())
+jest.mock('@tools/zoom', () => () => mockZoom())
 
 describe('header/zoom', () => {
-  const dispatch = jest.fn()
-  const contextValue = {
-    mainView: {},
-    zoomToSelection: {
-      enabled: true
-    },
-    dispatch
-  } as unknown as ContextState
+  const mainView = {}
+  const zoomToSelection = {
+    enabled: true
+  }
 
   beforeEach(() => {
-    dispatch.mockReset()
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
 
     mockZoomToFit.mockReset()
     mockZoom.mockReset()
@@ -71,16 +78,15 @@ describe('header/zoom', () => {
   })
 
   test('zoomToSelection', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <Zoom />
-      </Context.Provider>
-    )
+    mockUseStore
+      .mockImplementationOnce(() => mainView)
+      .mockImplementationOnce(() => zoomToSelection)
+    const { unmount } = render(<Zoom />)
 
     const button = screen.getByRole('button', { name: 'select' })
     fireEvent.click(button)
 
-    expect(dispatch).toHaveBeenCalledTimes(1)
+    expect(mockSetState).toHaveBeenCalledTimes(1)
 
     unmount()
   })

@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { ReactNode, useRef } from 'react'
 import { Vector3 } from 'three'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
@@ -21,7 +21,7 @@ const StaticText = ({
   position,
   fontSize,
   children
-}: StaticTextProps): React.JSX.Element => {
+}: StaticTextProps): ReactNode => {
   // Ref
   const ref = useRef<THREE.Mesh>(null!)
 

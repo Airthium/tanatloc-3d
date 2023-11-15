@@ -1,16 +1,24 @@
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import { Context, ContextState } from '@context'
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
 
-import MainContextFiller from '.'
+import MainStoreFiller from '.'
 
-describe('context/mainContextFiller', () => {
+describe('store/mainStoreFiller', () => {
   const controls = {}
-  const dispatch = jest.fn()
-  const contextValue = { dispatch } as unknown as ContextState
+
+  beforeEach(() => {
+    mockSetState.mockReset()
+  })
 
   test('render', async () => {
-    const renderer = await ReactThreeTestRenderer.create(<MainContextFiller />)
+    const renderer = await ReactThreeTestRenderer.create(<MainStoreFiller />)
     expect(renderer.scene.children.length).toBe(0)
 
     await renderer.unmount()
@@ -18,21 +26,11 @@ describe('context/mainContextFiller', () => {
 
   test('with controls', async () => {
     const renderer = await ReactThreeTestRenderer.create(
-      <MainContextFiller controls={controls} />
+      <MainStoreFiller controls={controls} />
     )
     expect(renderer.scene.children.length).toBe(0)
 
-    await renderer.unmount()
-  })
-
-  test('with context', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider value={contextValue}>
-        <MainContextFiller controls={controls} />
-      </Context.Provider>
-    )
-
-    expect(dispatch).toHaveBeenCalledTimes(4)
+    expect(mockSetState).toHaveBeenCalledTimes(1)
 
     await renderer.unmount()
   })

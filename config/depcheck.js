@@ -62,7 +62,13 @@ const customJest = async (fileName, deps) => {
 
 const options = {
   ignoreMatches: [
-    'depcheck' // used here
+    'depcheck', // used here
+    '@header/*',
+    '@helpers/*',
+    '@loader/*',
+    '@store/*',
+    '@style/*',
+    '@tools/*'
   ],
   specials: [depcheck.special.bin, customTypescript, customJest]
 }

@@ -1,8 +1,8 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { Line, OrthographicCamera, Text } from '@react-three/drei'
 import { Float32BufferAttribute } from 'three'
 
-import { Context } from '@context'
+import useStore from '@store'
 
 import toReadable from '@tools/toReadable'
 
@@ -28,7 +28,7 @@ const size = 10
  * @param props props
  * @returns Label
  */
-const Label = ({ position, value }: LabelProps): React.JSX.Element => {
+const Label = ({ position, value }: LabelProps): ReactNode => {
   /**
    * Render
    */
@@ -57,15 +57,16 @@ const Label = ({ position, value }: LabelProps): React.JSX.Element => {
  * Colorbar
  * @returns Colorbar
  */
-const Colorbar = ({ resize }: ColorbarProps): React.JSX.Element => {
+const Colorbar = ({ resize }: ColorbarProps): ReactNode => {
   // Ref
   const ref = useRef<THREE.Mesh>(null!)
 
   // State
   const [aspectRatio, setAspectRatio] = useState<number>(1)
 
-  // Context
-  const { mainView, lut } = useContext(Context)
+  // Store
+  const mainView = useStore((s) => s.mainView)
+  const lut = useStore((s) => s.lut)
 
   // Vertex colors
   useEffect(() => {

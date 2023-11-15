@@ -1,8 +1,12 @@
 import { render, waitFor } from '@testing-library/react'
 
-import { Tanatloc3DPart } from '../..'
+import { Tanatloc3DPart } from '@index'
 
-import { Context, ContextState } from '@context'
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  return useStore
+})
 
 jest.mock('three/examples/jsm/loaders/GLTFLoader', () => {
   class GLTFLoader {
@@ -37,42 +41,23 @@ describe('loader', () => {
     buffer: 'buffer'
   } as unknown as Tanatloc3DPart
 
-  const dispatch = jest.fn()
-  const contextValue = {
-    props: {
-      selection: '',
-      onHighlight: jest.fn,
-      onSelect: jest.fn
-    },
-    mainView: {
-      scene: {},
-      camera: {},
-      controls: {}
-    },
-    display: {
-      transparent: true
-    },
-    geometry: {
-      dimension: 0
-    },
-    sectionView: {
-      enabled: true,
-      clippingPlane: 'plane'
-    },
-    dispatch
-  } as unknown as ContextState
+  const mainView = {
+    scene: {},
+    camera: {},
+    controls: {}
+  }
 
   beforeEach(() => {
-    dispatch.mockReset()
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return mainView
+    })
   })
 
   test('Geometry2D', async () => {
     const PartLoader = (await import('.')).default
-
     const { container, unmount } = render(
-      <Context.Provider value={contextValue}>
-        <PartLoader part={part} uuid="uuid" />
-      </Context.Provider>
+      <PartLoader part={part} uuid="uuid" />
     )
 
     await waitFor(() => container.querySelector('mesh'))

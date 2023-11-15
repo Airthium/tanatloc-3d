@@ -1,6 +1,6 @@
 import {
+  ReactNode,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -10,7 +10,7 @@ import { ThreeEvent, useFrame } from '@react-three/fiber'
 import { OrthographicCamera, Text } from '@react-three/drei'
 import { Vector3, Shape } from 'three'
 
-import { Context } from '@context'
+import useStore from '@store'
 
 import Arrow from '../arrow'
 
@@ -90,12 +90,7 @@ const initHover = {
  * @param props Props
  * @returns Axis
  */
-const Axis = ({
-  origin,
-  direction,
-  color,
-  text
-}: AxisProps): React.JSX.Element => {
+const Axis = ({ origin, direction, color, text }: AxisProps): ReactNode => {
   // Direction
   const direction3 = useMemo(
     () => new Vector3(direction[0], direction[1], direction[2]),
@@ -131,7 +126,7 @@ const ShapeGeometry = ({
   width,
   height,
   radius
-}: ShapeGeometryProps): React.JSX.Element => {
+}: ShapeGeometryProps): ReactNode => {
   // X
   const x = useMemo(() => -width / 2, [width])
   // Y
@@ -183,17 +178,15 @@ const Face = ({
   onPointerMove,
   onPointerLeave,
   onClick
-}: FaceProps): React.JSX.Element => {
+}: FaceProps): ReactNode => {
   // Ref
   const ref = useRef<THREE.Group>(null!)
 
-  // Context
+  // Store
+  const { dimension } = useStore((s) => s.geometry)
   const {
-    geometry: { dimension },
-    settings: {
-      colors: { baseColor, hoverColor }
-    }
-  } = useContext(Context)
+    colors: { baseColor, hoverColor }
+  } = useStore((s) => s.settings)
 
   // Shape
   const shape = useMemo(
@@ -231,6 +224,12 @@ const Face = ({
   )
 
   /**
+   * On click (internal)
+   * @description Just ensure onClick has no arguments
+   */
+  const onInternalClick = useCallback(() => onClick(), [onClick])
+
+  /**
    * Render
    */
   return (
@@ -239,7 +238,7 @@ const Face = ({
       type={'Navigation_' + face.text}
       onPointerMove={onInternalPointerMove}
       onPointerLeave={onInternalPointerLeave}
-      onClick={onClick}
+      onClick={onInternalClick}
     >
       <mesh>
         {shape}
@@ -279,15 +278,13 @@ const Face = ({
  * @param props Props
  * @returns Navigation
  */
-const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
+const Navigation = ({ resize }: NavigationProps): ReactNode => {
   // Ref
   const currentDimension = useRef<number>(3)
 
-  // Context
-  const {
-    mainView,
-    geometry: { dimension }
-  } = useContext(Context)
+  // Store
+  const mainView = useStore((s) => s.mainView)
+  const { dimension } = useStore((s) => s.geometry)
 
   // State
   const [aspectRatio, setAspectRatio] = useState<number>(1)
@@ -353,39 +350,41 @@ const Navigation = ({ resize }: NavigationProps): React.JSX.Element => {
 
   /**
    * On click
+   * @param force Force face index
    */
-  const onClick = useCallback((): void => {
-    // Checks
-    if (!mainView?.camera || !mainView.controls) return
+  const onClick = useCallback(
+    (force?: number): void => {
+      // Checks
+      if (!mainView?.camera || !mainView.controls) return
 
-    const currentFace = faces[hover.index]
-    if (!currentFace) return
+      const currentFace = faces[force ?? hover.index]
+      if (!currentFace) return
 
-    // Distance
-    const target = mainView.controls.target as THREE.Vector3
-    const distance = mainView.camera.position.distanceTo(target)
+      // Distance
+      const target = mainView.controls.target as THREE.Vector3
+      const distance = mainView.camera.position.distanceTo(target)
 
-    // Position change
-    const interval = currentFace.normal.clone().multiplyScalar(distance)
+      // Position change
+      const interval = currentFace.normal.clone().multiplyScalar(distance)
 
-    // New position
-    const newPosition = target.clone().add(interval)
+      // New position
+      const newPosition = target.clone().add(interval)
 
-    // Update
-    mainView.camera.position.copy(newPosition)
-    mainView.camera.up.copy(currentFace.up)
-  }, [mainView?.camera, mainView.controls, hover])
+      // Update
+      mainView.camera.position.copy(newPosition)
+      mainView.camera.up.copy(currentFace.up)
+    },
+    [mainView?.camera, mainView.controls, hover]
+  )
+
+  console.log(dimension)
 
   // Dimension
   useEffect(() => {
     if (dimension === currentDimension.current) return
     currentDimension.current = dimension
 
-    if (dimension !== 2) return
-
-    setHover({ index: 0, distance: Infinity }) // Front
-    onClick()
-    setHover(initHover)
+    if (dimension < 3) onClick(0)
   }, [dimension, onClick])
 
   /**

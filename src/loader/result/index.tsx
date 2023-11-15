@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 import {
   Float32BufferAttribute,
   LineBasicMaterial,
@@ -8,8 +8,7 @@ import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 const LutModule = import('three/examples/jsm/math/Lut.js')
 
-import { Context } from '@context'
-import { setLutMax, setLutMin } from '@context/actions'
+import useStore from '@store'
 
 /**
  * Props
@@ -23,12 +22,15 @@ export interface ResultProps {
  * @param props Props
  * @returns Result
  */
-const Result = ({ scene }: ResultProps): React.JSX.Element => {
+const Result = ({ scene }: ResultProps): ReactNode => {
   // State
-  const [resultMesh, setResultMesh] = useState<React.JSX.Element>()
+  const [resultMesh, setResultMesh] = useState<ReactNode>()
 
-  // Context
-  const { display, sectionView, result, lut, dispatch } = useContext(Context)
+  // Store
+  const display = useStore((s) => s.display)
+  const sectionView = useStore((s) => s.sectionView)
+  const result = useStore((s) => s.result)
+  const lut = useStore((s) => s.lut)
 
   // Child
   const child = useMemo(
@@ -49,8 +51,13 @@ const Result = ({ scene }: ResultProps): React.JSX.Element => {
       const array = data.array as unknown as number[]
       const min = array.reduce((a, b) => Math.min(a, b), Infinity)
       const max = array.reduce((a, b) => Math.max(a, b), -Infinity)
-      dispatch(setLutMin(min))
-      dispatch(setLutMax(max))
+      useStore.setState({
+        lut: {
+          ...lut,
+          min,
+          max
+        }
+      })
 
       const lookUpTable = new Lut(lut.colormap)
       lookUpTable.setMin(lut.customMin ?? min)
@@ -71,7 +78,7 @@ const Result = ({ scene }: ResultProps): React.JSX.Element => {
     }
 
     setColor().catch(console.error)
-  }, [child, lut.colormap, lut.customMin, lut.customMax, dispatch])
+  }, [child, lut])
 
   // Result mesh
   useEffect(() => {

@@ -3,6 +3,7 @@ const config = {
   rootDir: '..',
   setupFiles: ['jest-canvas-mock', './config/jest.setup.js'],
   testEnvironment: 'jest-environment-jsdom',
+  testPathIgnorePatterns: ['<rootDir>/dist/', '<rootDir>/node_modules/'],
   collectCoverage: true,
   collectCoverageFrom: ['src/**/*.ts', 'src/**/*.tsx'],
   transform: {
@@ -18,13 +19,13 @@ const config = {
     ]
   },
   moduleNameMapper: {
-    '^@index/(.*)$': ['<rootDir>/index.d.ts'],
-    '^@tunnel/(.*)$': ['<rootDir>/src/$1'],
-    '^@context/(.*)$': ['<rootDir>/src/context/$1'],
-    '^@header/(.*)$': ['<rootDir>/src/header/$1'],
+    '@index': ['<rootDir>/index.d.ts'],
+    '@header': ['<rootDir>/src/header/index.tsx'],
     '^@helpers/(.*)$': ['<rootDir>/src/helpers/$1'],
-    '^@loader/(.*)$': ['<rootDir>/src/loader/$1'],
+    '@loader': ['<rootDir>/src/loader/index.tsx'],
     '^@tools/(.*)$': ['<rootDir>/src/tools/$1'],
+    '^@store/(.*)$': ['<rootDir>/src/store/$1'],
+    '@store': ['<rootDir>/src/store/index.ts'],
     '^@style/(.*)$': ['<rootDir>/src/style/$1']
   }
 }

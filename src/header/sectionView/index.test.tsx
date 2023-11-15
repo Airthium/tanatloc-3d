@@ -1,20 +1,27 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 
-import { Context, ContextState } from '@context'
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
 
 import SectionView from '.'
 
 describe('header/sectionView', () => {
-  const dispatch = jest.fn()
-  const contextValue = {
-    sectionView: {
-      enabled: true
-    },
-    dispatch
-  } as unknown as ContextState
+  const sectionView = {
+    enabled: true
+  }
 
   beforeEach(() => {
-    dispatch.mockReset()
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
   })
 
   test('render', () => {
@@ -24,34 +31,20 @@ describe('header/sectionView', () => {
   })
 
   test('buttons', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <SectionView />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => sectionView)
+    const { unmount } = render(<SectionView />)
 
     const buttons = screen.getAllByRole('button')
     buttons.forEach((button) => fireEvent.click(button))
 
-    expect(dispatch).toHaveBeenCalledTimes(6)
+    expect(mockSetState).toHaveBeenCalledTimes(6)
 
     unmount()
   })
 
   test('hidePlane', () => {
-    const { unmount } = render(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          sectionView: {
-            ...contextValue.sectionView,
-            hidePlane: true
-          }
-        }}
-      >
-        <SectionView />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => ({ ...sectionView, hidePlane: true }))
+    const { unmount } = render(<SectionView />)
 
     screen.getByRole('button', { name: 'eye' })
 

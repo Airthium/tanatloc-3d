@@ -1,25 +1,23 @@
 import { screen, render } from '@testing-library/react'
 
-import { Context, ContextState } from '@context'
-
 import Header from '.'
 
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  return useStore
+})
+
+const colorbarRole = 'Colorbar'
 jest.mock('./snapshot', () => () => <div />)
 jest.mock('./display', () => () => <div />)
 jest.mock('./zoom', () => () => <div />)
 jest.mock('./sectionView', () => () => <div />)
-jest.mock('./colorbar', () => () => <div />)
+jest.mock('./colorbar', () => () => <div role={colorbarRole} />)
 jest.mock('./results', () => () => <div />)
 jest.mock('./settings', () => () => <div />)
 
 describe('header', () => {
-  const contextValue = {
-    props: {
-      data: true,
-      postProcessing: true
-    },
-    dispatch: jest.fn()
-  } as unknown as ContextState
   const oneResult = false
 
   test('render', () => {
@@ -28,12 +26,19 @@ describe('header', () => {
     unmount()
   })
 
+  beforeEach(() => {
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
+  })
+
   test('width data & postprocessing', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <Header oneResult={oneResult} />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => ({
+      data: true,
+      postProcessing: true
+    }))
+    const { unmount } = render(<Header oneResult={oneResult} />)
 
     expect(screen.getByRole('button', { name: 'database' }))
     expect(screen.getByRole('button', { name: 'filter' }))
@@ -42,19 +47,10 @@ describe('header', () => {
   })
 
   test('width data', () => {
-    const { unmount } = render(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          props: {
-            ...contextValue.props,
-            postProcessing: false
-          }
-        }}
-      >
-        <Header oneResult={oneResult} />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => ({
+      data: true
+    }))
+    const { unmount } = render(<Header oneResult={oneResult} />)
 
     expect(screen.getByRole('button', { name: 'database' }))
 
@@ -62,19 +58,10 @@ describe('header', () => {
   })
 
   test('width postprocessing', () => {
-    const { unmount } = render(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          props: {
-            ...contextValue.props,
-            data: false
-          }
-        }}
-      >
-        <Header oneResult={oneResult} />
-      </Context.Provider>
-    )
+    mockUseStore.mockImplementation(() => ({
+      postProcessing: true
+    }))
+    const { unmount } = render(<Header oneResult={oneResult} />)
 
     expect(screen.getByRole('button', { name: 'filter' }))
 
@@ -83,6 +70,8 @@ describe('header', () => {
 
   test('with one result', () => {
     const { unmount } = render(<Header oneResult={true} />)
+
+    expect(screen.getByRole(colorbarRole))
 
     unmount()
   })

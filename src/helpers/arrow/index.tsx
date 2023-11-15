@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { ReactNode, useEffect, useMemo, useRef } from 'react'
 import { Vector3 } from 'three'
 
 import StaticText from '../staticText'
@@ -28,7 +28,7 @@ const Arrow = ({
   length,
   color,
   text
-}: ArrowProps): React.JSX.Element => {
+}: ArrowProps): ReactNode => {
   // Ref
   const ref = useRef<THREE.Mesh>(null!)
 

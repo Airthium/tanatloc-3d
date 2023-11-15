@@ -1,10 +1,14 @@
 import { render } from '@testing-library/react'
 
-import { Tanatloc3DPart } from '../..'
-
-import { Context, ContextState } from '@context'
+import { Tanatloc3DPart } from '@index'
 
 import PartLoader from '.'
+
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  return useStore
+})
 
 const mockGLTFLoad = jest.fn()
 jest.mock('three/examples/jsm/loaders/GLTFLoader', () => {
@@ -23,7 +27,7 @@ jest.mock('three/examples/jsm/loaders/GLTFLoader', () => {
   return { GLTFLoader }
 })
 
-jest.mock('../tools/zoomToFit', () => () => undefined)
+jest.mock('@tools/zoomToFit', () => () => undefined)
 
 jest.mock('./geometry2D', () => () => <mesh />)
 jest.mock('./geometry3D', () => () => <mesh />)
@@ -38,33 +42,17 @@ describe('loader', () => {
     buffer: 'buffer'
   } as unknown as Tanatloc3DPart
 
-  const dispatch = jest.fn()
-  const contextValue = {
-    props: {
-      selection: '',
-      onHighlight: jest.fn,
-      onSelect: jest.fn
-    },
-    mainView: {
-      scene: {},
-      camera: {},
-      controls: {}
-    },
-    display: {
-      transparent: true
-    },
-    geometry: {
-      dimension: 0
-    },
-    sectionView: {
-      enabled: true,
-      clippingPlane: 'plane'
-    },
-    dispatch
-  } as unknown as ContextState
+  const mainView = {
+    scene: {},
+    camera: {},
+    controls: {}
+  }
 
   beforeEach(() => {
-    dispatch.mockReset()
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
 
     mockGLTFLoad.mockReset()
     mockGLTFLoad.mockImplementation(() => ({ scene: { userData: {} } }))
@@ -76,12 +64,9 @@ describe('loader', () => {
     unmount()
   })
 
-  test('with context', () => {
-    const { unmount } = render(
-      <Context.Provider value={contextValue}>
-        <PartLoader part={part} uuid="uuid" />
-      </Context.Provider>
-    )
+  test('with store', () => {
+    mockUseStore.mockImplementation(() => mainView)
+    const { unmount } = render(<PartLoader part={part} uuid="uuid" />)
 
     unmount()
   })

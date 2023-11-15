@@ -1,6 +1,6 @@
-import { useContext, useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
-import { Context } from '@context'
+import useStore from '@store'
 
 /**
  * Props
@@ -14,13 +14,14 @@ export interface LightProps {
  * @param props Props
  * @returns Light
  */
-const Light = ({ update }: LightProps) => {
+const Light = ({ update }: LightProps): ReactNode => {
   // State
   const [positionRight, setPositionRight] = useState<THREE.Vector3>(null!)
   const [positionLeft, setPositionLeft] = useState<THREE.Vector3>(null!)
 
-  // Context
-  const { mainView, settings } = useContext(Context)
+  // Store
+  const mainView = useStore((s) => s.mainView)
+  const settings = useStore((s) => s.settings)
 
   // Set position
   useEffect(() => {

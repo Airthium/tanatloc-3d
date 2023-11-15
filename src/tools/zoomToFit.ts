@@ -14,7 +14,6 @@ const zoomToFit = (
   camera: THREE.PerspectiveCamera | undefined,
   controls: TrackballControlsProps | undefined
 ): void => {
-  console.log(scene)
   if (!scene || !camera || !controls) return
 
   // Center

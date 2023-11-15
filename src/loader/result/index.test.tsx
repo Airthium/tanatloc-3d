@@ -7,9 +7,15 @@ import {
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
-import { Context, ContextState } from '@context'
-
 import Result from '.'
+
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
 
 jest.mock('three/examples/jsm/math/Lut', () => {
   class Lut {
@@ -52,21 +58,26 @@ describe('loader/result', () => {
     children: [mesh]
   } as unknown as GLTF['scene']
 
-  const dispatch = jest.fn
-  const contextValue = {
-    display: {
-      transparent: true
-    },
-    sectionView: {
-      enabled: true,
-      clippingPlane: 'plane'
-    },
-    result: {
-      meshVisible: true
-    },
-    lut: {},
-    dispatch
-  } as unknown as ContextState
+  const display = {
+    transparent: true
+  }
+  const sectionView = {
+    enabled: true,
+    clippingPlane: 'plane'
+  }
+  const result = {
+    meshVisible: true
+  }
+  const lut = {}
+
+  beforeEach(() => {
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
+  })
 
   test('render', async () => {
     const renderer = await ReactThreeTestRenderer.create(
@@ -76,28 +87,31 @@ describe('loader/result', () => {
     await renderer.unmount()
   })
 
-  test('with context', async () => {
+  test('with store', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...display,
+      ...sectionView,
+      ...result,
+      ...lut
+    }))
     const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider value={contextValue}>
-        <Result scene={scene} />
-      </Context.Provider>
+      <Result scene={scene} />
     )
 
     await renderer.unmount()
   })
 
-  test('with context - no meshVisible', async () => {
+  test('with store - no transparent - no sectionView', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...display,
+      transparent: false,
+      ...sectionView,
+      enabled: false,
+      ...result,
+      ...lut
+    }))
     const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider
-        value={{
-          ...contextValue,
-          result: {
-            meshVisible: false
-          }
-        }}
-      >
-        <Result scene={scene} />
-      </Context.Provider>
+      <Result scene={scene} />
     )
 
     await renderer.unmount()

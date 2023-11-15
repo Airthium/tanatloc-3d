@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { Buffer } from 'buffer'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -7,7 +7,7 @@ const GLTFModule = import('three/examples/jsm/loaders/GLTFLoader.js')
 
 import { Tanatloc3DPart } from '@index'
 
-import { Context } from '@context'
+import useStore from '@store'
 
 import zoomToFit from '@tools/zoomToFit'
 
@@ -33,7 +33,7 @@ export interface MeshesProps {
  * @param props
  * @returns Meshes
  */
-const Meshes = ({ scene }: MeshesProps): React.JSX.Element => {
+const Meshes = ({ scene }: MeshesProps): ReactNode => {
   // Type
   const type = useMemo(
     () => scene.userData.type as string,
@@ -62,15 +62,15 @@ const Meshes = ({ scene }: MeshesProps): React.JSX.Element => {
  * @param props Props
  * @returns PartLoader
  */
-const PartLoader = ({ part }: PartLoaderProps): React.JSX.Element | null => {
+const PartLoader = ({ part }: PartLoaderProps): ReactNode => {
   // Ref
   const currentGLTF = useRef<GLTF>()
 
   // State
   const [gltf, setGltf] = useState<GLTF>()
 
-  // Context
-  const { mainView } = useContext(Context)
+  // Store
+  const mainView = useStore((s) => s.mainView)
 
   // GLTF load
   useEffect(() => {

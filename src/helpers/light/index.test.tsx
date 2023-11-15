@@ -1,25 +1,34 @@
 import { Vector3 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import { Context, ContextState } from '@context'
-
 import Light from '.'
 
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  return useStore
+})
+
 describe('helpers/light', () => {
-  const contextValue = {
-    mainView: {
-      camera: {
-        position: new Vector3(0, 0, 5),
-        up: new Vector3(0, 0, 1)
-      },
-      controls: {
-        target: new Vector3(0, 0, 0)
-      }
+  const mainView = {
+    camera: {
+      position: new Vector3(0, 0, 5),
+      up: new Vector3(0, 0, 1)
     },
-    settings: {
-      light: {}
+    controls: {
+      target: new Vector3(0, 0, 0)
     }
-  } as unknown as ContextState
+  }
+  const settings = {
+    light: {}
+  }
+
+  beforeEach(() => {
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return settings
+    })
+  })
 
   test('empty render', async () => {
     const renderer = await ReactThreeTestRenderer.create(<Light />)
@@ -29,12 +38,9 @@ describe('helpers/light', () => {
     await renderer.unmount()
   })
 
-  test('with context', async () => {
-    const renderer = await ReactThreeTestRenderer.create(
-      <Context.Provider value={contextValue}>
-        <Light />
-      </Context.Provider>
-    )
+  test('with mainView', async () => {
+    mockUseStore.mockImplementation(() => ({ ...settings, ...mainView }))
+    const renderer = await ReactThreeTestRenderer.create(<Light />)
     const mesh = renderer.scene.children[0]
     expect(mesh.type).toBe('Light')
 

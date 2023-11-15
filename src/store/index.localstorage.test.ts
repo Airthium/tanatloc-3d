@@ -1,4 +1,4 @@
-describe('context', () => {
+describe('store', () => {
   beforeAll(() => {
     localStorage.setItem(
       'tanatloc-3d-settings',

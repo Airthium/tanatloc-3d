@@ -1,8 +1,14 @@
 import { render } from '@testing-library/react'
 
-import { Context, ContextState } from '@context'
-
 import Parts from '.'
+
+const mockSetState = jest.fn()
+const mockUseStore = jest.fn()
+jest.mock('@store', () => {
+  const useStore = (callback: Function) => mockUseStore(callback)
+  useStore.setState = () => mockSetState()
+  return useStore
+})
 
 jest.mock('@loader', () => () => <div />)
 
@@ -16,13 +22,14 @@ describe('Parts', () => {
     }
   ]
 
-  const dispatch = jest.fn()
-  const contextValue = {
-    props: {
-      parts
-    },
-    dispatch
-  } as unknown as ContextState
+  beforeEach(() => {
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
+  })
 
   test('render', () => {
     const { unmount } = render(<Parts />)
@@ -30,27 +37,16 @@ describe('Parts', () => {
     unmount()
   })
 
-  test('with context', () => {
-    const { unmount, rerender } = render(
-      <Context.Provider value={contextValue}>
-        <Parts />
-      </Context.Provider>
-    )
+  test('with parts', () => {
+    mockUseStore.mockImplementation(() => ({ parts: parts }))
+    const { unmount, rerender } = render(<Parts />)
 
-    rerender(
-      <Context.Provider
-        value={
-          {
-            props: {
-              parts: [parts[0]]
-            },
-            dispatch
-          } as unknown as ContextState
-        }
-      >
-        <Parts />
-      </Context.Provider>
-    )
+    expect(mockSetState).toHaveBeenCalledTimes(2)
+
+    mockUseStore.mockImplementation(() => ({ parts: [parts[0]] }))
+    rerender(<Parts />)
+
+    expect(mockSetState).toHaveBeenCalledTimes(4)
 
     unmount()
   })
