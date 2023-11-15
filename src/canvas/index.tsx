@@ -29,7 +29,6 @@ import style from '@style/Canvas'
  * @returns Canvas
  */
 const Canvas = (): ReactNode => {
-  console.log('render canvas')
   // Ref
   const mainViewControls = useRef(null!)
 

@@ -1,4 +1,5 @@
 import Renderer from './renderer'
 import Canvas from './canvas'
 
-export default { Canvas, Renderer }
+const Tanatloc3D = { Canvas, Renderer }
+export default Tanatloc3D

@@ -5,6 +5,8 @@ import useStore from '@store'
 
 import zoomToRect from '@tools/zoomToRect'
 
+// TODO review, zoom in the wrong place
+
 // Selection box
 let div: HTMLDivElement
 
@@ -20,7 +22,6 @@ const endPoint = new Vector2()
  */
 const ZoomToSelection = (): ReactNode => {
   // Store
-
   const mainView = useStore((s) => s.mainView)
   const zoomToSelection = useStore((s) => s.zoomToSelection)
 

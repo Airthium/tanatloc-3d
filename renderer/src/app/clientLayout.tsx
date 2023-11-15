@@ -1,12 +1,14 @@
 'use client'
 
-import * as Tanatloc3D from '../../../dist'
+import { ReactNode } from 'react'
 
-const ClientLayout = ({ children }) => {
+import Tanatloc3D from '../../../dist'
+
+const ClientLayout = ({ children }: { children: ReactNode }) => {
   return (
     <>
       {children}
-      <Tanatloc3D.default.Canvas />
+      <Tanatloc3D.Canvas />
     </>
   )
 }

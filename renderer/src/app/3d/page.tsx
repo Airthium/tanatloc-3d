@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import * as Tanatloc3D from '../../../../dist'
+import Tanatloc3D from '../../../../dist'
 import { Tanatloc3DPart } from '../../../../index.d'
 
 import geometry2D from '../../assets/geometry2D'
@@ -41,20 +41,20 @@ const ThreeD = () => {
         <Button onClick={changePart}>Change part</Button>
       </div>
 
-      <Tanatloc3D.default.Renderer
+      <Tanatloc3D.Renderer
         parts={[part]}
-        selection={{
-          enabled: true,
-          part: geometry3D.summary.uuid,
-          type: 'faces',
-          highlighted: undefined,
-          selected: [
-            {
-              uuid: geometry3D.summary.faces![0].uuid,
-              label: geometry3D.summary.faces![0].label
-            }
-          ]
-        }}
+        // selection={{
+        //   enabled: true,
+        //   part: geometry3D.summary.uuid,
+        //   type: 'faces',
+        //   highlighted: undefined,
+        //   selected: [
+        //     {
+        //       uuid: geometry3D.summary.faces![0].uuid,
+        //       label: geometry3D.summary.faces![0].label
+        //     }
+        //   ]
+        // }}
         data={true}
         postProcessing={true}
         snapshot={{

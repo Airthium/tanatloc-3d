@@ -14,7 +14,6 @@ import style from '@style/Renderer'
  * @returns Renderer
  */
 const Renderer = (props: Tanatloc3DRendererProps & { theme?: ThemeConfig }) => {
-  console.log('render renderer')
   // Store
   const { parts } = useStore((s) => s.props)
 

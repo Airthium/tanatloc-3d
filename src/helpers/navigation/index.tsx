@@ -377,8 +377,6 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
     [mainView?.camera, mainView.controls, hover]
   )
 
-  console.log(dimension)
-
   // Dimension
   useEffect(() => {
     if (dimension === currentDimension.current) return
