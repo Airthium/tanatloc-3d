@@ -28,6 +28,9 @@ jobs:
       - name: Tests
         run: yarn test || true
 
+      - name: Doc
+        run: yarn doc || true
+
       - name: Build
         run: yarn build
 
