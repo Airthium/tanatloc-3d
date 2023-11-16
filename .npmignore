@@ -5,7 +5,6 @@
 ./coverage
 ./docs
 ./node_modules
-./renderer
 ./src
 .babelrc
 .gitignore

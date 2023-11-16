@@ -1,6 +1,6 @@
 {
   "name": "@airthium/tanatloc-3d",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "type": "module",
   "types": "index.d.ts",
   "main": "dist/index.js",
@@ -14,9 +14,6 @@
     "build": "swc --config-file config/.swcrc src/ --out-dir dist",
     "check": "reset && .github/workflows/check.sh"
   },
-  "workspaces": [
-    "renderer"
-  ],
   "peerDependencies": {
     "react": ">=18.2.0",
     "react-dom": ">=18.2.0"
