@@ -44,6 +44,10 @@ const Result = ({ scene }: ResultProps): ReactNode => {
 
   // Vertex color
   useEffect(() => {
+    const colorAttribute = child.geometry.getAttribute('color')
+    if (colorAttribute) return
+
+    console.log(child.geometry.getAttribute('color'))
     const data = child.geometry.getAttribute('data')
     const array = data.array as unknown as number[]
     const min = array.reduce((a, b) => Math.min(a, b), Infinity)
