@@ -1,12 +1,12 @@
 .git
 .github
 .yarn
-config
-coverage
-docs
-node_modules
-renderer
-src
+./config
+./coverage
+./docs
+./node_modules
+./renderer
+./src
 .babelrc
 .gitignore
 .npmignore
@@ -14,5 +14,5 @@ src
 .prettierrc
 .swcrc
 .yarnrc.yml
-tsconfig.json
-yarn.lock
+./tsconfig.json
+./yarn.lock
