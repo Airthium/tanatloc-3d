@@ -456,8 +456,6 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
     const selected =
       (selectionable ? propsToSelected(children, selection) : undefined) ??
       initSelected
-    console.log(hover)
-    console.log(selected)
     setHover(hover)
     setSelected(selected)
   }, [selectionable, children, selection])
