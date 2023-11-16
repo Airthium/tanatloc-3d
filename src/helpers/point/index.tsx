@@ -90,7 +90,7 @@ const Point = (): ReactNode => {
 
     const sphere = buildSphere(boundingBox)
     setSphere(sphere)
-  }, [mainView.scene])
+  }, [mainView.scene, mainView.scene?.children])
 
   /**
    * Render

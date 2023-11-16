@@ -34,6 +34,7 @@ jest.mock('@helpers/zoomToSelection', () => () => <div />)
 jest.mock('@helpers/sectionView', () => () => <div />)
 jest.mock('@helpers/colorbar', () => () => <div />)
 jest.mock('@helpers/light', () => () => <div />)
+jest.mock('@helpers/point', () => () => <div />)
 
 jest.mock('./parts', () => () => <div />)
 

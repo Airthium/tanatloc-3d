@@ -19,6 +19,7 @@ import ZoomToSelection from '@helpers/zoomToSelection'
 import SectionView from '@helpers/sectionView'
 import Colorbar from '@helpers/colorbar'
 import Light from '@helpers/light'
+import Point from '@helpers/point'
 
 import Parts from './parts'
 
@@ -94,6 +95,7 @@ const Canvas = (): ReactNode => {
           noRotate={dimension !== 3}
         />
         <Light update={controlsUpdate} />
+        <Point />
         <Parts />
       </Hud>
       <Hud renderPriority={2}>
