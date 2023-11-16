@@ -27,7 +27,7 @@ const ThreeD = () => {
     <>
       <div
         style={{
-          width: '200px',
+          width: '158px',
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
@@ -42,19 +42,30 @@ const ThreeD = () => {
       </div>
 
       <Tanatloc3D.Renderer
+        style={{ width: 'calc(100vw - 200px)' }}
         parts={[part]}
-        // selection={{
-        //   enabled: true,
-        //   part: geometry3D.summary.uuid,
-        //   type: 'faces',
-        //   highlighted: undefined,
-        //   selected: [
-        //     {
-        //       uuid: geometry3D.summary.faces![0].uuid,
-        //       label: geometry3D.summary.faces![0].label
-        //     }
-        //   ]
-        // }}
+        selection={{
+          enabled: true,
+          // part: geometry3D.summary.uuid,
+          part: geometry2D.summary.uuid,
+          // type: 'faces',
+          type: 'edges',
+          highlighted: {
+            // uuid: geometry3D.summary.faces![1].uuid,
+            // label: geometry3D.summary.faces![1].label
+            uuid: geometry2D.summary.edges![0].uuid,
+            label: geometry2D.summary.edges![0].label
+          },
+
+          selected: [
+            {
+              // uuid: geometry3D.summary.faces![0].uuid,
+              // label: geometry3D.summary.faces![0].label
+              uuid: geometry2D.summary.edges![1].uuid,
+              label: geometry2D.summary.edges![1].label
+            }
+          ]
+        }}
         data={true}
         postProcessing={true}
         snapshot={{

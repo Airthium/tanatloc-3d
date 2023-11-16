@@ -5,8 +5,6 @@ import useStore from '@store'
 
 import zoomToRect from '@tools/zoomToRect'
 
-// TODO review, zoom in the wrong place
-
 // Selection box
 let div: HTMLDivElement
 
@@ -142,8 +140,8 @@ const ZoomToSelection = (): ReactNode => {
       const rect = parentElement!.getBoundingClientRect()
 
       // Left, top
-      const left = x - rect.left
-      const top = y - rect.top
+      const left = x + rect.left
+      const top = y + rect.top
 
       // Selection box
       div.style.display = 'none'
@@ -152,12 +150,9 @@ const ZoomToSelection = (): ReactNode => {
       div.style.width = '0'
       div.style.height = '0'
 
-      // Start, end point
-      startPoint.x = startPoint.x + left
-      startPoint.y = startPoint.y + top
-
-      endPoint.x = x
-      endPoint.y = y
+      // End point
+      endPoint.x = left
+      endPoint.y = top
 
       // Zoom to rect
       zoomToRect(

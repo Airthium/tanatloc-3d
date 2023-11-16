@@ -3,10 +3,9 @@ const style: { [key: string]: React.CSSProperties } = {
     position: 'absolute',
     top: 0,
     right: 0,
-    width: ' 80vw',
+    width: '100vw',
     height: '100vh',
-    overflow: 'auto',
-    touchAction: 'auto'
+    overflow: 'hidden'
   }
 }
 

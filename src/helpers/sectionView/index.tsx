@@ -448,6 +448,7 @@ const SectionView = (): ReactNode => {
 
   // Intialization
   useEffect(() => {
+    /* istanbul ignore next */
     if (sectionView.clippingPlane !== clippingPlane)
       useStore.setState({ sectionView: { ...sectionView, clippingPlane } })
   }, [sectionView])

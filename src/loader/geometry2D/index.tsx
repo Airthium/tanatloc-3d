@@ -1,6 +1,6 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 
-import { Tanatloc3DSelectionValue } from '@index'
+import { Tanatloc3DSelection, Tanatloc3DSelectionValue } from '@index'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
@@ -51,6 +51,106 @@ const initHover: Selection = {
 
 // Initial selected
 const initSelected: Selection[] = []
+
+/**
+ * Find index
+ * @param children Children
+ * @param type Type
+ * @param uuid UUID
+ * @returns Index
+ */
+const findIndex = (
+  children: (Omit<
+    THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
+    'children'
+  > & {
+    children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
+  })[],
+  type: Tanatloc3DSelection['type'],
+  uuid: string
+): number => {
+  let searchIndex = -1
+  children.forEach((solid, index) => {
+    if (type === 'faces') {
+      if (solid.userData.uuid === uuid) searchIndex = index
+    } else if (type === 'edges') {
+      solid.children.forEach((face, index) => {
+        if (face.userData.uuid === uuid) searchIndex = index
+      })
+    }
+  })
+  return searchIndex
+}
+
+/**
+ * Selection props to hover
+ * @param children Children
+ * @param selection Selection
+ * @returns Selection
+ */
+const propsToHover = (
+  children: (Omit<
+    THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
+    'children'
+  > & {
+    children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
+  })[],
+  selection?: Tanatloc3DSelection
+): Selection | undefined => {
+  if (!selection?.highlighted) return
+
+  // UUID
+  const uuid = selection.highlighted.uuid
+
+  // Find index
+  const index = findIndex(children, selection.type, uuid)
+
+  // Check
+  if (index === -1) return
+
+  // Hover
+  return {
+    ...selection.highlighted,
+    index
+  }
+}
+
+/**
+ * Selection props to selected
+ * @param children Children
+ * @param selection Selection
+ * @returns Selected
+ */
+const propsToSelected = (
+  children: (Omit<
+    THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
+    'children'
+  > & {
+    children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
+  })[],
+  selection?: Tanatloc3DSelection
+): Selection[] | undefined => {
+  if (!selection?.selected) return
+
+  // Selected
+  const selected: Selection[] = []
+  selection.selected.forEach((s) => {
+    // UUID
+    const uuid = s.uuid
+
+    // Find index
+    const index = findIndex(children, selection.type, uuid)
+
+    // Check
+    if (index !== -1)
+      selected.push({
+        ...s,
+        index
+      })
+  })
+
+  return selected
+}
 
 /**
  * Geometry 2D edge
@@ -359,9 +459,15 @@ const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
 
   // On selection update
   useEffect(() => {
-    setHover(initHover)
-    setSelected(initSelected)
-  }, [selection])
+    const hover =
+      (selectionable ? propsToHover(children, selection) : undefined) ??
+      initHover
+    const selected =
+      (selectionable ? propsToSelected(children, selection) : undefined) ??
+      initSelected
+    setHover(hover)
+    setSelected(selected)
+  }, [selectionable, children, selection])
 
   // On highlight
   useEffect(() => {

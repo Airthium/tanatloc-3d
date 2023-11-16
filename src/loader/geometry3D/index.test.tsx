@@ -24,14 +24,20 @@ describe('loader/Geometry3D', () => {
   face2.name = 'face2'
   face2.userData.uuid = 'face2_uuid'
 
-  const solid = new Mesh(geometry, material)
-  solid.uuid = 'solid'
-  solid.name = 'solid'
-  solid.userData.uuid = 'solid_uuid'
-  solid.children = [face1, face2]
+  const solid1 = new Mesh(geometry, material)
+  solid1.uuid = 'solid1'
+  solid1.name = 'solid1'
+  solid1.userData.uuid = 'solid1_uuid'
+  solid1.children = [face1, face2]
+
+  const solid2 = new Mesh(geometry, material)
+  solid2.uuid = 'solid2'
+  solid2.name = 'solid2'
+  solid2.userData.uuid = 'solid2_uuid'
+  solid2.children = []
 
   const scene = {
-    children: [solid],
+    children: [solid1, solid2],
     userData: { uuid: 'uuid' }
   } as unknown as GLTF['scene']
 
@@ -146,6 +152,69 @@ describe('loader/Geometry3D', () => {
     await renderer.fireEvent(solid, 'pointerMove', { distance: 1 })
     await renderer.fireEvent(solid, 'click')
     await renderer.fireEvent(solid, 'pointerLeave')
+
+    await renderer.unmount()
+  })
+
+  test('with store - solid highlighted/selected', async () => {
+    mockUseStore.mockImplementationOnce(() => ({
+      ...props,
+      selection: {
+        enabled: true,
+        part: 'uuid',
+        type: 'solids',
+        highlighted: { uuid: 'solid1_uuid' },
+        selected: [{ uuid: 'solid1_uuid' }]
+      },
+      ...display,
+      ...sectionView,
+      ...settings
+    }))
+    const renderer = await ReactThreeTestRenderer.create(
+      <Geometry3D scene={scene} />
+    )
+
+    await renderer.unmount()
+  })
+
+  test('with store - face highlighted/selected', async () => {
+    mockUseStore.mockImplementationOnce(() => ({
+      ...props,
+      selection: {
+        enabled: true,
+        part: 'uuid',
+        type: 'faces',
+        highlighted: { uuid: 'face1_uuid' },
+        selected: [{ uuid: 'face2_uuid' }]
+      },
+      ...display,
+      ...sectionView,
+      ...settings
+    }))
+    const renderer = await ReactThreeTestRenderer.create(
+      <Geometry3D scene={scene} />
+    )
+
+    await renderer.unmount()
+  })
+
+  test('with store - edge highlighted/selected', async () => {
+    mockUseStore.mockImplementationOnce(() => ({
+      ...props,
+      selection: {
+        enabled: true,
+        part: 'uuid',
+        type: 'edges',
+        highlighted: { uuid: 'edge1_uuid' },
+        selected: [{ uuid: 'edge2_uuid' }]
+      },
+      ...display,
+      ...sectionView,
+      ...settings
+    }))
+    const renderer = await ReactThreeTestRenderer.create(
+      <Geometry3D scene={scene} />
+    )
 
     await renderer.unmount()
   })

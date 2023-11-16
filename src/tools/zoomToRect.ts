@@ -1,7 +1,7 @@
 import { TrackballControlsProps } from '@react-three/drei'
 import { Raycaster, Vector2 } from 'three'
 
-// TODO bug with result
+// TODO bug with mesh & result
 // Wrong position
 
 /**

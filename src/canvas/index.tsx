@@ -22,7 +22,7 @@ import Light from '@helpers/light'
 
 import Parts from './parts'
 
-import style from '@style/Canvas'
+import defaultStyle from '@style/Canvas'
 
 /**
  * Canvas
@@ -37,7 +37,7 @@ const Canvas = (): ReactNode => {
   const [resize, setResize] = useState<number>(0)
 
   // Store
-  const { parts } = useStore((s) => s.props)
+  const { parts, style } = useStore((s) => s.props)
   const { dimension } = useStore((s) => s.geometry)
 
   /**
@@ -74,7 +74,7 @@ const Canvas = (): ReactNode => {
   return (
     <R3FCanvas
       hidden={!parts || parts.length === 0}
-      style={style.canvas}
+      style={{ ...defaultStyle.canvas, ...style }}
       frameloop="demand"
       gl={{
         preserveDrawingBuffer: true,

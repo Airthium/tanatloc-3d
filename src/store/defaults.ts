@@ -4,6 +4,7 @@ import { Store } from '@store'
  * Default props
  */
 export const defaultProps = {
+  style: undefined,
   parts: undefined,
   selection: undefined,
   data: undefined,

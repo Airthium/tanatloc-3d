@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import { CanvasProps } from '@react-three/fiber'
 import { ThemeConfig } from 'antd'
 
@@ -6,6 +6,7 @@ import { ThemeConfig } from 'antd'
  * Tanatloc3D renderer props
  */
 export interface Tanatloc3DRendererProps {
+  style?: CSSProperties
   parts?: Tanatloc3DPart[]
   selection?: Tanatloc3DSelection
   data?: boolean

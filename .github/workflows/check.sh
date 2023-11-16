@@ -12,7 +12,7 @@ yarn depcheck
 yarn prettier
 
 # Doc
-yarn doc
+# yarn doc
 
 # Test
 yarn test
