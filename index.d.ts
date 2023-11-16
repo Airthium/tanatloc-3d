@@ -9,6 +9,7 @@ export interface Tanatloc3DRendererProps {
   style?: CSSProperties
   parts?: Tanatloc3DPart[]
   selection?: Tanatloc3DSelection
+  point?: { x: number; y: number; z: number }
   data?: boolean
   postProcessing?: boolean
   snapshot?: Tanatloc3DRendererPropsSnapshot
