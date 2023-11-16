@@ -31,7 +31,6 @@ const Renderer = (props: Tanatloc3DRendererProps & { theme?: ThemeConfig }) => {
     () => !!parts?.find((part) => part.summary.type === 'result'),
     [parts]
   )
-
   /**
    * Render
    */

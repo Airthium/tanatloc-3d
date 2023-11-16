@@ -1,6 +1,6 @@
-const { basename } = require('path')
-const depcheck = require('depcheck')
-const { exit } = require('process')
+import { basename } from 'path'
+import depcheck from 'depcheck'
+import { exit } from 'process'
 
 const customTypescript = async (fileName, deps) => {
   const newDeps = []

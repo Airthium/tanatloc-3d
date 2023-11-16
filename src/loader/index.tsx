@@ -1,9 +1,7 @@
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { Buffer } from 'buffer'
 
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
-
-const GLTFModule = import('three/examples/jsm/loaders/GLTFLoader.js')
+import { GLTFLoader, GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import { Tanatloc3DPart } from '@index'
 
@@ -74,24 +72,18 @@ const PartLoader = ({ part }: PartLoaderProps): ReactNode => {
 
   // GLTF load
   useEffect(() => {
-    const load = async () => {
-      const GLTFLoader = (await GLTFModule).GLTFLoader
-
-      const blob = new Blob([Buffer.from(part.buffer)])
-      const url = URL.createObjectURL(blob)
-      const loader = new GLTFLoader()
-      loader.load(
-        url,
-        setGltf,
-        (progress) =>
-          console.info(
-            'Loading part ' + (progress.loaded / progress.total) * 100 + '%'
-          ),
-        console.error
-      )
-    }
-
-    load().catch(console.error)
+    const blob = new Blob([Buffer.from(part.buffer)])
+    const url = URL.createObjectURL(blob)
+    const loader = new GLTFLoader()
+    loader.load(
+      url,
+      setGltf,
+      (progress) =>
+        console.info(
+          'Loading part ' + (progress.loaded / progress.total) * 100 + '%'
+        ),
+      console.error
+    )
   }, [part])
 
   // Zoom to fit

@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react'
 
-import Tanatloc3D from '../../../dist'
+import Tanatloc3D from 'tanatloc-3d'
 
 const ClientLayout = ({ children }: { children: ReactNode }) => {
   return (

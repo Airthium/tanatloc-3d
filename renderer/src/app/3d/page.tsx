@@ -2,8 +2,7 @@
 
 import Link from 'next/link'
 
-import Tanatloc3D from '../../../../dist'
-import { Tanatloc3DPart } from '../../../../index.d'
+import Tanatloc3D, { Tanatloc3DPart } from 'tanatloc-3d'
 
 import geometry2D from '../../assets/geometry2D'
 import geometry3D from '../../assets/geometry3D'

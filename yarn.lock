@@ -8799,6 +8799,7 @@ __metadata:
     next: "npm:14.0.2"
     react: "npm:18.2.0"
     react-dom: "npm:18.2.0"
+    tanatloc-3d: ../package.tgz
     typescript: "npm:5.2.2"
   languageName: unknown
   linkType: soft
@@ -9579,6 +9580,23 @@ __metadata:
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
   checksum: dfbe201ae09ac6053d163578778c53aa860a784147ecf95705de0cd23f42c851e1be7889241495e95c37cabb058edb1052f141387bef68f705afc8f9dd358509
+  languageName: node
+  linkType: hard
+
+"tanatloc-3d@file:../package.tgz::locator=renderer%40workspace%3Arenderer":
+  version: 0.10.2
+  resolution: "tanatloc-3d@file:../package.tgz#../package.tgz::hash=684942&locator=renderer%40workspace%3Arenderer"
+  dependencies:
+    "@ant-design/icons": "npm:5.2.6"
+    "@react-three/drei": "npm:9.88.13"
+    "@react-three/fiber": "npm:8.15.10"
+    antd: "npm:5.11.1"
+    three: "npm:0.158.0"
+    zustand: "npm:4.4.6"
+  peerDependencies:
+    react: ">=18.2.0"
+    react-dom: ">=18.2.0"
+  checksum: ee81e8fafd7a5d6a0af0419c2b2360a515531b671bc2f0818352e7a5e0cd443f723300fef2f855111fd138256ba1bbab0adcd6b3ebb30fc389b55b17262516b2
   languageName: node
   linkType: hard
 

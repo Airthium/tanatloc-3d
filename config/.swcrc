@@ -1,11 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/swcrc",
-  // "minify": true,
+  "minify": true,
   "exclude": [".*\\.test.tsx"],
   "jsc": {
     "parser": {
       "syntax": "typescript",
-      "jsx": true
+      "tsx": true,
+      "dynamicImport": true
     },
     "baseUrl": "../",
     "paths": {
@@ -27,6 +28,6 @@
     "target": "es2022"
   },
   "module": {
-    "type": "commonjs"
+    "type": "es6"
   }
 }
