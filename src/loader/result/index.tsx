@@ -49,8 +49,20 @@ const Result = ({ scene }: ResultProps): ReactNode => {
 
     const data = child.geometry.getAttribute('data')
     const array = data.array as unknown as number[]
-    const min = array.reduce((a, b) => Math.min(a, b), Infinity)
-    const max = array.reduce((a, b) => Math.max(a, b), -Infinity)
+    let min = array.reduce((a, b) => Math.min(a, b), Infinity)
+    let max = array.reduce((a, b) => Math.max(a, b), -Infinity)
+
+    if (min === max) {
+      if (min < 1e-12) {
+        min = min - 1
+        max = max + 1
+      } else {
+        const range = max - min
+        min = min - 0.1 * range
+        max = max + 0.1 * range
+      }
+    }
+
     useStore.setState({
       lut: {
         ...lut,
