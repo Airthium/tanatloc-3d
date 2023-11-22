@@ -477,16 +477,6 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
     setSelected(selected)
   }, [selectionable, children, selection])
 
-  // On highlight
-  useEffect(() => {
-    onHighlight?.(hover)
-  }, [hover, onHighlight])
-
-  // On select
-  useEffect(() => {
-    onSelect?.(selected)
-  }, [selected, onSelect])
-
   /**
    * Render
    */
