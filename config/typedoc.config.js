@@ -5,4 +5,4 @@ const config = {
   entryPointStrategy: 'Expand'
 }
 
-module.exports = config
+export default config

@@ -212,7 +212,7 @@ const Geometry3DFace = ({
       if (selection?.enabled && selection.type === 'faces')
         onPointerMove({ index, uuid, label, distance: event.distance })
     },
-    [selection, uuid, index, onPointerMove]
+    [selection?.enabled, selection?.type, uuid, label, index, onPointerMove]
   )
 
   /**
@@ -220,14 +220,14 @@ const Geometry3DFace = ({
    */
   const onInternalPointerLeave = useCallback((): void => {
     if (selection?.enabled && selection.type === 'faces') onPointerLeave(index)
-  }, [selection, index, onPointerLeave])
+  }, [selection?.enabled, selection?.type, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
     if (selection?.enabled && selection.type === 'faces') onClick()
-  }, [onClick])
+  }, [selection?.enabled, selection?.type, onClick])
 
   // Material color
   const materialColor = useMemo(() => {
@@ -244,6 +244,8 @@ const Geometry3DFace = ({
     selectColor,
     hoverSelectColor,
     material,
+    solid,
+    index,
     hover,
     selected
   ])
@@ -319,7 +321,7 @@ const Geometry3DSolid = ({
       if (selection?.enabled && selection.type === 'solids')
         onPointerMove({ index, uuid, label, distance: event.distance })
     },
-    [selection, uuid, index, onPointerMove]
+    [selection, uuid, label, index, onPointerMove]
   )
 
   /**
@@ -421,9 +423,14 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
   const onPointerMove = useCallback(
     (data: Selection) => {
       if (!selectionable) return
-      if (data.distance < hover.distance) setHover(data)
+
+      if (data.distance < hover.distance) {
+        const newHover = data
+        setHover(newHover)
+        onHighlight?.({ uuid: newHover.uuid, label: newHover.label })
+      }
     },
-    [selectionable, hover]
+    [selectionable, hover, onHighlight]
   )
 
   /**
@@ -432,9 +439,13 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
   const onPointerLeave = useCallback(
     (index: number) => {
       if (!selectionable) return
-      if (index === hover.index) setHover(initHover)
+
+      if (index === hover.index) {
+        setHover(initHover)
+        onHighlight?.()
+      }
     },
-    [selectionable, hover]
+    [selectionable, hover, onHighlight]
   )
 
   /**
@@ -442,21 +453,27 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
    */
   const onClick = useCallback(() => {
     if (!selectionable) return
+
+    let newSelected = []
     const index = selected.findIndex((s) => s.index === hover.index)
-    if (index === -1) setSelected([...selected, hover])
+    if (index === -1) newSelected = [...selected, hover]
     else
-      setSelected([...selected.slice(0, index), ...selected.slice(index + 1)])
-  }, [selectionable, hover, selected])
+      newSelected = [...selected.slice(0, index), ...selected.slice(index + 1)]
+
+    setSelected(newSelected)
+    onSelect?.(newSelected.map((s) => ({ uuid: s.uuid, label: s.label })))
+  }, [selectionable, hover, selected, onSelect])
 
   // On selection update
   useEffect(() => {
     const hover =
       (selectionable ? propsToHover(children, selection) : undefined) ??
       initHover
+    setHover(hover)
+
     const selected =
       (selectionable ? propsToSelected(children, selection) : undefined) ??
       initSelected
-    setHover(hover)
     setSelected(selected)
   }, [selectionable, children, selection])
 

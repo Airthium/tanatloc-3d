@@ -1,4 +1,4 @@
-const style: { [key: string]: React.CSSProperties } = {
+const style: Record<string, React.CSSProperties> = {
   header: {
     position: 'absolute',
     background: 'none',

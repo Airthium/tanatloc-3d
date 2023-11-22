@@ -1,4 +1,4 @@
-const style: { [key: string]: React.CSSProperties } = {
+const style: Record<string, React.CSSProperties> = {
   canvas: {
     position: 'absolute',
     top: 0,

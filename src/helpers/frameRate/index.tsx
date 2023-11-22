@@ -22,7 +22,7 @@ const FrameRate = (): ReactNode => {
     return () => {
       clearInterval(id)
     }
-  }, [fps])
+  }, [fps, invalidate])
 
   return null
 }

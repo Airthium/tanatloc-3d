@@ -70,7 +70,12 @@ const options = {
     '@style/*',
     '@tools/*'
   ],
-  specials: [depcheck.special.bin, customTypescript, customJest]
+  specials: [
+    depcheck.special.bin,
+    depcheck.special.eslint,
+    customTypescript,
+    customJest
+  ]
 }
 
 depcheck(process.cwd(), options, (unused) => {

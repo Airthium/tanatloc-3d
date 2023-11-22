@@ -5,7 +5,7 @@ describe('tools/computeSceneBoundingBox', () => {
   const geometry = new BoxGeometry(2, 2, 2)
   const material = new MeshBasicMaterial()
   const mesh1 = new Mesh(geometry, material)
-  //@ts-ignore
+  //@ts-expect-error type is read only
   mesh1.type = 'Part'
 
   const mesh2 = new Mesh()

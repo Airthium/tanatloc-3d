@@ -1,0 +1,54 @@
+{
+  "root": true,
+  "plugins": ["react", "react-hooks", "jest"],
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/stylistic"
+      ],
+      "parserOptions": {
+        "sourceType": "module",
+        "warnOnUnsupportedTypeScriptVersion": false
+      },
+      "plugins": ["@typescript-eslint"]
+    },
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "**/*.test.*tsx"],
+      "extends": ["plugin:jest/recommended"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/ban-types": "off",
+        "jest/expect-expect": "off",
+        "jest/no-disabled-tests": "off",
+        "jest/no-conditional-expect": "off",
+        "jest/valid-title": "off",
+        "jest/no-interpolation-in-snapshots": "off",
+        "jest/no-export": "off"
+      }
+    }
+  ]
+}

@@ -8,11 +8,14 @@ yarn
 # Depcheck
 yarn depcheck
 
+# Lint
+yarn lint
+
 # Prettier
 yarn prettier
 
 # Doc
-# yarn doc
+yarn doc
 
 # Test
 yarn test

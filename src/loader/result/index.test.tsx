@@ -34,7 +34,7 @@ jest.mock('three/examples/jsm/math/Lut', () => {
     setMax(max: number) {
       this.max = max
     }
-    getColor(_value: number) {
+    getColor() {
       return { r: 1, g: 0.5, b: 0 }
     }
   }
@@ -110,6 +110,74 @@ describe('loader/result', () => {
       ...result,
       ...lut
     }))
+    const renderer = await ReactThreeTestRenderer.create(
+      <Result scene={scene} />
+    )
+
+    await renderer.unmount()
+  })
+})
+
+describe('loader/result - 0', () => {
+  const geometry = new BoxGeometry(1, 1, 1)
+  const material = new MeshBasicMaterial()
+  const mesh = new Mesh(geometry, material)
+  mesh.uuid = 'uuid'
+  mesh.name = 'name'
+  mesh.userData.uuid = 'uuid1'
+  mesh.geometry.setAttribute(
+    'data',
+    new Float32BufferAttribute([0, 0, 0, 0, 0, 0], 3)
+  )
+
+  const scene = {
+    children: [mesh]
+  } as unknown as GLTF['scene']
+
+  beforeEach(() => {
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
+  })
+
+  test('render', async () => {
+    const renderer = await ReactThreeTestRenderer.create(
+      <Result scene={scene} />
+    )
+
+    await renderer.unmount()
+  })
+})
+
+describe('loader/result - 1', () => {
+  const geometry = new BoxGeometry(1, 1, 1)
+  const material = new MeshBasicMaterial()
+  const mesh = new Mesh(geometry, material)
+  mesh.uuid = 'uuid'
+  mesh.name = 'name'
+  mesh.userData.uuid = 'uuid1'
+  mesh.geometry.setAttribute(
+    'data',
+    new Float32BufferAttribute([1, 1, 1, 1, 1, 1], 3)
+  )
+
+  const scene = {
+    children: [mesh]
+  } as unknown as GLTF['scene']
+
+  beforeEach(() => {
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
+  })
+
+  test('render', async () => {
     const renderer = await ReactThreeTestRenderer.create(
       <Result scene={scene} />
     )

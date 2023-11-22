@@ -40,8 +40,8 @@ describe('header', () => {
     }))
     const { unmount } = render(<Header oneResult={oneResult} />)
 
-    expect(screen.getByRole('button', { name: 'database' }))
-    expect(screen.getByRole('button', { name: 'filter' }))
+    expect(screen.getByRole('button', { name: 'database' })).toBeDefined()
+    expect(screen.getByRole('button', { name: 'filter' })).toBeDefined()
 
     unmount()
   })
@@ -52,7 +52,7 @@ describe('header', () => {
     }))
     const { unmount } = render(<Header oneResult={oneResult} />)
 
-    expect(screen.getByRole('button', { name: 'database' }))
+    expect(screen.getByRole('button', { name: 'database' })).toBeDefined()
 
     unmount()
   })
@@ -63,7 +63,7 @@ describe('header', () => {
     }))
     const { unmount } = render(<Header oneResult={oneResult} />)
 
-    expect(screen.getByRole('button', { name: 'filter' }))
+    expect(screen.getByRole('button', { name: 'filter' })).toBeDefined()
 
     unmount()
   })
@@ -71,7 +71,7 @@ describe('header', () => {
   test('with one result', () => {
     const { unmount } = render(<Header oneResult={true} />)
 
-    expect(screen.getByRole(colorbarRole))
+    expect(screen.getByRole(colorbarRole)).toBeDefined()
 
     unmount()
   })

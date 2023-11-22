@@ -14,7 +14,6 @@ import {
   defaultSettings,
   defaultZoomToSelection
 } from './defaults'
-import { setMainView, setProps } from './set'
 
 /**
  * Store
@@ -96,8 +95,8 @@ const useStore = create<Store>((set) => ({
   settings: localStorageSettings
     ? JSON.parse(localStorageSettings)
     : defaultSettings,
-  setProps: setProps(set),
-  setMainView: setMainView(set)
+  setProps: (props: Store['props']) => set({ props }),
+  setMainView: (mainView: Store['mainView']) => set({ mainView })
 }))
 
 export default useStore

@@ -22,14 +22,17 @@ jobs:
       - name: Depcheck
         run: yarn depcheck || true
 
+      - name: Lint
+        run: yarn lint || true
+
       - name: Prettier
         run: yarn prettier || true
 
-      - name: Tests
-        run: yarn test || true
-
       - name: Doc
         run: yarn doc || true
+
+      - name: Tests
+        run: yarn test || true
 
       - name: Build
         run: yarn build

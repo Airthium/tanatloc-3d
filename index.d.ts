@@ -1,5 +1,4 @@
 import { CSSProperties, ReactNode } from 'react'
-import { CanvasProps } from '@react-three/fiber'
 import { ThemeConfig } from 'antd'
 
 /**
@@ -13,7 +12,7 @@ export interface Tanatloc3DRendererProps {
   data?: boolean
   postProcessing?: boolean
   snapshot?: Tanatloc3DRendererPropsSnapshot
-  onHighlight?: (highlighted: Tanatloc3DSelectionValue) => void
+  onHighlight?: (highlighted?: Tanatloc3DSelectionValue) => void
   onSelect?: (selected: Tanatloc3DSelectionValue[]) => void
   onData?: () => void
   onPostProcessing?: () => void

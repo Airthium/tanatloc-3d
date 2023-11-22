@@ -25,7 +25,7 @@ jest.mock('three/examples/jsm/math/Lut', () => {
     setMax(max: number) {
       this.max = max
     }
-    getColor(_value: number) {
+    getColor() {
       return { r: 1, g: 0.5, b: 0 }
     }
   }

@@ -216,12 +216,9 @@ const Face = ({
   /**
    * On pointer leave (internal)
    */
-  const onInternalPointerLeave = useCallback(
-    (_event: any) => {
-      onPointerLeave(index)
-    },
-    [index, onPointerLeave]
-  )
+  const onInternalPointerLeave = useCallback(() => {
+    onPointerLeave(index)
+  }, [index, onPointerLeave])
 
   /**
    * On click (internal)

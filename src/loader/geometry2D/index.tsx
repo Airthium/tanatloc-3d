@@ -202,7 +202,7 @@ const Geometry2DEdge = ({
   const onInternalPointerMove = useCallback((): void => {
     if (selection?.enabled && selection.type == 'edges')
       onPointerMove({ index, uuid, label })
-  }, [selection, uuid, index, onPointerMove])
+  }, [selection, uuid, label, index, onPointerMove])
 
   /**
    * On pointer leave
@@ -230,6 +230,7 @@ const Geometry2DEdge = ({
     selectColor,
     hoverSelectColor,
     material,
+    index,
     hover,
     selected
   ])
@@ -315,7 +316,7 @@ const Geometry2DFace = ({
   const onInternalPointerMove = useCallback((): void => {
     if (selection?.enabled && selection.type === 'faces')
       onPointerMove({ index, uuid, label })
-  }, [selection, uuid, index, onPointerMove])
+  }, [selection, uuid, label, index, onPointerMove])
 
   /**
    * On pointer leave
@@ -343,6 +344,7 @@ const Geometry2DFace = ({
     selectColor,
     hoverSelectColor,
     material,
+    index,
     hover,
     selected
   ])
@@ -429,9 +431,12 @@ const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
   const onPointerMove = useCallback(
     (data: Selection) => {
       if (!selectionable) return
-      setHover(data)
+
+      const newHover = data
+      setHover(newHover)
+      onHighlight?.({ uuid: newHover.uuid, label: newHover.label })
     },
-    [selectionable, hover]
+    [selectionable, onHighlight]
   )
 
   /**
@@ -441,9 +446,13 @@ const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
   const onPointerLeave = useCallback(
     (index: number) => {
       if (!selectionable) return
-      if (index === hover.index) setHover(initHover)
+
+      if (index === hover.index) {
+        setHover(initHover)
+        onHighlight?.()
+      }
     },
-    [selectionable, hover]
+    [selectionable, hover, onHighlight]
   )
 
   /**
@@ -451,33 +460,29 @@ const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
    */
   const onClick = useCallback(() => {
     if (!selectionable) return
+
+    let newSelected = []
     const index = selected.findIndex((s) => s.index === hover.index)
-    if (index === -1) setSelected([...selected, hover])
+    if (index === -1) newSelected = [...selected, hover]
     else
-      setSelected([...selected.slice(0, index), ...selected.slice(index + 1)])
-  }, [selectionable, hover, selected])
+      newSelected = [...selected.slice(0, index), ...selected.slice(index + 1)]
+
+    setSelected(newSelected)
+    onSelect?.(newSelected.map((s) => ({ uuid: s.uuid, label: s.label })))
+  }, [selectionable, hover, selected, onSelect])
 
   // On selection update
   useEffect(() => {
     const hover =
       (selectionable ? propsToHover(children, selection) : undefined) ??
       initHover
+    setHover(hover)
+
     const selected =
       (selectionable ? propsToSelected(children, selection) : undefined) ??
       initSelected
-    setHover(hover)
     setSelected(selected)
   }, [selectionable, children, selection])
-
-  // On highlight
-  useEffect(() => {
-    onHighlight?.(hover)
-  }, [hover, onHighlight])
-
-  // On select
-  useEffect(() => {
-    onSelect?.(selected)
-  }, [selected, onSelect])
 
   /**
    * Render
