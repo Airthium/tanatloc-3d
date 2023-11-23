@@ -436,7 +436,7 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
    */
   const onPointerMove = useCallback(
     (data: Selection) => {
-      if (!selectionable || !selection?.enabled) return
+      if (!selectionable) return
 
       if (data.distance < hover.distance) {
         const newHover = data
@@ -444,7 +444,7 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
         selection?.onHighlight?.({ uuid: newHover.uuid, label: newHover.label })
       }
     },
-    [selectionable, hover.distance, selection?.enabled, selection?.onHighlight]
+    [selectionable, hover.distance, selection?.onHighlight]
   )
 
   /**
@@ -452,21 +452,21 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
    */
   const onPointerLeave = useCallback(
     (index: number) => {
-      if (!selectionable || !selection?.enabled) return
+      if (!selectionable) return
 
       if (index === hover.index) {
         setHover(initHover)
         selection?.onHighlight?.()
       }
     },
-    [selectionable, hover.index, selection?.enabled, selection?.onHighlight]
+    [selectionable, hover.index, selection?.onHighlight]
   )
 
   /**
    * On click
    */
   const onClick = useCallback(() => {
-    if (!selectionable || !selection?.enabled) return
+    if (!selectionable) return
 
     let newSelected = []
     const index = selected.findIndex((s) => s.index === hover.index)
@@ -478,7 +478,7 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
     selection?.onSelect?.(
       newSelected.map((s) => ({ uuid: s.uuid, label: s.label }))
     )
-  }, [selectionable, hover, selected, selection?.enabled, selection?.onSelect])
+  }, [selectionable, hover, selected, selection?.onSelect])
 
   // On selection update
   useEffect(() => {
@@ -497,9 +497,13 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
   useEffect(() => {
     if (!selection?.enabled) {
       setHover(initHover)
+      selection?.onHighlight?.()
       setSelected(initSelected)
+      selection?.onSelect?.([])
     }
-  }, [selection?.enabled])
+  }, [selection?.enabled, selection?.onHighlight, selection?.onSelect])
+
+  console.log(selection)
 
   /**
    * Render
