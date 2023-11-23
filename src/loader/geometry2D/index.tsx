@@ -484,6 +484,14 @@ const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
     setSelected(selected)
   }, [selectionable, children, selection])
 
+  // Disabled
+  useEffect(() => {
+    if (!selection?.enabled) {
+      setHover(initHover)
+      setSelected(initSelected)
+    }
+  }, [selection?.enabled])
+
   /**
    * Render
    */

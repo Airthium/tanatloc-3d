@@ -477,6 +477,14 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
     setSelected(selected)
   }, [selectionable, children, selection])
 
+  // Disabled
+  useEffect(() => {
+    if (!selection?.enabled) {
+      setHover(initHover)
+      setSelected(initSelected)
+    }
+  }, [selection?.enabled])
+
   /**
    * Render
    */
