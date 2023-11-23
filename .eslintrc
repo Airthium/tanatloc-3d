@@ -1,43 +1,49 @@
 {
   "root": true,
-  "plugins": ["react", "react-hooks", "jest"],
-  "env": {
-    "browser": true,
-    "commonjs": true,
-    "es6": true,
-    "node": true,
-    "jest": true
-  },
-  "parser": "@typescript-eslint/parser",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
-    "sourceType": "module"
+    "requireConfigFile": false,
+    "babelOptions": {
+      "plugins": [
+        "@babel/plugin-syntax-jsx",
+        "@babel/plugin-syntax-import-assertions"
+      ]
+    }
   },
   "settings": {
     "react": {
       "version": "detect"
     }
   },
+  "ignorePatterns": ["coverage/**/*.js", "dist/**/*.js", "docs/**/*.js"],
   "overrides": [
     {
-      "files": ["**/*.ts", "**/*.tsx"],
-      "extends": [
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/stylistic"
-      ],
+      "files": ["index.d.ts"],
+      "parser": "@typescript-eslint/parser",
       "parserOptions": {
         "sourceType": "module",
         "warnOnUnsupportedTypeScriptVersion": false
       },
-      "plugins": ["@typescript-eslint"]
-    },
-    {
-      "files": ["**/*.d.ts"],
       "rules": {
         "@typescript-eslint/no-unused-vars": "off"
       }
     },
     {
-      "files": ["**/*.test.ts", "**/*.test.*tsx"],
+      "files": ["src/**/*.ts", "src/**/*.tsx"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/stylistic"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "sourceType": "module",
+        "warnOnUnsupportedTypeScriptVersion": false
+      },
+      "plugins": ["react", "react-hooks", "@typescript-eslint"]
+    },
+    {
+      "files": ["src/**/*.test.ts", "src/**/*.test.*tsx"],
+      "plugins": ["jest"],
       "extends": ["plugin:jest/recommended"],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
