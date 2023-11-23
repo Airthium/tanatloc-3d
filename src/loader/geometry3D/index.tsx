@@ -503,8 +503,6 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
     }
   }, [selection?.enabled, selection?.onHighlight, selection?.onSelect])
 
-  console.log(selection)
-
   /**
    * Render
    */

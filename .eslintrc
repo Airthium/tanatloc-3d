@@ -48,12 +48,7 @@
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/ban-types": "off",
-        "jest/expect-expect": "off",
-        "jest/no-disabled-tests": "off",
-        "jest/no-conditional-expect": "off",
-        "jest/valid-title": "off",
-        "jest/no-interpolation-in-snapshots": "off",
-        "jest/no-export": "off"
+        "jest/expect-expect": "off"
       }
     }
   ]

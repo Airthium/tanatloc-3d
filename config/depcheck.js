@@ -63,6 +63,8 @@ const customJest = async (fileName, deps) => {
 const options = {
   ignoreMatches: [
     'depcheck', // used here
+    '@babel/plugin-syntax-import-assertions', // eslint custom
+    '@babel/plugin-syntax-jsx', // eslint custom
     '@header/*',
     '@helpers/*',
     '@loader/*',

@@ -508,9 +508,11 @@ const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
   useEffect(() => {
     if (!selection?.enabled) {
       setHover(initHover)
+      selection?.onHighlight?.()
       setSelected(initSelected)
+      selection?.onSelect?.([])
     }
-  }, [selection?.enabled])
+  }, [selection?.enabled, selection?.onHighlight, selection?.onSelect])
 
   /**
    * Render
