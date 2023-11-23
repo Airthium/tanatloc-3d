@@ -5,6 +5,7 @@ import { Tanatloc3DSelection, Tanatloc3DSelectionValue } from '@index'
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import useStore from '@store'
+import { ThreeEvent } from '@react-three/fiber'
 
 /**
  * Props
@@ -202,21 +203,21 @@ const Geometry2DEdge = ({
   const onInternalPointerMove = useCallback((): void => {
     if (selection?.enabled && selection.type == 'edges')
       onPointerMove({ index, uuid, label })
-  }, [selection, uuid, label, index, onPointerMove])
+  }, [selection?.enabled, selection?.type, uuid, label, index, onPointerMove])
 
   /**
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
     if (selection?.enabled && selection.type === 'edges') onPointerLeave(index)
-  }, [selection, index, onPointerLeave])
+  }, [selection?.enabled, selection?.type, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
     if (selection?.enabled && selection.type === 'edges') onClick()
-  }, [selection, onClick])
+  }, [selection?.enabled, selection?.type, onClick])
 
   // Material color
   const materialColor = useMemo(() => {
@@ -312,25 +313,42 @@ const Geometry2DFace = ({
 
   /**
    * On pointer move
+   * @param event Event
    */
-  const onInternalPointerMove = useCallback((): void => {
-    if (selection?.enabled && selection.type === 'faces')
-      onPointerMove({ index, uuid, label })
-  }, [selection, uuid, label, index, onPointerMove])
+  const onInternalPointerMove = useCallback(
+    (event: ThreeEvent<PointerEvent>): void => {
+      if (selection?.enabled) {
+        if (selection.type === 'faces') onPointerMove({ index, uuid, label })
+        else if (selection?.type === 'point') {
+          const newPoint = event.intersections[0].point
+          selection?.onPoint?.({ x: newPoint.x, y: newPoint.y, z: newPoint.z })
+        }
+      }
+    },
+    [
+      selection?.enabled,
+      selection?.type,
+      selection?.onPoint,
+      uuid,
+      label,
+      index,
+      onPointerMove
+    ]
+  )
 
   /**
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
     if (selection?.enabled && selection.type === 'faces') onPointerLeave(index)
-  }, [selection, index, onPointerLeave])
+  }, [selection?.enabled, selection?.type, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
     if (selection?.enabled && selection.type === 'faces') onClick()
-  }, [selection, onClick])
+  }, [selection?.enabled, selection?.type, onClick])
 
   // Material color
   const materialColor = useMemo(() => {
@@ -404,7 +422,7 @@ const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
   const [selected, setSelected] = useState<Selection[]>(initSelected)
 
   // Store
-  const { selection, onHighlight, onSelect } = useStore((s) => s.props)
+  const { selection } = useStore((s) => s.props)
 
   // Children
   const children = useMemo(
@@ -434,9 +452,9 @@ const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
 
       const newHover = data
       setHover(newHover)
-      onHighlight?.({ uuid: newHover.uuid, label: newHover.label })
+      selection?.onHighlight?.({ uuid: newHover.uuid, label: newHover.label })
     },
-    [selectionable, onHighlight]
+    [selectionable, selection?.onHighlight]
   )
 
   /**
@@ -449,10 +467,10 @@ const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
 
       if (index === hover.index) {
         setHover(initHover)
-        onHighlight?.()
+        selection?.onHighlight?.()
       }
     },
-    [selectionable, hover, onHighlight]
+    [selectionable, hover.index, selection?.onHighlight]
   )
 
   /**
@@ -468,8 +486,10 @@ const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
       newSelected = [...selected.slice(0, index), ...selected.slice(index + 1)]
 
     setSelected(newSelected)
-    onSelect?.(newSelected.map((s) => ({ uuid: s.uuid, label: s.label })))
-  }, [selectionable, hover, selected, onSelect])
+    selection?.onSelect?.(
+      newSelected.map((s) => ({ uuid: s.uuid, label: s.label }))
+    )
+  }, [selectionable, hover, selected, selection?.onSelect])
 
   // On selection update
   useEffect(() => {

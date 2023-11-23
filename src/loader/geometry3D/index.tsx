@@ -209,10 +209,24 @@ const Geometry3DFace = ({
    */
   const onInternalPointerMove = useCallback(
     (event: ThreeEvent<PointerEvent>): void => {
-      if (selection?.enabled && selection.type === 'faces')
-        onPointerMove({ index, uuid, label, distance: event.distance })
+      if (selection?.enabled) {
+        if (selection.type === 'faces')
+          onPointerMove({ index, uuid, label, distance: event.distance })
+        else if (selection?.type === 'point') {
+          const newPoint = event.intersections[0].point
+          selection?.onPoint?.({ x: newPoint.x, y: newPoint.y, z: newPoint.z })
+        }
+      }
     },
-    [selection?.enabled, selection?.type, uuid, label, index, onPointerMove]
+    [
+      selection?.enabled,
+      selection?.type,
+      selection?.onPoint,
+      uuid,
+      label,
+      index,
+      onPointerMove
+    ]
   )
 
   /**
@@ -321,7 +335,7 @@ const Geometry3DSolid = ({
       if (selection?.enabled && selection.type === 'solids')
         onPointerMove({ index, uuid, label, distance: event.distance })
     },
-    [selection, uuid, label, index, onPointerMove]
+    [selection?.enabled, selection?.type, uuid, label, index, onPointerMove]
   )
 
   /**
@@ -329,21 +343,21 @@ const Geometry3DSolid = ({
    */
   const onInternalPointerLeave = useCallback((): void => {
     if (selection?.enabled && selection.type === 'solids') onPointerLeave(index)
-  }, [selection, index, onPointerLeave])
+  }, [selection?.enabled, selection?.type, index, onPointerLeave])
 
   /**
    * On click
    */
   const onInternalClick = useCallback((): void => {
     if (selection?.enabled && selection.type === 'solids') onClick()
-  }, [selection, onClick])
+  }, [selection?.enabled, selection?.type, onClick])
 
   // Hover
   const hoverSolid = useMemo(() => {
     return (
       selection?.enabled && selection.type === 'solids' && hover.index === index
     )
-  }, [selection, hover, index])
+  }, [selection?.enabled, selection?.type, hover, index])
 
   // Selected
   const selectedSolid = useMemo(() => {
@@ -352,7 +366,7 @@ const Geometry3DSolid = ({
       selection.type === 'solids' &&
       !!selected.find((s) => s.index === index)
     )
-  }, [selection, selected, index])
+  }, [selection?.enabled, selection?.type, selected, index])
 
   /**
    * Render
@@ -396,7 +410,7 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
   const [selected, setSelected] = useState<Selection[]>(initSelected)
 
   // Store
-  const { selection, onHighlight, onSelect } = useStore((s) => s.props)
+  const { selection } = useStore((s) => s.props)
 
   // Children
   const children = useMemo(
@@ -427,10 +441,10 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
       if (data.distance < hover.distance) {
         const newHover = data
         setHover(newHover)
-        onHighlight?.({ uuid: newHover.uuid, label: newHover.label })
+        selection?.onHighlight?.({ uuid: newHover.uuid, label: newHover.label })
       }
     },
-    [selectionable, hover, onHighlight]
+    [selectionable, hover.distance, selection?.onHighlight]
   )
 
   /**
@@ -442,10 +456,10 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
 
       if (index === hover.index) {
         setHover(initHover)
-        onHighlight?.()
+        selection?.onHighlight?.()
       }
     },
-    [selectionable, hover, onHighlight]
+    [selectionable, hover.index, selection?.onHighlight]
   )
 
   /**
@@ -461,8 +475,10 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
       newSelected = [...selected.slice(0, index), ...selected.slice(index + 1)]
 
     setSelected(newSelected)
-    onSelect?.(newSelected.map((s) => ({ uuid: s.uuid, label: s.label })))
-  }, [selectionable, hover, selected, onSelect])
+    selection?.onSelect?.(
+      newSelected.map((s) => ({ uuid: s.uuid, label: s.label }))
+    )
+  }, [selectionable, hover, selected, selection?.onSelect])
 
   // On selection update
   useEffect(() => {

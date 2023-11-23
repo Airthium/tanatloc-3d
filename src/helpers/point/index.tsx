@@ -71,14 +71,14 @@ const Point = (): ReactNode => {
   const [sphere, setSphere] = useState<ReactNode>(null)
 
   // Store
-  const { point } = useStore((s) => s.props)
+  const { selection } = useStore((s) => s.props)
   const mainView = useStore((s) => s.mainView)
 
   // Position
-  const position: [number, number, number] = useMemo(
-    () => (point ? [point.x, point.y, point.z] : [0, 0, 0]),
-    [point]
-  )
+  const position: [number, number, number] = useMemo(() => {
+    const point = selection?.point
+    return point ? [point.x, point.y, point.z] : [0, 0, 0]
+  }, [selection?.point])
 
   // Lines
   useEffect(() => {
@@ -96,7 +96,7 @@ const Point = (): ReactNode => {
    * Render
    */
   return (
-    <group type="Point" visible={!!point} position={position}>
+    <group type="Point" visible={!!selection?.point} position={position}>
       {lines}
       {sphere}
     </group>

@@ -8,12 +8,9 @@ export interface Tanatloc3DRendererProps {
   style?: CSSProperties
   parts?: Tanatloc3DPart[]
   selection?: Tanatloc3DSelection
-  point?: { x: number; y: number; z: number }
   data?: boolean
   postProcessing?: boolean
   snapshot?: Tanatloc3DRendererPropsSnapshot
-  onHighlight?: (highlighted?: Tanatloc3DSelectionValue) => void
-  onSelect?: (selected: Tanatloc3DSelectionValue[]) => void
   onData?: () => void
   onPostProcessing?: () => void
 }
@@ -31,14 +28,24 @@ export interface Tanatloc3DRendererPropsSnapshot {
 export interface Tanatloc3DSelection {
   enabled?: boolean
   part?: string
-  type?: 'solids' | 'faces' | 'edges'
+  type?: 'solids' | 'faces' | 'edges' | 'point'
   highlighted?: Tanatloc3DSelectionValue
   selected?: Tanatloc3DSelectionValue[]
+  point?: Tanatloc3DSelectionPoint
+  onHighlight?: (highlighted?: Tanatloc3DSelectionValue) => void
+  onSelect?: (selected: Tanatloc3DSelectionValue[]) => void
+  onPoint?: (point: Tanatloc3DSelectionPoint) => void
 }
 
 export interface Tanatloc3DSelectionValue {
   uuid: string
   label: number
+}
+
+export interface Tanatloc3DSelectionPoint {
+  x: number
+  y: nubmer
+  z: number
 }
 
 /**
@@ -91,7 +98,8 @@ export type {
   Tanatloc3DRendererProps,
   Tanatloc3DPart,
   Tanatloc3DSelection,
-  Tanatloc3DSelectionValue
+  Tanatloc3DSelectionValue,
+  Tanatloc3DSelectionPoint
 }
 
 const Canvas = () => ReactNode

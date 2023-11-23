@@ -44,9 +44,13 @@ describe('loader/Geometry3D', () => {
   const onHighlight = jest.fn()
   const onSelect = jest.fn()
   const props = {
-    selection: { enabled: true, part: 'uuid', type: 'solids' },
-    onHighlight,
-    onSelect
+    selection: {
+      enabled: true,
+      part: 'uuid',
+      type: 'solids',
+      onHighlight,
+      onSelect
+    }
   }
   const display = {
     transparent: true
@@ -130,6 +134,50 @@ describe('loader/Geometry3D', () => {
     await renderer.fireEvent(face1, 'pointerLeave')
     await renderer.fireEvent(face1, 'pointerMove', { distance: 1 })
     await renderer.fireEvent(face1, 'click')
+
+    await renderer.unmount()
+  })
+
+  test('with store - point', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...props,
+      selection: { enabled: true, part: 'uuid', type: 'point' },
+      ...display,
+      ...sectionView,
+      ...settings
+    }))
+    const renderer = await ReactThreeTestRenderer.create(
+      <Geometry3D scene={scene} />
+    )
+
+    const mesh = renderer.scene.children[0]
+    const solid = mesh.children[0]
+    const face1 = solid.children[0]
+
+    await renderer.fireEvent(face1, 'pointerMove', {
+      intersections: [{ point: { x: 1, y: 2, z: 3 } }]
+    })
+
+    await renderer.unmount()
+  })
+
+  test('with store - selection disabled', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...props,
+      selection: { enabled: false, part: 'uuid', type: 'point' },
+      ...display,
+      ...sectionView,
+      ...settings
+    }))
+    const renderer = await ReactThreeTestRenderer.create(
+      <Geometry3D scene={scene} />
+    )
+
+    const mesh = renderer.scene.children[0]
+    const solid = mesh.children[0]
+    const face1 = solid.children[0]
+
+    await renderer.fireEvent(face1, 'pointerMove')
 
     await renderer.unmount()
   })

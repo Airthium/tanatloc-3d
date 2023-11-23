@@ -331,7 +331,7 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
       const distance = event.distance
       if (distance < hover.distance) setHover({ index, distance })
     },
-    [hover]
+    [hover.distance]
   )
 
   /**
@@ -342,7 +342,7 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
     (index: number): void => {
       if (index === hover.index) setHover(initHover)
     },
-    [hover]
+    [hover.index]
   )
 
   /**
@@ -371,7 +371,7 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
       mainView.camera.position.copy(newPosition)
       mainView.camera.up.copy(currentFace.up)
     },
-    [mainView?.camera, mainView.controls, hover]
+    [mainView?.camera, mainView.controls, hover.index]
   )
 
   // Dimension

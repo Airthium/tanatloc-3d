@@ -14,7 +14,7 @@ jest.mock('@tools/computeSceneBoundingBox', () => () => mockBox)
 
 describe('helpers/point', () => {
   const props = {
-    point: { x: 1, y: 2, z: 3 }
+    selection: { point: { x: 1, y: 2, z: 3 } }
   }
   const mainView = {
     scene: {}
