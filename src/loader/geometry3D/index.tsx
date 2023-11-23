@@ -496,6 +496,7 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
   // Disabled
   useEffect(() => {
     if (!selection?.enabled) {
+      console.log('cleanup')
       setHover(initHover)
       setSelected(initSelected)
     }
