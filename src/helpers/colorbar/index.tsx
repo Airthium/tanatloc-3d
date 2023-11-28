@@ -110,6 +110,9 @@ const Colorbar = ({ resize }: ColorbarProps): ReactNode => {
   // Max
   const max = useMemo(() => lut.customMax ?? lut.max, [lut.max, lut.customMax])
 
+  // Range
+  const range = useMemo(() => max - min, [min, max])
+
   /**
    * Render
    */
@@ -130,11 +133,11 @@ const Colorbar = ({ resize }: ColorbarProps): ReactNode => {
         <meshBasicMaterial vertexColors />
       </mesh>
       <Label position={[-(size - 1) / 2, 0.4, 1]} value={min} />
-      <Label position={[-(size - 1) / 4, 0.4, 1]} value={(max - min) / 4} />
-      <Label position={[0, 0.4, 1]} value={(max - min) / 2} />
+      <Label position={[-(size - 1) / 4, 0.4, 1]} value={min + range / 4} />
+      <Label position={[0, 0.4, 1]} value={min + range / 2} />
       <Label
         position={[(size - 1) / 4, 0.4, 1]}
-        value={(3 * (max - min)) / 4}
+        value={min + (3 * range) / 4}
       />
       <Label position={[(size - 1) / 2, 0.4, 1]} value={max} />
     </group>
