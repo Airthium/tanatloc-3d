@@ -57,9 +57,8 @@ const Result = ({ scene }: ResultProps): ReactNode => {
         min = min - 1
         max = max + 1
       } else {
-        const range = max - min
-        min = min - 0.1 * range
-        max = max + 0.1 * range
+        min = min - 0.1 * max
+        max = max + 0.1 * max
       }
     }
 
