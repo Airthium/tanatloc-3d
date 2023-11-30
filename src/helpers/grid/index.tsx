@@ -17,8 +17,10 @@ export interface GridProps {
   update: number
 }
 
+export type Axis = 'xy' | 'xz' | 'yz'
+
 export interface AxisGridProps {
-  axis: 'xy' | 'xz' | 'yz'
+  axis: Axis
   center: [number, number, number]
   size: [number, number, number]
   divisions: [number, number]
@@ -26,7 +28,7 @@ export interface AxisGridProps {
 }
 
 export interface AxisLabelsProps {
-  axis: 'xy' | 'xz' | 'yz'
+  axis: Axis
   center: [number, number, number]
   size: [number, number, number]
   range: [number, number]
@@ -90,6 +92,57 @@ const getNumberOfDivisions = (
 }
 
 /**
+ * Get width
+ * @param axis Axis
+ * @param size Size
+ * @returns Width
+ */
+const getWidth = (axis: Axis, size: [number, number, number]): number => {
+  switch (axis) {
+    case 'xy':
+      return size[0]
+    case 'xz':
+      return size[0]
+    case 'yz':
+      return size[1]
+  }
+}
+
+/**
+ * Get height
+ * @param axis Axis
+ * @param size Size
+ * @returns Height
+ */
+const getHeight = (axis: Axis, size: [number, number, number]): number => {
+  switch (axis) {
+    case 'xy':
+      return size[1]
+    case 'xz':
+      return size[2]
+    case 'yz':
+      return size[2]
+  }
+}
+
+/**
+ * Get depth
+ * @param axis Axis
+ * @param size Size
+ * @returns Depth
+ */
+const getDepth = (axis: Axis, size: [number, number, number]): number => {
+  switch (axis) {
+    case 'xy':
+      return size[2]
+    case 'xz':
+      return size[1]
+    case 'yz':
+      return size[0]
+  }
+}
+
+/**
  * AxisLine
  * @param props Props
  * @returns AxisLine
@@ -111,40 +164,13 @@ const AxisGrid = ({
   offset
 }: AxisGridProps): ReactNode => {
   // Width
-  const width = useMemo(() => {
-    switch (axis) {
-      case 'xy':
-        return size[0]
-      case 'xz':
-        return size[0]
-      case 'yz':
-        return size[1]
-    }
-  }, [axis, size])
+  const width = useMemo(() => getWidth(axis, size), [axis, size])
 
   // Height
-  const height = useMemo(() => {
-    switch (axis) {
-      case 'xy':
-        return size[1]
-      case 'xz':
-        return size[2]
-      case 'yz':
-        return size[2]
-    }
-  }, [axis, size])
+  const height = useMemo(() => getHeight(axis, size), [axis, size])
 
   // Depth
-  const depth = useMemo(() => {
-    switch (axis) {
-      case 'xy':
-        return size[2]
-      case 'xz':
-        return size[1]
-      case 'yz':
-        return size[0]
-    }
-  }, [axis, size])
+  const depth = useMemo(() => getDepth(axis, size), [axis, size])
 
   // Rotation
   const rotation = useMemo(
@@ -237,40 +263,13 @@ const AxisLabels = ({
   offset
 }: AxisLabelsProps): ReactNode => {
   // Width
-  const width = useMemo(() => {
-    switch (axis) {
-      case 'xy':
-        return size[0]
-      case 'xz':
-        return size[0]
-      case 'yz':
-        return size[1]
-    }
-  }, [axis, size])
+  const width = useMemo(() => getWidth(axis, size), [axis, size])
 
   // Height
-  const height = useMemo(() => {
-    switch (axis) {
-      case 'xy':
-        return size[1]
-      case 'xz':
-        return size[2]
-      case 'yz':
-        return size[2]
-    }
-  }, [axis, size])
+  const height = useMemo(() => getHeight(axis, size), [axis, size])
 
   // Depth
-  const depth = useMemo(() => {
-    switch (axis) {
-      case 'xy':
-        return size[2]
-      case 'xz':
-        return size[1]
-      case 'yz':
-        return size[0]
-    }
-  }, [axis, size])
+  const depth = useMemo(() => getDepth(axis, size), [axis, size])
 
   // Position
   const position = useMemo(() => {

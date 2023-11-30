@@ -1,4 +1,11 @@
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import { ThreeEvent } from '@react-three/fiber'
 
 import { Tanatloc3DSelection, Tanatloc3DSelectionValue } from '@index'
@@ -90,6 +97,7 @@ const findIndex = (
  * Selection props to hover
  * @param children Children
  * @param selection Selection
+ * @param distance Distance
  * @returns Selection
  */
 const propsToHover = (
@@ -99,7 +107,8 @@ const propsToHover = (
   > & {
     children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
   })[],
-  selection?: Tanatloc3DSelection
+  selection: Tanatloc3DSelection | undefined,
+  distance: number
 ): Selection | undefined => {
   if (!selection?.highlighted) return
 
@@ -116,7 +125,7 @@ const propsToHover = (
   return {
     ...selection.highlighted,
     index,
-    distance: Infinity
+    distance
   }
 }
 
@@ -124,6 +133,7 @@ const propsToHover = (
  * Selection props to selected
  * @param children Children
  * @param selection Selection
+ * @param distance Distance
  * @returns Selected
  */
 const propsToSelected = (
@@ -133,7 +143,8 @@ const propsToSelected = (
   > & {
     children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
   })[],
-  selection?: Tanatloc3DSelection
+  selection: Tanatloc3DSelection | undefined,
+  distance: number
 ): Selection[] | undefined => {
   if (!selection?.selected) return
 
@@ -151,7 +162,7 @@ const propsToSelected = (
       selected.push({
         ...s,
         index,
-        distance: Infinity
+        distance
       })
   })
 
@@ -405,6 +416,9 @@ const Geometry3DSolid = ({
  * @returns Geometry3D
  */
 const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
+  // Ref
+  const lastDistance = useRef<number>(Infinity)
+
   // State
   const [hover, setHover] = useState<Selection>(initHover)
   const [selected, setSelected] = useState<Selection[]>(initSelected)
@@ -439,6 +453,7 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
       if (!selectionable) return
 
       if (data.distance < hover.distance) {
+        lastDistance.current = data.distance
         const newHover = data
         setHover(newHover)
         selection?.onHighlight?.({ uuid: newHover.uuid, label: newHover.label })
@@ -483,13 +498,15 @@ const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
   // On selection update
   useEffect(() => {
     const hover =
-      (selectionable ? propsToHover(children, selection) : undefined) ??
-      initHover
+      (selectionable
+        ? propsToHover(children, selection, lastDistance.current)
+        : undefined) ?? initHover
     setHover(hover)
 
     const selected =
-      (selectionable ? propsToSelected(children, selection) : undefined) ??
-      initSelected
+      (selectionable
+        ? propsToSelected(children, selection, lastDistance.current)
+        : undefined) ?? initSelected
     setSelected(selected)
   }, [selectionable, children, selection])
 

@@ -30,7 +30,7 @@ export const defaultMainView = {
  * Default display
  */
 export const defaultDisplay = {
-  transparent: false,
+  transparent: true,
   grid: true
 }
 
