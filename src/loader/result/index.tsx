@@ -56,17 +56,19 @@ const ResultChild = ({ child }: ResultChildProps): ReactNode => {
       }
     }
 
+    const globalMin = Math.min(lut.min, min)
+    const globalMax = Math.max(lut.max, max)
     useStore.setState({
       lut: {
         ...lut,
-        min,
-        max
+        min: globalMin,
+        max: globalMax
       }
     })
 
     const lookUpTable = new Lut(lut.colormap)
-    lookUpTable.setMin(lut.customMin ?? min)
-    lookUpTable.setMax(lut.customMax ?? max)
+    lookUpTable.setMin(lut.customMin ?? globalMin)
+    lookUpTable.setMax(lut.customMax ?? globalMax)
 
     const vertexColors = new Float32Array(data.count * 3)
     for (let i = 0; i < data.count; ++i) {
@@ -80,7 +82,7 @@ const ResultChild = ({ child }: ResultChildProps): ReactNode => {
       'color',
       new Float32BufferAttribute(vertexColors, 3)
     )
-  }, [child, lut])
+  }, [child, lut.colormap, lut.min, lut.max, lut.customMin, lut.customMax])
 
   // Result mesh
   useEffect(() => {

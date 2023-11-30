@@ -71,8 +71,8 @@ export const defaultResult = {
  */
 export const defaultLut = {
   colormap: 'rainbow',
-  min: -1,
-  max: 1
+  min: Infinity,
+  max: -Infinity
 }
 
 /**
