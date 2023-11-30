@@ -17,12 +17,16 @@ export interface ResultProps {
   scene: GLTF['scene']
 }
 
+export interface ResultChildProps {
+  child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
+}
+
 /**
- * Result
- * @param props Props
- * @returns Result
+ * Result child
+ * @param props props
+ * @returns ResultChild
  */
-const Result = ({ scene }: ResultProps): ReactNode => {
+const ResultChild = ({ child }: ResultChildProps): ReactNode => {
   // State
   const [resultMesh, setResultMesh] = useState<ReactNode>()
 
@@ -31,16 +35,6 @@ const Result = ({ scene }: ResultProps): ReactNode => {
   const sectionView = useStore((s) => s.sectionView)
   const result = useStore((s) => s.result)
   const lut = useStore((s) => s.lut)
-
-  // Child
-  const child = useMemo(
-    () =>
-      scene.children[0] as THREE.Mesh<
-        THREE.BufferGeometry,
-        THREE.MeshBasicMaterial
-      >,
-    [scene.children]
-  )
 
   // Vertex color
   useEffect(() => {
@@ -90,7 +84,7 @@ const Result = ({ scene }: ResultProps): ReactNode => {
 
   // Result mesh
   useEffect(() => {
-    if (result.meshVisible) {
+    if (result.meshVisible && child.type === 'Mesh') {
       const geometry = new WireframeGeometry(child.geometry)
       const material = new LineBasicMaterial({
         linewidth: 2,
@@ -139,6 +133,34 @@ const Result = ({ scene }: ResultProps): ReactNode => {
       />
       {resultMesh}
     </mesh>
+  )
+}
+
+/**
+ * Result
+ * @param props Props
+ * @returns Result
+ */
+const Result = ({ scene }: ResultProps): ReactNode => {
+  // Child
+  const children = useMemo(
+    () =>
+      scene.children as THREE.Mesh<
+        THREE.BufferGeometry,
+        THREE.MeshBasicMaterial
+      >[],
+    [scene.children]
+  )
+
+  /**
+   * Render
+   */
+  return (
+    <>
+      {children.map((child) => (
+        <ResultChild key={child.uuid} child={child} />
+      ))}
+    </>
   )
 }
 

@@ -378,9 +378,8 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
   useEffect(() => {
     if (dimension === currentDimension.current) return
     currentDimension.current = dimension
-
     if (dimension < 3) onClick(0)
-  }, [dimension, onClick])
+  }, [dimension, mainView.scene?.children, onClick])
 
   /**
    * Render
