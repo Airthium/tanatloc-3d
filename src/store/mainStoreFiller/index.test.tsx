@@ -30,7 +30,7 @@ describe('store/mainStoreFiller', () => {
     )
     expect(renderer.scene.children.length).toBe(0)
 
-    expect(mockSetState).toHaveBeenCalledTimes(1)
+    expect(mockSetState).toHaveBeenCalled()
 
     await renderer.unmount()
   })

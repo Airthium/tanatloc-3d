@@ -19,7 +19,7 @@ const MainStoreFiller = ({ controls }: MainStoreFillerProps): null => {
   // Data
   const { gl, scene, camera } = useThree()
 
-  // Update
+  // Update (has to be always up to date)
   useEffect(() => {
     useStore.setState({
       mainView: {
@@ -29,7 +29,7 @@ const MainStoreFiller = ({ controls }: MainStoreFillerProps): null => {
         controls
       }
     })
-  }, [gl, scene, camera, controls])
+  })
 
   /**
    * Render

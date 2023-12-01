@@ -78,7 +78,7 @@ const Colorbar = ({ resize }: ColorbarProps): ReactNode => {
 
     const position = geometry.getAttribute('position')
 
-    const colors = new Float32Array(position.count * 3)
+    const colors = new Float32Array(position.count * position.itemSize)
     for (let i = 0; i < position.count; ++i) {
       const color = lookUpTable.getColor(position.array[3 * i + 0])
 
@@ -105,10 +105,16 @@ const Colorbar = ({ resize }: ColorbarProps): ReactNode => {
   )
 
   // Min
-  const min = useMemo(() => lut.customMin ?? lut.min, [lut.min, lut.customMin])
+  const min = useMemo(() => {
+    const min = lut.customMin ?? lut.min
+    return min === Infinity ? -1 : min
+  }, [lut.min, lut.customMin])
 
   // Max
-  const max = useMemo(() => lut.customMax ?? lut.max, [lut.max, lut.customMax])
+  const max = useMemo(() => {
+    const max = lut.customMax ?? lut.max
+    return max === -Infinity ? 1 : max
+  }, [lut.max, lut.customMax])
 
   // Range
   const range = useMemo(() => max - min, [min, max])

@@ -37,6 +37,10 @@ jest.mock('@tools/toReadable', () => () => 'value')
 
 describe('helpers/colorbar', () => {
   const mainView = { camera: { aspect: 1 } }
+  const lut = {
+    min: Infinity,
+    max: -Infinity
+  }
 
   beforeEach(() => {
     mockUseStore.mockImplementation((callback) => {
@@ -55,6 +59,18 @@ describe('helpers/colorbar', () => {
 
   test('with mainView.camera', async () => {
     mockUseStore.mockImplementation(() => mainView)
+    const renderer = await ReactThreeTestRenderer.create(<Colorbar />)
+    const group = renderer.scene.children[0]
+    expect(group.type).toBe('Colorbar')
+
+    await renderer.unmount()
+  })
+
+  test('with Infinity', async () => {
+    mockUseStore.mockImplementation(() => ({
+      ...mainView,
+      ...lut
+    }))
     const renderer = await ReactThreeTestRenderer.create(<Colorbar />)
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Colorbar')

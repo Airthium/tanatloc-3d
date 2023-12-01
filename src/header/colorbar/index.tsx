@@ -56,10 +56,10 @@ const Colorbar = (): ReactNode => {
    * @param values Values
    */
   const onCustomRange = useCallback(
-    (values: { min: number; max: number }): void => {
+    (values: { min: string; max: string }): void => {
       // Update custom min/max
       useStore.setState({
-        lut: { ...lut, customMin: values.min, customMax: values.max }
+        lut: { ...lut, customMin: +values.min, customMax: +values.max }
       })
 
       // Close

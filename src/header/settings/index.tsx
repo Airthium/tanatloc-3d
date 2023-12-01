@@ -15,6 +15,8 @@ import { SettingOutlined } from '@ant-design/icons'
 import useStore from '@store'
 import { defaultSettings } from '@store/defaults'
 
+import packageJson from '../../../package.json'
+
 /**
  * Props
  */
@@ -189,6 +191,7 @@ const Settings = (): ReactNode => {
             <Switch />
           </Form.Item>
         </Form>
+        <Typography.Text>Version: {packageJson.version}</Typography.Text>
       </Modal>
       <Tooltip title="Settings" placement="left">
         <Button icon={<SettingOutlined />} onClick={onOpen} />

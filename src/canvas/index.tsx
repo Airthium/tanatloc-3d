@@ -17,6 +17,7 @@ import Navigation from '@helpers/navigation'
 import Grid from '@helpers/grid'
 import ZoomToSelection from '@helpers/zoomToSelection'
 import SectionView from '@helpers/sectionView'
+import ComputeLut from '@helpers/computeLut'
 import Colorbar from '@helpers/colorbar'
 import Light from '@helpers/light'
 import Point from '@helpers/point'
@@ -103,6 +104,7 @@ const Canvas = (): ReactNode => {
       </Hud>
       {oneResult ? (
         <Hud renderPriority={3}>
+          <ComputeLut />
           <Colorbar resize={resize} />
         </Hud>
       ) : null}
