@@ -29,10 +29,19 @@ const getMinMax = (
 
   const data = child.geometry.getAttribute('data')
   if (!data) return { min: Infinity, max: -Infinity }
-
   const array = data.array as unknown as number[]
-  const min = array.reduce((a, b) => Math.min(a, b), Infinity)
-  const max = array.reduce((a, b) => Math.max(a, b), -Infinity)
+  let min = array.reduce((a, b) => Math.min(a, b), Infinity)
+  let max = array.reduce((a, b) => Math.max(a, b), -Infinity)
+
+  if (min == max) {
+    if (min < 1e-12) {
+      min = -1
+      max = 1
+    } else {
+      min = min - 0.1 * max
+      max = max - 0.1 * max
+    }
+  }
 
   return { min, max }
 }
@@ -55,7 +64,6 @@ const ResultChild = ({ child }: ResultChildProps): ReactNode => {
     if (!data) return {}
     return {
       count: data.count,
-      itemSize: data.itemSize,
       array: data.array as unknown as number[]
     }
   }, [child])

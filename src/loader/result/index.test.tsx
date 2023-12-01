@@ -53,10 +53,6 @@ describe('loader/result', () => {
     'color',
     new Float32BufferAttribute([0, 0, 0, 1, 1, 1], 3)
   )
-  mesh.geometry.setAttribute(
-    'data',
-    new Float32BufferAttribute([0, 0, 0, 1, 1, 1], 3)
-  )
 
   const scene = {
     children: [mesh]
@@ -159,6 +155,40 @@ describe('loader/result - without data attributes', () => {
   mesh.uuid = 'uuid'
   mesh.name = 'name'
   mesh.userData.uuid = 'uuid1'
+
+  const scene = {
+    children: [mesh]
+  } as unknown as GLTF['scene']
+
+  beforeEach(() => {
+    mockSetState.mockReset()
+
+    mockUseStore.mockImplementation((callback) => {
+      callback({})
+      return {}
+    })
+  })
+
+  test('render', async () => {
+    const renderer = await ReactThreeTestRenderer.create(
+      <Result scene={scene} />
+    )
+
+    await renderer.unmount()
+  })
+})
+
+describe('loader/result - 0 - 1', () => {
+  const geometry = new BoxGeometry(1, 1, 1)
+  const material = new MeshBasicMaterial()
+  const mesh = new Mesh(geometry, material)
+  mesh.uuid = 'uuid'
+  mesh.name = 'name'
+  mesh.userData.uuid = 'uuid1'
+  mesh.geometry.setAttribute(
+    'data',
+    new Float32BufferAttribute([0, 0, 0, 1, 1, 1], 3)
+  )
 
   const scene = {
     children: [mesh]

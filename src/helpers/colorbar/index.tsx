@@ -77,7 +77,6 @@ const Colorbar = ({ resize }: ColorbarProps): ReactNode => {
     lookUpTable.setMax((size - 1) / 2)
 
     const position = geometry.getAttribute('position')
-
     const colors = new Float32Array(position.count * position.itemSize)
     for (let i = 0; i < position.count; ++i) {
       const color = lookUpTable.getColor(position.array[3 * i + 0])

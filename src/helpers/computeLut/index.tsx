@@ -46,7 +46,6 @@ const setVertexColor = (
   const data = child.userData.data as
     | {
         count: number
-        itemSize: number
         array: number[]
       }
     | undefined
@@ -56,7 +55,7 @@ const setVertexColor = (
   lookUpTable.setMin(lut.customMin ?? min)
   lookUpTable.setMax(lut.customMax ?? max)
 
-  const vertexColors = new Float32Array(data.count * data.itemSize)
+  const vertexColors = new Float32Array(data.count * 3)
   for (let i = 0; i < data.count; ++i) {
     const vertexColor = lookUpTable.getColor(data.array[i])
 
@@ -79,8 +78,6 @@ const ComputeLut = (): ReactNode => {
   // Store
   const { scene } = useStore((s) => s.mainView)
   const lut = useStore((s) => s.lut)
-
-  console.log(scene)
 
   // Colors
   useEffect(() => {

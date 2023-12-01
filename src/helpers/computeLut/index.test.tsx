@@ -48,7 +48,7 @@ describe('helpers/computeLut', () => {
             {
               userData: {
                 lut: { min: -1, max: 1 },
-                data: { count: 1, array: [1, 1, 1], itemSize: 3 }
+                data: { count: 1, array: [1, 1, 1] }
               },
               geometry: {
                 setAttribute: jest.fn
