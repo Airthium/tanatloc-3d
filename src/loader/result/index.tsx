@@ -33,7 +33,7 @@ const getMinMax = (
   let min = array.reduce((a, b) => Math.min(a, b), Infinity)
   let max = array.reduce((a, b) => Math.max(a, b), -Infinity)
 
-  if (min == max) {
+  if (min === max) {
     if (min < 1e-12) {
       min = -1
       max = 1
