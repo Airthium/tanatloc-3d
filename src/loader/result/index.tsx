@@ -39,7 +39,7 @@ const getMinMax = (
       max = 1
     } else {
       min = min - 0.1 * max
-      max = max - 0.1 * max
+      max = max + 0.1 * max
     }
   }
 
