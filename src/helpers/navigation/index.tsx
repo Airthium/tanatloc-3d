@@ -304,12 +304,14 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
   }, [camera, resize])
 
   // Rotation
-  useFrame(({ camera }) => {
-    camera.position.set(0, 0, 0)
-    camera.rotation.copy(camera.rotation)
-    camera.translateX(cameraPosition[0])
-    camera.translateY(cameraPosition[1])
-    camera.translateZ(cameraPosition[2])
+  useFrame(({ camera: frameCamera }) => {
+    if (!camera) return
+
+    frameCamera.position.set(0, 0, 0)
+    frameCamera.rotation.copy(camera.rotation)
+    frameCamera.translateX(cameraPosition[0])
+    frameCamera.translateY(cameraPosition[1])
+    frameCamera.translateZ(cameraPosition[2])
   })
 
   /**
