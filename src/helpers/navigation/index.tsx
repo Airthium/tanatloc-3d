@@ -18,7 +18,6 @@ import Arrow from '../arrow'
  * Props
  */
 export interface NavigationProps {
-  update?: number
   resize?: number
 }
 
@@ -159,12 +158,6 @@ const ShapeGeometry = ({
    */
   return <shapeGeometry args={[shape]} />
 }
-// Default props
-ShapeGeometry.defaultProps = {
-  width: size,
-  height: size,
-  radius: size * corner
-}
 
 /**
  * Face
@@ -280,7 +273,7 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
   const currentDimension = useRef<number>(3)
 
   // Store
-  const mainView = useStore((s) => s.mainView)
+  const { camera, controls, scene } = useStore((s) => s.mainView)
   const { dimension } = useStore((s) => s.geometry)
 
   // State
@@ -306,16 +299,14 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
 
   // Aspect ratio (main camera)
   useEffect(() => {
-    if (!mainView.camera) return
-    setAspectRatio(mainView.camera.aspect)
-  }, [mainView.camera, resize])
+    if (!camera) return
+    setAspectRatio(camera.aspect)
+  }, [camera, resize])
 
   // Rotation
   useFrame(({ camera }) => {
-    if (!mainView?.camera) return
-
     camera.position.set(0, 0, 0)
-    camera.rotation.copy(mainView.camera.rotation)
+    camera.rotation.copy(camera.rotation)
     camera.translateX(cameraPosition[0])
     camera.translateY(cameraPosition[1])
     camera.translateZ(cameraPosition[2])
@@ -352,14 +343,14 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
   const onClick = useCallback(
     (force?: number): void => {
       // Checks
-      if (!mainView?.camera || !mainView.controls) return
+      if (!camera || !controls) return
 
       const currentFace = faces[force ?? hover.index]
       if (!currentFace) return
 
       // Distance
-      const target = mainView.controls.target as THREE.Vector3
-      const distance = mainView.camera.position.distanceTo(target)
+      const target = controls.target as THREE.Vector3
+      const distance = camera.position.distanceTo(target)
 
       // Position change
       const interval = currentFace.normal.clone().multiplyScalar(distance)
@@ -368,10 +359,10 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
       const newPosition = target.clone().add(interval)
 
       // Update
-      mainView.camera.position.copy(newPosition)
-      mainView.camera.up.copy(currentFace.up)
+      camera.position.copy(newPosition)
+      camera.up.copy(currentFace.up)
     },
-    [mainView?.camera, mainView.controls, hover.index]
+    [camera, controls, hover.index]
   )
 
   // Dimension
@@ -379,7 +370,7 @@ const Navigation = ({ resize }: NavigationProps): ReactNode => {
     if (dimension === currentDimension.current) return
     currentDimension.current = dimension
     if (dimension < 3) onClick(0)
-  }, [dimension, mainView.scene?.children, onClick])
+  }, [scene?.children, scene?.children.length, dimension, onClick])
 
   /**
    * Render

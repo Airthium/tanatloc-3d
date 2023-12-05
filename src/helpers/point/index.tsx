@@ -72,7 +72,7 @@ const Point = (): ReactNode => {
 
   // Store
   const { selection } = useStore((s) => s.props)
-  const mainView = useStore((s) => s.mainView)
+  const { scene } = useStore((s) => s.mainView)
 
   // Position
   const position: [number, number, number] = useMemo(() => {
@@ -82,15 +82,15 @@ const Point = (): ReactNode => {
 
   // Lines
   useEffect(() => {
-    if (!mainView.scene) return
+    if (!scene?.children.length) return
 
-    const boundingBox = computeSceneBoundingBox(mainView.scene.children)
+    const boundingBox = computeSceneBoundingBox(scene.children)
     const lines = buildLines(boundingBox)
     setLines(lines)
 
     const sphere = buildSphere(boundingBox)
     setSphere(sphere)
-  }, [mainView.scene, mainView.scene?.children])
+  }, [scene?.children, scene?.children.length])
 
   /**
    * Render

@@ -341,8 +341,8 @@ const AxisLabels = ({
  */
 const Grid = ({ update }: GridProps): ReactNode => {
   // Store
-  const mainView = useStore((s) => s.mainView)
-  const display = useStore((s) => s.display)
+  const { camera, scene } = useStore((s) => s.mainView)
+  const { grid } = useStore((s) => s.display)
   const { dimension } = useStore((s) => s.geometry)
 
   // State
@@ -363,9 +363,9 @@ const Grid = ({ update }: GridProps): ReactNode => {
 
   // Scene update
   useEffect(() => {
-    if (!mainView.scene?.children) return
+    if (!scene?.children) return
 
-    const boundingBox = computeSceneBoundingBox(mainView.scene.children)
+    const boundingBox = computeSceneBoundingBox(scene.children)
     const center = new Vector3()
     boundingBox.getCenter(center)
     const size = [
@@ -386,25 +386,25 @@ const Grid = ({ update }: GridProps): ReactNode => {
     setRange(range)
     setOffset(offset)
     setNumberOfDivisions(numberOfDivisions)
-  }, [mainView.scene?.children])
+  }, [scene?.children, scene?.children.length])
 
   // Camera udpate
   useEffect(() => {
-    if (!mainView.camera) return
+    if (!camera) return
 
     const cameraDirection = new Vector3()
-    mainView.camera.getWorldDirection(cameraDirection)
+    camera.getWorldDirection(cameraDirection)
     setCameraDirection([
       cameraDirection.x,
       cameraDirection.y,
       cameraDirection.z
     ])
-  }, [mainView.camera, update])
+  }, [camera, update])
 
   /**
    * Render
    */
-  return display.grid ? (
+  return grid ? (
     <group type="Grid">
       <AxisGrid
         axis="xy"

@@ -17,7 +17,7 @@ describe('helpers/point', () => {
     selection: { point: { x: 1, y: 2, z: 3 } }
   }
   const mainView = {
-    scene: {}
+    scene: { children: [{}] }
   }
 
   beforeEach(() => {

@@ -358,7 +358,7 @@ const SectionView = (): ReactNode => {
   const [type, setType] = useState<Type>()
 
   // Store
-  const mainView = useStore((s) => s.mainView)
+  const { camera, controls, scene } = useStore((s) => s.mainView)
   const sectionView = useStore((s) => s.sectionView)
   const {
     colors: { hoverColor: baseColor, selectColor: hoverColor }
@@ -375,13 +375,13 @@ const SectionView = (): ReactNode => {
         hoverDome,
         event,
         ref.current,
-        mainView.camera,
-        mainView.controls
+        camera,
+        controls
       )
       setType(type)
       setEnabled(enabled)
     },
-    [hoverPlane, hoverDome, mainView.camera, mainView.controls]
+    [hoverPlane, hoverDome, camera, controls]
   )
 
   /**
@@ -396,10 +396,10 @@ const SectionView = (): ReactNode => {
         ref.current,
         planeRef.current,
         type,
-        mainView.camera
+        camera
       )
     },
-    [enabled, type, mainView.camera]
+    [enabled, type, camera]
   )
 
   /**
@@ -407,8 +407,8 @@ const SectionView = (): ReactNode => {
    */
   const onPointerUp = useCallback(() => {
     setEnabled(false)
-    _onPointerUp(mainView.controls)
-  }, [mainView.controls])
+    _onPointerUp(controls)
+  }, [controls])
 
   /**
    * On pointer out
@@ -455,24 +455,20 @@ const SectionView = (): ReactNode => {
 
   // Start
   useEffect(() => {
-    const { success } = onStart(sectionView.enabled, mainView.scene?.children)
+    const { success } = onStart(sectionView.enabled, scene?.children)
     if (!success) return
 
     setPosition(runtimeData.position)
     setScale(runtimeData.scale)
-  }, [mainView.scene?.children, sectionView.enabled])
+  }, [scene?.children, scene?.children.length, sectionView.enabled])
 
   // Snap
   useEffect(() => {
-    const { success } = onSnap(
-      sectionView.snap,
-      mainView.scene?.children,
-      ref.current
-    )
+    const { success } = onSnap(sectionView.snap, scene?.children, ref.current)
     if (!success) return
 
     setPosition(runtimeData.position)
-  }, [mainView.scene?.children, sectionView.snap])
+  }, [scene?.children, scene?.children.length, sectionView.snap])
 
   // Flip
   useEffect(() => {

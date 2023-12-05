@@ -23,7 +23,7 @@ describe('helpers/zoomToSelection', () => {
   }
   const mainView = {
     gl: { domElement: { parentElement } },
-    scene: {},
+    scene: { children: [{}] },
     camera: {},
     controls: {}
   }

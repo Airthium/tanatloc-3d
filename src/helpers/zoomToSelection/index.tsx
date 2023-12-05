@@ -20,15 +20,15 @@ const endPoint = new Vector2()
  */
 const ZoomToSelection = (): ReactNode => {
   // Store
-  const mainView = useStore((s) => s.mainView)
+  const { camera, controls, gl, scene } = useStore((s) => s.mainView)
   const zoomToSelection = useStore((s) => s.zoomToSelection)
 
   // Parent
   const parentElement = useMemo(() => {
-    if (!mainView.gl) return
+    if (!gl) return
 
-    return mainView.gl.domElement.parentElement!
-  }, [mainView.gl])
+    return gl.domElement.parentElement!
+  }, [gl])
 
   // Selection box
   useEffect(() => {
@@ -124,13 +124,7 @@ const ZoomToSelection = (): ReactNode => {
    */
   const onPointerUp = useCallback(
     (event: MouseEvent) => {
-      if (
-        !mainView.gl ||
-        !mainView.scene ||
-        !mainView.camera ||
-        !mainView.controls
-      )
-        return
+      if (!gl || !scene?.children.length || !camera || !controls) return
 
       // x, y
       const x = event.clientX
@@ -157,10 +151,10 @@ const ZoomToSelection = (): ReactNode => {
       // Zoom to rect
       zoomToRect(
         new Box2(startPoint, endPoint),
-        mainView.gl,
-        mainView.scene,
-        mainView.camera,
-        mainView.controls
+        gl,
+        scene.children,
+        camera,
+        controls
       )
 
       // Disabled zoom to selection
@@ -170,10 +164,11 @@ const ZoomToSelection = (): ReactNode => {
     },
     [
       parentElement,
-      mainView.gl,
-      mainView.scene,
-      mainView.camera,
-      mainView.controls,
+      camera,
+      controls,
+      gl,
+      scene?.children,
+      scene?.children.length,
       zoomToSelection
     ]
   )
@@ -181,18 +176,18 @@ const ZoomToSelection = (): ReactNode => {
   // Event initialization
   useEffect(() => {
     if (!parentElement) return
-    if (!mainView.controls) return
+    if (!controls) return
 
     if (zoomToSelection.enabled) {
       // Disable controls
-      mainView.controls.enabled = false
+      controls.enabled = false
 
       document.addEventListener('pointerdown', onPointerDown)
       document.addEventListener('pointermove', onPointerMove)
       document.addEventListener('pointerup', onPointerUp)
     } else {
       // Enable controls
-      mainView.controls.enabled = true
+      controls.enabled = true
 
       document.removeEventListener('pointerdown', onPointerDown)
       document.removeEventListener('pointermove', onPointerMove)
@@ -207,7 +202,7 @@ const ZoomToSelection = (): ReactNode => {
     }
   }, [
     parentElement,
-    mainView.controls,
+    controls,
     zoomToSelection.enabled,
     onPointerDown,
     onPointerMove,

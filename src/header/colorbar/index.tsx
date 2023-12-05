@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { Button, Dropdown, Form, InputNumber, Modal, Tooltip } from 'antd'
 import {
   ArrowsAltOutlined,
@@ -24,6 +24,12 @@ const Colorbar = (): ReactNode => {
   // Data
   const [form] = Form.useForm()
 
+  // Initial values
+  const initialValues = useMemo(
+    () => ({ min: toReadable(lut.min), max: toReadable(lut.max) }),
+    [lut.min, lut.max]
+  )
+
   /**
    * On colormap
    * @param param { key }
@@ -46,10 +52,10 @@ const Colorbar = (): ReactNode => {
   /**
    * On custom range close
    */
-  const onCustomRangeClose = useCallback(
-    (): void => setCustomRangeOpen(false),
-    []
-  )
+  const onCustomRangeClose = useCallback((): void => {
+    setCustomRangeOpen(false)
+    form.resetFields()
+  }, [])
 
   /**
    * On custom range
@@ -92,7 +98,7 @@ const Colorbar = (): ReactNode => {
       >
         <Form
           form={form}
-          initialValues={{ min: toReadable(lut.min), max: toReadable(lut.max) }}
+          initialValues={initialValues}
           onFinish={onCustomRange}
         >
           <Form.Item name="min" label="Minimum">

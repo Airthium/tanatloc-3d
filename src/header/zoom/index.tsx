@@ -21,32 +21,32 @@ let zoomInProgress: number | undefined = undefined
  */
 const Zoom = (): ReactNode => {
   // Store
-  const mainView = useStore((s) => s.mainView)
+  const { camera, controls, scene } = useStore((s) => s.mainView)
   const zoomToSelection = useStore((s) => s.zoomToSelection)
 
   /**
    * Zoom in
    */
   const onZoomIn = useCallback(() => {
-    zoom(mainView.camera, mainView.controls, 1)
+    zoom(camera, controls, 1)
     zoomInProgress = requestAnimationFrame(onZoomIn)
-  }, [mainView.camera, mainView.controls])
+  }, [camera, controls])
 
   /**
    * Zoom to fit
    */
   const onZoomToFit = useCallback(
-    () => zoomToFit(mainView.scene, mainView.camera, mainView.controls),
-    [mainView.scene, mainView.camera, mainView.controls]
+    () => zoomToFit(scene?.children, camera, controls),
+    [camera, controls, scene?.children, scene?.children.length]
   )
 
   /**
    * Zoom out
    */
   const onZoomOut = useCallback(() => {
-    zoom(mainView.camera, mainView.controls, -1)
+    zoom(camera, controls, -1)
     zoomInProgress = requestAnimationFrame(onZoomOut)
-  }, [mainView.camera, mainView.controls])
+  }, [camera, controls])
 
   /**
    * Zoom stop

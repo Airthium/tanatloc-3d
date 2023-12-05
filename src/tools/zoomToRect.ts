@@ -8,7 +8,7 @@ import { Raycaster, Vector2 } from 'three'
  * Zoom to rect
  * @param rect Rect
  * @param gl Renderer
- * @param scene Scene
+ * @param sceneChildren Scene children
  * @param camera Camera
  * @param controls Controls
  * @returns
@@ -16,7 +16,7 @@ import { Raycaster, Vector2 } from 'three'
 const zoomToRect = (
   rect: THREE.Box2,
   gl: THREE.WebGLRenderer,
-  scene: THREE.Scene,
+  sceneChildren: THREE.Scene['children'],
   camera: THREE.PerspectiveCamera,
   controls: TrackballControlsProps
 ) => {
@@ -43,7 +43,7 @@ const zoomToRect = (
   )
 
   // Intersection
-  const objects = scene.children.filter((child) => child.type === 'Part')
+  const objects = sceneChildren.filter((child) => child.type === 'Part')
   if (!objects.length) return
 
   const raycaster = new Raycaster()

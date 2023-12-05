@@ -7,9 +7,9 @@ import StaticText from '../staticText'
  * Props
  */
 export interface ArrowProps {
-  origin: THREE.Vector3
-  direction: THREE.Vector3
-  length: number
+  origin?: THREE.Vector3
+  direction?: THREE.Vector3
+  length?: number
   color?: string | number
   text?: string
 }
@@ -23,9 +23,9 @@ const axis = new Vector3()
  * @returns Arrow
  */
 const Arrow = ({
-  origin,
-  direction,
-  length,
+  origin = new Vector3(0, 0, 0),
+  direction = new Vector3(1, 0, 0),
+  length = 1,
   color,
   text
 }: ArrowProps): ReactNode => {
@@ -74,11 +74,6 @@ const Arrow = ({
       ) : null}
     </group>
   )
-}
-Arrow.defaultProps = {
-  origin: new Vector3(0, 0, 0),
-  direction: new Vector3(1, 0, 0),
-  length: 1
 }
 
 export default Arrow

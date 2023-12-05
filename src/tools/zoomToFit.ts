@@ -5,19 +5,19 @@ import computeSceneBoundingBox from './computeSceneBoundingBox'
 
 /**
  * Zoom to fit
- * @param scene Scene
+ * @param sceneChildren Scene children
  * @param camera Camera
  * @param controls Controls
  */
 const zoomToFit = (
-  scene: THREE.Scene | undefined,
+  sceneChildren: THREE.Scene['children'] | undefined,
   camera: THREE.PerspectiveCamera | undefined,
   controls: TrackballControlsProps | undefined
 ): void => {
-  if (!scene || !camera || !controls) return
+  if (!sceneChildren || !camera || !controls) return
 
   // Center
-  const boundingBox = computeSceneBoundingBox(scene.children)
+  const boundingBox = computeSceneBoundingBox(sceneChildren)
   const center = new Vector3()
   boundingBox.getCenter(center)
 

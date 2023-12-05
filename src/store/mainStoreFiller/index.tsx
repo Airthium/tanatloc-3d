@@ -1,6 +1,5 @@
-import { useEffect } from 'react'
-import { useThree } from '@react-three/fiber'
 import { TrackballControlsProps } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 
 import useStore from '@store'
 
@@ -16,11 +15,8 @@ export interface MainStoreFillerProps {
  * @returns MainStoreFiller
  */
 const MainStoreFiller = ({ controls }: MainStoreFillerProps): null => {
-  // Data
-  const { gl, scene, camera } = useThree()
-
   // Update (has to be always up to date)
-  useEffect(() => {
+  useFrame(({ camera, gl, scene }) => {
     useStore.setState({
       mainView: {
         gl,

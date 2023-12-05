@@ -112,15 +112,7 @@ const ComputeLut = (): ReactNode => {
     for (const result of results) {
       for (const child of result.children) setVertexColor(child, lut, min, max)
     }
-  }, [
-    scene?.children,
-    scene?.children.length,
-    lut.colormap,
-    lut.min,
-    lut.max,
-    lut.customMin,
-    lut.customMax
-  ])
+  }, [scene?.children, scene?.children.length, JSON.stringify(lut)])
 
   return null
 }

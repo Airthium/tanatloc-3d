@@ -99,7 +99,7 @@ const exportSnapshot = (
 const Snapshot = (): ReactNode => {
   // Store
   const props = useStore((s) => s.props)
-  const mainView = useStore((s) => s.mainView)
+  const { camera, gl, scene } = useStore((s) => s.mainView)
 
   /**
    * On Snapshot
@@ -107,30 +107,25 @@ const Snapshot = (): ReactNode => {
    */
   const onSnapshot = useCallback(
     ({ key }: { key: string }): void => {
-      if (!mainView.gl || !mainView.scene || !mainView.camera) return
+      if (!gl || !scene || !camera) return
 
       if (key === projectSnapshotKey) {
-        projectSnapshot(
-          mainView.gl,
-          mainView.scene,
-          mainView.camera,
-          props.snapshot?.project
-        )
+        projectSnapshot(gl, scene, camera, props.snapshot?.project)
       } else {
-        exportSnapshot(mainView.gl, mainView.scene, mainView.camera)
+        exportSnapshot(gl, scene, camera)
       }
     },
-    [mainView.gl, mainView.scene, mainView.camera, props.snapshot?.project]
+    [gl, scene, camera, props.snapshot?.project]
   )
 
   /**
    * On export snapshot
    */
   const onExportSnapshot = useCallback((): void => {
-    if (!mainView.gl || !mainView.scene || !mainView.camera) return
+    if (!gl || !scene || !camera) return
 
-    exportSnapshot(mainView.gl, mainView.scene, mainView.camera)
-  }, [mainView.gl, mainView.scene, mainView.camera])
+    exportSnapshot(gl, scene, camera)
+  }, [gl, scene, camera])
 
   /**
    * Render

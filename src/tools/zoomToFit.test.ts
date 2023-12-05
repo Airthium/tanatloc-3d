@@ -7,7 +7,7 @@ const mockBox = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 1))
 jest.mock('./computeSceneBoundingBox', () => () => mockBox)
 
 describe('tools/zoomToFit', () => {
-  const scene = {} as THREE.Scene
+  const scene = { children: [] } as unknown as THREE.Scene
   const camera = {
     position: new Vector3(0, 0, 5),
     updateProjectionMatrix: jest.fn
@@ -20,6 +20,6 @@ describe('tools/zoomToFit', () => {
   })
 
   test('run', () => {
-    zoomToFit(scene, camera, controls)
+    zoomToFit(scene.children, camera, controls)
   })
 })

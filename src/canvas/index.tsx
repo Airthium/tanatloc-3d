@@ -100,7 +100,7 @@ const Canvas = (): ReactNode => {
         <Parts />
       </Hud>
       <Hud renderPriority={2}>
-        <Navigation update={controlsUpdate} resize={resize} />
+        <Navigation resize={resize} />
       </Hud>
       {oneResult ? (
         <Hud renderPriority={3}>

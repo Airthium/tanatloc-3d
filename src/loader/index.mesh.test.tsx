@@ -42,7 +42,7 @@ describe('loader', () => {
   } as unknown as Tanatloc3DPart
 
   const mainView = {
-    scene: {},
+    scene: { children: [{}] },
     camera: {},
     controls: {}
   }

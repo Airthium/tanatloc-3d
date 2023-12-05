@@ -68,7 +68,7 @@ const PartLoader = ({ part }: PartLoaderProps): ReactNode => {
   const [gltf, setGltf] = useState<GLTF>()
 
   // Store
-  const mainView = useStore((s) => s.mainView)
+  const { camera, controls, scene } = useStore((s) => s.mainView)
 
   // GLTF load
   useEffect(() => {
@@ -88,12 +88,12 @@ const PartLoader = ({ part }: PartLoaderProps): ReactNode => {
 
   // Zoom to fit
   useEffect(() => {
-    if (!mainView.scene || !mainView.camera || !mainView.controls) return
+    if (!scene?.children.length || !camera || !controls) return
     if (currentGLTF.current === gltf) return
     currentGLTF.current = gltf
 
-    zoomToFit(mainView.scene, mainView.camera, mainView.controls)
-  }, [mainView.scene, mainView.camera, mainView.controls, gltf])
+    zoomToFit(scene.children, camera, controls)
+  }, [camera, controls, scene?.children, scene?.children.length, gltf])
 
   /**
    * Render

@@ -20,20 +20,19 @@ const Light = ({ update }: LightProps): ReactNode => {
   const [positionLeft, setPositionLeft] = useState<THREE.Vector3>(null!)
 
   // Store
-  const mainView = useStore((s) => s.mainView)
+  const { camera, controls } = useStore((s) => s.mainView)
   const settings = useStore((s) => s.settings)
 
   // Set position
   useEffect(() => {
-    if (!mainView.camera || !mainView.controls) return
+    if (!camera || !controls) return
 
     // Camera
-    const camera = mainView.camera
     const cameraPosition = camera.position.clone()
     const cameraUp = camera.up.clone().normalize()
 
     // Target
-    const target = mainView.controls.target as THREE.Vector3
+    const target = controls.target as THREE.Vector3
 
     // Direction
     const direction = target.clone().sub(cameraPosition).normalize()
@@ -53,7 +52,7 @@ const Light = ({ update }: LightProps): ReactNode => {
     // Update
     setPositionRight(right)
     setPositionLeft(left)
-  }, [mainView.camera, mainView.controls, update])
+  }, [camera, controls, update])
 
   /**
    * Render

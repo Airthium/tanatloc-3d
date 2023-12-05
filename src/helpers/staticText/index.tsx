@@ -7,9 +7,9 @@ import { Text } from '@react-three/drei'
  * Props
  */
 export interface StaticTextProps {
-  position: THREE.Vector3
+  position?: THREE.Vector3
   fontSize?: number
-  children: string
+  children?: string
 }
 
 /**
@@ -18,9 +18,9 @@ export interface StaticTextProps {
  * @returns StaticText
  */
 const StaticText = ({
-  position,
+  position = new Vector3(0, 0, 0),
   fontSize,
-  children
+  children = ''
 }: StaticTextProps): ReactNode => {
   // Ref
   const ref = useRef<THREE.Mesh>(null!)
@@ -38,10 +38,6 @@ const StaticText = ({
       {children}
     </Text>
   )
-}
-StaticText.defaultProps = {
-  position: new Vector3(0, 0, 0),
-  children: ''
 }
 
 export default StaticText

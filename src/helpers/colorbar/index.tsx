@@ -65,7 +65,7 @@ const Colorbar = ({ resize }: ColorbarProps): ReactNode => {
   const [aspectRatio, setAspectRatio] = useState<number>(1)
 
   // Store
-  const mainView = useStore((s) => s.mainView)
+  const { camera } = useStore((s) => s.mainView)
   const lut = useStore((s) => s.lut)
 
   // Vertex colors
@@ -93,9 +93,9 @@ const Colorbar = ({ resize }: ColorbarProps): ReactNode => {
 
   // Aspect ratio (main camera)
   useEffect(() => {
-    if (!mainView.camera) return
-    setAspectRatio(mainView.camera.aspect)
-  }, [mainView.camera, resize])
+    if (!camera) return
+    setAspectRatio(camera.aspect)
+  }, [camera, resize])
 
   // Camera position
   const cameraPosition: [number, number, number] = useMemo(

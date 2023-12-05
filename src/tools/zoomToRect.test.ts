@@ -20,7 +20,7 @@ jest.mock('three', () => {
   }
 })
 
-describe('tools/zzomToRect', () => {
+describe('tools/zoomToRect', () => {
   const part = {
     type: 'Part'
   } as THREE.Mesh
@@ -56,7 +56,7 @@ describe('tools/zzomToRect', () => {
   })
 
   test('run', () => {
-    zoomToRect(rect, gl, scene, camera, controls)
+    zoomToRect(rect, gl, scene.children, camera, controls)
   })
 
   test('too small', () => {
@@ -66,26 +66,18 @@ describe('tools/zzomToRect', () => {
         max: { x: 1, y: 1 }
       } as THREE.Box2,
       gl,
-      scene,
+      scene.children,
       camera,
       controls
     )
   })
 
   test('empty scene', () => {
-    zoomToRect(
-      rect,
-      gl,
-      {
-        children: []
-      } as unknown as THREE.Scene,
-      camera,
-      controls
-    )
+    zoomToRect(rect, gl, [], camera, controls)
   })
 
   test('empty intersection', () => {
     mockIntersectObjects.mockImplementation(() => [])
-    zoomToRect(rect, gl, scene, camera, controls)
+    zoomToRect(rect, gl, scene.children, camera, controls)
   })
 })
