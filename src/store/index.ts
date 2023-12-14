@@ -5,6 +5,7 @@ import { Tanatloc3DRendererProps } from '@index'
 
 import {
   defaultDisplay,
+  defaultExtra,
   defaultGeometry,
   defaultLut,
   defaultMainView,
@@ -19,6 +20,10 @@ import {
  * Store
  */
 export interface Store {
+  extra: {
+    notFound?: boolean
+    background?: boolean
+  }
   props: Tanatloc3DRendererProps
   mainView: {
     gl?: THREE.WebGLRenderer
@@ -84,6 +89,7 @@ const localStorageSettings =
  * Store
  */
 const useStore = create<Store>((set) => ({
+  extra: defaultExtra,
   props: defaultProps,
   mainView: defaultMainView,
   display: defaultDisplay,
@@ -95,6 +101,7 @@ const useStore = create<Store>((set) => ({
   settings: localStorageSettings
     ? JSON.parse(localStorageSettings)
     : defaultSettings,
+  setExtra: (extra: Store['extra']) => set({ extra }),
   setProps: (props: Store['props']) => set({ props }),
   setMainView: (mainView: Store['mainView']) => set({ mainView })
 }))

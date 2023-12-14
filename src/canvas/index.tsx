@@ -9,6 +9,8 @@ import {
 import { Canvas as R3FCanvas } from '@react-three/fiber'
 import { Hud, PerspectiveCamera, TrackballControls } from '@react-three/drei'
 
+import WebGL from 'three/examples/jsm/capabilities/WebGL'
+
 import useStore from '@store'
 import MainStoreFiller from '@store/mainStoreFiller'
 
@@ -22,9 +24,13 @@ import Colorbar from '@helpers/colorbar'
 import Light from '@helpers/light'
 import Point from '@helpers/point'
 
+import { _404Render as NotFound } from '@extra/404'
+import { BackgroundRender as Background } from '@extra/background'
+
 import Parts from './parts'
 
 import defaultStyle from '@style/Canvas'
+import { notification } from 'antd'
 
 /**
  * Canvas
@@ -35,12 +41,17 @@ const Canvas = (): ReactNode => {
   const mainViewControls = useRef(null!)
 
   // State
+  const [webGLAvailable, setWebGLAvailable] = useState<boolean>(false)
   const [controlsUpdate, setControlsUpdate] = useState<number>(0)
   const [resize, setResize] = useState<number>(0)
 
   // Store
+  const extra = useStore((s) => s.extra)
   const { parts, style } = useStore((s) => s.props)
   const { dimension } = useStore((s) => s.geometry)
+
+  // Notification
+  const [api] = notification.useNotification()
 
   /**
    * On main view controls
@@ -62,6 +73,18 @@ const Canvas = (): ReactNode => {
     setResize(Math.random())
   }, [])
 
+  // Check WebGL
+  useEffect(() => {
+    if (WebGL.isWebGLAvailable()) setWebGLAvailable(true)
+    else {
+      setWebGLAvailable(false)
+      api.error({
+        message: 'WebGL unavailable',
+        description: 'WebGL is not activated. Please have a look on solutions' //TODO
+      })
+    }
+  }, [])
+
   // Events
   useEffect(() => {
     window.addEventListener('resize', onResize)
@@ -70,12 +93,20 @@ const Canvas = (): ReactNode => {
     }
   }, [onResize])
 
+  // Resize
+  useEffect(() => {
+    onResize()
+  }, [style, onResize])
+
   /**
    * Render
    */
+  if (!webGLAvailable) return null
   return (
     <R3FCanvas
-      hidden={!parts || parts.length === 0}
+      hidden={
+        (!parts || parts.length === 0) && !extra.notFound && !extra.background
+      }
       style={{ ...defaultStyle.canvas, ...style }}
       frameloop="demand"
       gl={{
@@ -86,21 +117,25 @@ const Canvas = (): ReactNode => {
       <FrameRate />
       <Hud renderPriority={1}>
         <MainStoreFiller controls={mainViewControls.current} />
-        <PerspectiveCamera makeDefault position={[1, 1, 5]} />
+        <PerspectiveCamera makeDefault position={[0, 0, 5]} />
         <Grid update={controlsUpdate} />
         <ZoomToSelection />
         <SectionView />
         <TrackballControls
           ref={mainViewControls}
           onChange={onMainViewControls}
-          noRotate={dimension !== 3}
+          noRotate={!extra.notFound && dimension !== 3}
         />
         <Light update={controlsUpdate} />
         <Point />
-        <Parts />
+        {extra.notFound ? <NotFound /> : null}
+        {extra.background ? <Background /> : null}
+        {!extra.notFound && !extra.background ? <Parts /> : null}
       </Hud>
       <Hud renderPriority={2}>
-        <Navigation resize={resize} />
+        {extra.notFound || extra.background ? null : (
+          <Navigation resize={resize} />
+        )}
       </Hud>
       {oneResult ? (
         <Hud renderPriority={3}>

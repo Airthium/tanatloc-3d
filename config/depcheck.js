@@ -65,6 +65,7 @@ const options = {
     'depcheck', // used here
     '@babel/plugin-syntax-import-assertions', // eslint custom
     '@babel/plugin-syntax-jsx', // eslint custom
+    '@extra/*',
     '@header/*',
     '@helpers/*',
     '@loader/*',

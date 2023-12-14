@@ -107,5 +107,9 @@ const Canvas = () => ReactNode
 const Renderer = (props: Tanatloc3DRendererProps & { theme?: ThemeConfig }) =>
   ReactNode
 
-const Tanatloc3D = { Canvas, Renderer }
+const _404: () => ReactNode
+
+const Background: () => ReactNode
+
+const Tanatloc3D = { Canvas, Renderer, extra: { _404, Background } }
 export default Tanatloc3D

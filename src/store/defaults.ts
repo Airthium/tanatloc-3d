@@ -1,6 +1,14 @@
 import { Store } from '@store'
 
 /**
+ * Default extra
+ */
+export const defaultExtra = {
+  notFound: undefined,
+  backgroud: undefined
+}
+
+/**
  * Default props
  */
 export const defaultProps = {

@@ -14,9 +14,14 @@ jest.mock('@react-three/drei', () => ({
     <div
       role={trackballControlsRole}
       onClick={props.onChange}
-      onKeyUp={console.log}
+      onKeyUp={console.debug}
     />
   )
+}))
+
+const mockIsWebGLAvailable = jest.fn()
+jest.mock('three/examples/jsm/capabilities/WebGL', () => ({
+  isWebGLAvailable: () => mockIsWebGLAvailable()
 }))
 
 const mockUseStore = jest.fn()
@@ -37,6 +42,14 @@ jest.mock('@helpers/colorbar', () => () => <div />)
 jest.mock('@helpers/light', () => () => <div />)
 jest.mock('@helpers/point', () => () => <div />)
 
+jest.mock('@extra/404', () => ({
+  _404Render: () => <div />
+}))
+
+jest.mock('@extra/background', () => ({
+  BackgroundRender: () => <div />
+}))
+
 jest.mock('./parts', () => () => <div />)
 
 describe('Tanatloc3D', () => {
@@ -46,6 +59,9 @@ describe('Tanatloc3D', () => {
   }
 
   beforeEach(() => {
+    mockIsWebGLAvailable.mockReset()
+    mockIsWebGLAvailable.mockImplementation(() => true)
+
     mockUseStore.mockImplementation((callback) => {
       callback({})
       return {}
@@ -77,6 +93,27 @@ describe('Tanatloc3D', () => {
 
   test('oneResult', () => {
     mockUseStore.mockImplementation(() => ({ ...props, ...geometry }))
+    const { unmount } = render(<Canvas />)
+
+    unmount()
+  })
+
+  test('404', () => {
+    mockUseStore.mockImplementation(() => ({ notFound: true }))
+    const { unmount } = render(<Canvas />)
+
+    unmount()
+  })
+
+  test('Background', () => {
+    mockUseStore.mockImplementation(() => ({ background: true }))
+    const { unmount } = render(<Canvas />)
+
+    unmount()
+  })
+
+  test('no WebGL', () => {
+    mockIsWebGLAvailable.mockImplementation(() => false)
     const { unmount } = render(<Canvas />)
 
     unmount()

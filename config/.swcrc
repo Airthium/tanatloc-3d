@@ -10,6 +10,7 @@
     },
     "baseUrl": "../",
     "paths": {
+      "@extra/*": ["./src/extra/*"],
       "@index": ["./index.d.ts"],
       "@header": ["./src/header/index.js"],
       "@helpers/*": ["./src/helpers/*"],
