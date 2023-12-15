@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from 'react'
+import { useCallback } from 'react'
 import { Switch, Tooltip } from 'antd'
 import {
   BorderlessTableOutlined,
@@ -12,7 +12,7 @@ import useStore from '@store'
  * Display
  * @returns Display
  */
-const Display = (): ReactNode => {
+const Display: React.FunctionComponent = () => {
   // Store
   const display = useStore((s) => s.display)
 

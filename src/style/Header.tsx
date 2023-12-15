@@ -4,7 +4,7 @@ const style: Record<string, React.CSSProperties> = {
     background: 'none',
     backgroundColor: 'transparent',
     height: 'unset',
-    width: '200px !important',
+    width: '200px',
     zIndex: 10,
     top: 0,
     right: 0,

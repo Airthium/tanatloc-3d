@@ -1,11 +1,4 @@
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ThreeEvent, useFrame } from '@react-three/fiber'
 import { OrthographicCamera, Text } from '@react-three/drei'
 import { Vector3, Shape } from 'three'
@@ -89,7 +82,12 @@ const initHover = {
  * @param props Props
  * @returns Axis
  */
-const Axis = ({ origin, direction, color, text }: AxisProps): ReactNode => {
+const Axis: React.FunctionComponent<AxisProps> = ({
+  origin,
+  direction,
+  color,
+  text
+}) => {
   // Direction
   const direction3 = useMemo(
     () => new Vector3(direction[0], direction[1], direction[2]),
@@ -121,11 +119,11 @@ const Axis = ({ origin, direction, color, text }: AxisProps): ReactNode => {
  * @param props Props
  * @returns ShapeGeometry
  */
-const ShapeGeometry = ({
+const ShapeGeometry: React.FunctionComponent<ShapeGeometryProps> = ({
   width,
   height,
   radius
-}: ShapeGeometryProps): ReactNode => {
+}) => {
   // X
   const x = useMemo(() => -width / 2, [width])
   // Y
@@ -164,14 +162,14 @@ const ShapeGeometry = ({
  * @param props Props
  * @returns Face
  */
-const Face = ({
+const Face: React.FunctionComponent<FaceProps> = ({
   index,
   face,
   hover,
   onPointerMove,
   onPointerLeave,
   onClick
-}: FaceProps): ReactNode => {
+}) => {
   // Ref
   const ref = useRef<THREE.Group>(null!)
 
@@ -268,7 +266,7 @@ const Face = ({
  * @param props Props
  * @returns Navigation
  */
-const Navigation = ({ resize }: NavigationProps): ReactNode => {
+const Navigation: React.FunctionComponent<NavigationProps> = ({ resize }) => {
   // Ref
   const currentDimension = useRef<number>(3)
 

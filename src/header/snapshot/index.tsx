@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from 'react'
+import { useCallback } from 'react'
 import { Button, Dropdown, Tooltip } from 'antd'
 import { FundProjectionScreenOutlined } from '@ant-design/icons'
 
@@ -96,7 +96,7 @@ const exportSnapshot = (
  * Snapshot
  * @returns Snapshot
  */
-const Snapshot = (): ReactNode => {
+const Snapshot: React.FunctionComponent = () => {
   // Store
   const props = useStore((s) => s.props)
   const { camera, gl, scene } = useStore((s) => s.mainView)

@@ -118,4 +118,11 @@ describe('Tanatloc3D', () => {
 
     unmount()
   })
+
+  test('no WebGL, with props', () => {
+    mockIsWebGLAvailable.mockImplementation(() => false)
+    const { unmount } = render(<Canvas toWebGL={console.debug} />)
+
+    unmount()
+  })
 })

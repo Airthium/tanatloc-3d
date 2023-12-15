@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from 'react'
+import { useMemo } from 'react'
 import { LineBasicMaterial, WireframeGeometry } from 'three'
 
 import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
@@ -51,7 +51,7 @@ const getMinMax = (
  * @param props props
  * @returns ResultChild
  */
-const ResultChild = ({ child }: ResultChildProps): ReactNode => {
+const ResultChild: React.FunctionComponent<ResultChildProps> = ({ child }) => {
   // Store
   const display = useStore((s) => s.display)
   const sectionView = useStore((s) => s.sectionView)
@@ -132,7 +132,7 @@ const ResultChild = ({ child }: ResultChildProps): ReactNode => {
  * @param props Props
  * @returns Result
  */
-const Result = ({ scene }: ResultProps): ReactNode => {
+const Result: React.FunctionComponent<ResultProps> = ({ scene }) => {
   // Child
   const children = useMemo(
     () =>

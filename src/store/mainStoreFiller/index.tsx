@@ -14,7 +14,9 @@ export interface MainStoreFillerProps {
  * Main store filler
  * @returns MainStoreFiller
  */
-const MainStoreFiller = ({ controls }: MainStoreFillerProps): null => {
+const MainStoreFiller: React.FunctionComponent<MainStoreFillerProps> = ({
+  controls
+}) => {
   // Update (has to be always up to date)
   useFrame(({ camera, gl, scene }) => {
     useStore.setState({

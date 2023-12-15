@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from 'react'
+import { useCallback } from 'react'
 import { Button, Tooltip } from 'antd'
 import {
   CompressOutlined,
@@ -19,7 +19,7 @@ let zoomInProgress: number | undefined = undefined
  * Zoom
  * @returns Zoom
  */
-const Zoom = (): ReactNode => {
+const Zoom: React.FunctionComponent = () => {
   // Store
   const { camera, controls, scene } = useStore((s) => s.mainView)
   const zoomToSelection = useStore((s) => s.zoomToSelection)

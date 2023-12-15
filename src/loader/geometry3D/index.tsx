@@ -1,11 +1,4 @@
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ThreeEvent } from '@react-three/fiber'
 
 import { Tanatloc3DSelection, Tanatloc3DSelectionValue } from '@index'
@@ -174,7 +167,7 @@ const propsToSelected = (
  * @param props Props
  * @returns Geometry3DFace
  */
-const Geometry3DFace = ({
+const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
   solid,
   child,
   index,
@@ -183,7 +176,7 @@ const Geometry3DFace = ({
   onPointerMove,
   onPointerLeave,
   onClick
-}: Geometry3DFaceProps) => {
+}) => {
   // Store
   const { selection } = useStore((s) => s.props)
   const display = useStore((s) => s.display)
@@ -311,7 +304,7 @@ const Geometry3DFace = ({
  * @param props Props
  * @returns Geometry3DSolid
  */
-const Geometry3DSolid = ({
+const Geometry3DSolid: React.FunctionComponent<Geometry3DSolidProps> = ({
   child,
   index,
   hover,
@@ -319,7 +312,7 @@ const Geometry3DSolid = ({
   onPointerMove,
   onPointerLeave,
   onClick
-}: Geometry3DSolidProps): ReactNode => {
+}) => {
   // Store
   const { selection } = useStore((s) => s.props)
 
@@ -415,7 +408,7 @@ const Geometry3DSolid = ({
  * @param props Props
  * @returns Geometry3D
  */
-const Geometry3D = ({ scene }: Geometry3DProps): ReactNode => {
+const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
   // Ref
   const lastDistance = useRef<number>(Infinity)
 

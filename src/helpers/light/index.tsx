@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import useStore from '@store'
 
@@ -14,7 +14,7 @@ export interface LightProps {
  * @param props Props
  * @returns Light
  */
-const Light = ({ update }: LightProps): ReactNode => {
+const Light: React.FunctionComponent<LightProps> = ({ update }) => {
   // State
   const [positionRight, setPositionRight] = useState<THREE.Vector3>(null!)
   const [positionLeft, setPositionLeft] = useState<THREE.Vector3>(null!)

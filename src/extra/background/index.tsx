@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Tetrahedron } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 
@@ -25,7 +25,7 @@ export interface OneTetrahedronProps {
  * Background
  * @returns Background
  */
-const Background = () => {
+const Background: React.FunctionComponent = () => {
   // Update store
   useEffect(() => {
     useStore.setState({ extra: { background: true } })
@@ -46,7 +46,10 @@ const Background = () => {
  * @param props Props
  * @returns OneTetrahedron
  */
-const OneTetrahedron = ({ width, height }: OneTetrahedronProps): ReactNode => {
+const OneTetrahedron: React.FunctionComponent<OneTetrahedronProps> = ({
+  width,
+  height
+}) => {
   // Ref
   const meshRef = useRef<THREE.Mesh>(null!)
   const xDir = useRef<-1 | 1>(1)
@@ -138,7 +141,7 @@ const OneTetrahedron = ({ width, height }: OneTetrahedronProps): ReactNode => {
  * Background render
  * @returns BackgroundRender
  */
-export const BackgroundRender = () => {
+export const BackgroundRender: React.FunctionComponent = () => {
   // Store
   const { camera } = useStore((s) => s.mainView)
 

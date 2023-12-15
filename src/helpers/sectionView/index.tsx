@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Euler,
   Line3,
@@ -342,7 +342,7 @@ const _onPointerUp = (controls?: TrackballControlsProps): void => {
  * SectionView
  * @returns SectionView
  */
-const SectionView = (): ReactNode => {
+const SectionView: React.FunctionComponent = () => {
   // Ref
   const ref = useRef<THREE.Group>(null!)
   const planeRef = useRef<THREE.Mesh>(null!)

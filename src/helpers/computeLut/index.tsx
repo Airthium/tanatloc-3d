@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
 import { Float32BufferAttribute } from 'three'
 
 import { Lut } from 'three/examples/jsm/math/Lut.js'
@@ -74,7 +74,7 @@ const setVertexColor = (
  * Compute lut
  * @returns ComputeLut
  */
-const ComputeLut = (): ReactNode => {
+const ComputeLut: React.FunctionComponent = () => {
   // Store
   const { scene } = useStore((s) => s.mainView)
   const lut = useStore((s) => s.lut)

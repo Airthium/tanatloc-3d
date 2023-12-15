@@ -1,5 +1,5 @@
+import { useEffect, useMemo, useState } from 'react'
 import { Line } from '@react-three/drei'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Euler, Vector3 } from 'three'
 
 import useStore from '@store'
@@ -147,7 +147,7 @@ const getDepth = (axis: Axis, size: [number, number, number]): number => {
  * @param props Props
  * @returns AxisLine
  */
-const AxisLine = ({ start, stop }: AxisLineProps): ReactNode => (
+const AxisLine: React.FunctionComponent<AxisLineProps> = ({ start, stop }) => (
   <Line points={[start, stop]} color={lineColor} />
 )
 
@@ -156,13 +156,13 @@ const AxisLine = ({ start, stop }: AxisLineProps): ReactNode => (
  * @param props Props
  * @returns AxisGrid
  */
-const AxisGrid = ({
+const AxisGrid: React.FunctionComponent<AxisGridProps> = ({
   axis,
   center,
   size,
   divisions,
   offset
-}: AxisGridProps): ReactNode => {
+}) => {
   // Width
   const width = useMemo(() => getWidth(axis, size), [axis, size])
 
@@ -254,14 +254,14 @@ const AxisGrid = ({
  * @param props Props
  * @returns AxisLabels
  */
-const AxisLabels = ({
+const AxisLabels: React.FunctionComponent<AxisLabelsProps> = ({
   axis,
   center,
   size,
   range,
   division,
   offset
-}: AxisLabelsProps): ReactNode => {
+}) => {
   // Width
   const width = useMemo(() => getWidth(axis, size), [axis, size])
 
@@ -339,7 +339,7 @@ const AxisLabels = ({
  * @param props Props
  * @returns Grid
  */
-const Grid = ({ update }: GridProps): ReactNode => {
+const Grid: React.FunctionComponent<GridProps> = ({ update }) => {
   // Store
   const { camera, scene } = useStore((s) => s.mainView)
   const { grid } = useStore((s) => s.display)

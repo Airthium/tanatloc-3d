@@ -7,7 +7,7 @@ import useStore from '@store'
  * 404
  * @returns 404
  */
-const _404 = () => {
+const _404: React.FunctionComponent = () => {
   // Update store
   useEffect(() => {
     useStore.setState({ extra: { notFound: true } })

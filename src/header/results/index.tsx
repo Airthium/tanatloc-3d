@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from 'react'
+import { useCallback } from 'react'
 import { Switch, Tooltip } from 'antd'
 import { TableOutlined } from '@ant-design/icons'
 import { SwitchChangeEventHandler } from 'antd/es/switch'
@@ -9,7 +9,7 @@ import useStore from '@store'
  * Results
  * @returns Results
  */
-const Results = (): ReactNode => {
+const Results: React.FunctionComponent = () => {
   // Store
   const result = useStore((s) => s.result)
 

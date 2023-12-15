@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { Box2, Vector2 } from 'three'
 
 import useStore from '@store'
@@ -18,7 +18,7 @@ const endPoint = new Vector2()
  * ZoomToSelection
  * @returns ZoomToSelection
  */
-const ZoomToSelection = (): ReactNode => {
+const ZoomToSelection: React.FunctionComponent = () => {
   // Store
   const { camera, controls, gl, scene } = useStore((s) => s.mainView)
   const zoomToSelection = useStore((s) => s.zoomToSelection)

@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Line, OrthographicCamera, Text } from '@react-three/drei'
 import { Float32BufferAttribute } from 'three'
 
@@ -28,7 +28,7 @@ const size = 10
  * @param props props
  * @returns Label
  */
-const Label = ({ position, value }: LabelProps): ReactNode => {
+const Label: React.FunctionComponent<LabelProps> = ({ position, value }) => {
   /**
    * Render
    */
@@ -57,7 +57,7 @@ const Label = ({ position, value }: LabelProps): ReactNode => {
  * Colorbar
  * @returns Colorbar
  */
-const Colorbar = ({ resize }: ColorbarProps): ReactNode => {
+const Colorbar: React.FunctionComponent<ColorbarProps> = ({ resize }) => {
   // Ref
   const ref = useRef<THREE.Mesh>(null!)
 

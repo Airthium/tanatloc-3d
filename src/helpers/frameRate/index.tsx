@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useThree } from '@react-three/fiber'
 
 import useStore from '@store'
@@ -7,7 +7,7 @@ import useStore from '@store'
  * Frame rate
  * @returns FrameRate
  */
-const FrameRate = (): ReactNode => {
+const FrameRate: React.FunctionComponent = () => {
   // Store
   const {
     frameRate: { fps }

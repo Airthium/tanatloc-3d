@@ -1,15 +1,11 @@
-import {
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas as R3FCanvas } from '@react-three/fiber'
 import { Hud, PerspectiveCamera, TrackballControls } from '@react-three/drei'
+import { Button, notification } from 'antd'
 
 import WebGL from 'three/examples/jsm/capabilities/WebGL'
+
+import { Tanatloc3DCanvasProps } from '@index'
 
 import useStore from '@store'
 import MainStoreFiller from '@store/mainStoreFiller'
@@ -30,13 +26,14 @@ import { BackgroundRender as Background } from '@extra/background'
 import Parts from './parts'
 
 import defaultStyle from '@style/Canvas'
-import { notification } from 'antd'
 
 /**
  * Canvas
  * @returns Canvas
  */
-const Canvas = (): ReactNode => {
+const Canvas: React.FunctionComponent<Tanatloc3DCanvasProps> = ({
+  toWebGL
+}) => {
   // Ref
   const mainViewControls = useRef(null!)
 
@@ -49,9 +46,6 @@ const Canvas = (): ReactNode => {
   const extra = useStore((s) => s.extra)
   const { parts, style } = useStore((s) => s.props)
   const { dimension } = useStore((s) => s.geometry)
-
-  // Notification
-  const [api] = notification.useNotification()
 
   /**
    * On main view controls
@@ -78,9 +72,19 @@ const Canvas = (): ReactNode => {
     if (WebGL.isWebGLAvailable()) setWebGLAvailable(true)
     else {
       setWebGLAvailable(false)
-      api.error({
+      notification.error({
         message: 'WebGL unavailable',
-        description: 'WebGL is not activated. Please have a look on solutions' //TODO
+        description: (
+          <>
+            WebGL is not activated. Please have a look on{' '}
+            {toWebGL ? (
+              <Button onClick={toWebGL}>solutions</Button>
+            ) : (
+              'solutions'
+            )}
+          </>
+        ),
+        duration: 0
       })
     }
   }, [])

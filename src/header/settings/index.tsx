@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   Button,
   ColorPicker,
@@ -45,7 +45,7 @@ export const colorToHex = (color: Color | string): string => {
  * Settings
  * @returns Settings
  */
-const Settings = (): ReactNode => {
+const Settings: React.FunctionComponent = () => {
   // State
   const [open, setOpen] = useState<boolean>(false)
 

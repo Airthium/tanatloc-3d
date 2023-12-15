@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Vector3 } from 'three'
 
 import StaticText from '../staticText'
@@ -22,13 +22,13 @@ const axis = new Vector3()
  * @param props Props
  * @returns Arrow
  */
-const Arrow = ({
+const Arrow: React.FunctionComponent<ArrowProps> = ({
   origin = new Vector3(0, 0, 0),
   direction = new Vector3(1, 0, 0),
   length = 1,
   color,
   text
-}: ArrowProps): ReactNode => {
+}) => {
   // Ref
   const ref = useRef<THREE.Mesh>(null!)
 

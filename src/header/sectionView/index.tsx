@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from 'react'
+import { useCallback } from 'react'
 import { Button, Tooltip } from 'antd'
 import {
   EyeInvisibleOutlined,
@@ -21,7 +21,7 @@ const Z = new Vector3(0, 0, 1)
  * SectionView
  * @returns SectionView
  */
-const SectionView = (): ReactNode => {
+const SectionView: React.FunctionComponent = () => {
   // Store
   const sectionView = useStore((s) => s.sectionView)
 

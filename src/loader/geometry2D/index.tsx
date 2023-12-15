@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Tanatloc3DSelection, Tanatloc3DSelectionValue } from '@index'
 
@@ -158,7 +158,7 @@ const propsToSelected = (
  * @param props Props
  * @returns Geometry2DEdge
  */
-const Geometry2DEdge = ({
+const Geometry2DEdge: React.FunctionComponent<Geometry2DEdgeProps> = ({
   child,
   index,
   hover,
@@ -166,7 +166,7 @@ const Geometry2DEdge = ({
   onPointerMove,
   onPointerLeave,
   onClick
-}: Geometry2DEdgeProps) => {
+}) => {
   // Store
   const { selection } = useStore((s) => s.props)
   const display = useStore((s) => s.display)
@@ -269,7 +269,7 @@ const Geometry2DEdge = ({
  * @param props Props
  * @returns Geometry2DFace
  */
-const Geometry2DFace = ({
+const Geometry2DFace: React.FunctionComponent<Geometry2DFaceProps> = ({
   child,
   index,
   hover,
@@ -277,7 +277,7 @@ const Geometry2DFace = ({
   onPointerMove,
   onPointerLeave,
   onClick
-}: Geometry2DFaceProps) => {
+}) => {
   // Store
   const { selection } = useStore((s) => s.props)
   const display = useStore((s) => s.display)
@@ -416,7 +416,7 @@ const Geometry2DFace = ({
  * @param props Props
  * @returns Geometry2D
  */
-const Geometry2D = ({ scene }: Geometry2DProps): ReactNode => {
+const Geometry2D: React.FunctionComponent<Geometry2DProps> = ({ scene }) => {
   // State
   const [hover, setHover] = useState<Selection>(initHover)
   const [selected, setSelected] = useState<Selection[]>(initSelected)

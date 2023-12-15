@@ -2,6 +2,13 @@ import { CSSProperties, ReactNode } from 'react'
 import { ThemeConfig } from 'antd'
 
 /**
+ * Tanatloc3D Canvas props
+ */
+export interface Tanatloc3DCanvasProps {
+  toWebGL?: React.MouseEventHandler<HTMLElement>
+}
+
+/**
  * Tanatloc3D renderer props
  */
 export interface Tanatloc3DRendererProps {
@@ -102,14 +109,26 @@ export type {
   Tanatloc3DSelectionPoint
 }
 
-const Canvas = () => ReactNode
+/**
+ * Tanatloc3D WebGL props
+ */
+export interface Tanatloc3DWebGLProps {
+  logo?: ReactNode
+  back?: React.MouseEventHandler<HTMLElement>
+}
 
-const Renderer = (props: Tanatloc3DRendererProps & { theme?: ThemeConfig }) =>
-  ReactNode
+// Components
+const Canvas: React.FunctionComponent<Tanatloc3DCanvasProps>
 
-const _404: () => ReactNode
+const Renderer: React.FunctionComponent<
+  Tanatloc3DRendererProps & { theme?: ThemeConfig }
+>
 
-const Background: () => ReactNode
+const _404: React.FunctionComponent
 
-const Tanatloc3D = { Canvas, Renderer, extra: { _404, Background } }
+const Background: React.FunctionComponent
+
+const WebGL: React.FunctionComponent<Tanatloc3DWebGLProps>
+
+const Tanatloc3D = { Canvas, Renderer, extra: { _404, Background, WebGL } }
 export default Tanatloc3D

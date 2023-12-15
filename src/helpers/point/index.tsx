@@ -65,7 +65,7 @@ const buildSphere = (boundingBox: THREE.Box3): ReactNode => {
  * Point
  * @returns Point
  */
-const Point = (): ReactNode => {
+const Point: React.FunctionComponent = () => {
   // State
   const [lines, setLines] = useState<ReactNode[]>([])
   const [sphere, setSphere] = useState<ReactNode>(null)

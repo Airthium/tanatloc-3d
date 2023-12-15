@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import useStore from '@store'
 
@@ -8,7 +8,7 @@ import PartLoader from '@loader'
  * Parts
  * @returns Parts
  */
-const Parts = (): ReactNode => {
+const Parts: React.FunctionComponent = () => {
   // State
   const [children, setChildren] = useState<React.JSX.Element[]>([])
 

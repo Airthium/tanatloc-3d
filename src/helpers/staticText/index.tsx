@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from 'react'
+import { useRef } from 'react'
 import { Vector3 } from 'three'
 import { useFrame } from '@react-three/fiber'
 import { Text } from '@react-three/drei'
@@ -17,11 +17,11 @@ export interface StaticTextProps {
  * @param props props
  * @returns StaticText
  */
-const StaticText = ({
+const StaticText: React.FunctionComponent<StaticTextProps> = ({
   position = new Vector3(0, 0, 0),
   fontSize,
   children = ''
-}: StaticTextProps): ReactNode => {
+}) => {
   // Ref
   const ref = useRef<THREE.Mesh>(null!)
 

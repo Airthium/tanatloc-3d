@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Button, Dropdown, Form, InputNumber, Modal, Tooltip } from 'antd'
 import {
   ArrowsAltOutlined,
@@ -14,7 +14,7 @@ import toReadable from '@tools/toReadable'
  * Colorbar
  * @returns Colorbar
  */
-const Colorbar = (): ReactNode => {
+const Colorbar: React.FunctionComponent = () => {
   // State
   const [customRangeOpen, setCustomRangeOpen] = useState<boolean>(false)
 
