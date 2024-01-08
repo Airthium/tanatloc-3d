@@ -303,7 +303,7 @@ const AxisLabels: React.FunctionComponent<AxisLabelsProps> = ({
     const step = length / (division - 1)
 
     for (let i = 0; i < division; ++i) {
-      const value = range[0] + (i / (division - 1)) * range[1]
+      const value = range[0] + (i / (division - 1)) * (range[1] - range[0])
       let textPosition
       switch (axis) {
         case 'xy':

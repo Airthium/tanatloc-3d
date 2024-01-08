@@ -13,7 +13,7 @@ jest.mock('@react-three/drei', () => ({
   Line: () => <mesh />
 }))
 
-const mockBox = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 1))
+const mockBox = new Box3(new Vector3(1, 1, 1), new Vector3(2, 3, 4))
 jest.mock('@tools/computeSceneBoundingBox', () => () => mockBox)
 
 jest.mock('@tools/toReadable', () => () => 'value')
