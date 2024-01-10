@@ -9,6 +9,7 @@ import {
 import useStore from '@store'
 
 import Snapshot from './snapshot'
+import Unit from './unit'
 import Display from './display'
 import Zoom from './zoom'
 import SectionView from './sectionView'
@@ -93,20 +94,22 @@ const Header: React.FunctionComponent<HeaderProps> = ({ oneResult }) => {
                 <div key="container" style={style.collapseBody}>
                   <Snapshot key="snapshot" />
                   <Divider key="divider-1" style={style.divider} />
-                  <Display key="display" />
+                  <Unit key="unit" />
                   <Divider key="divider-2" style={style.divider} />
-                  <Zoom key="zoom" />
+                  <Display key="display" />
                   <Divider key="divider-3" style={style.divider} />
+                  <Zoom key="zoom" />
+                  <Divider key="divider-4" style={style.divider} />
                   <SectionView key="section-view" />
                   {oneResult ? (
                     <>
-                      <Divider key="divider-4" style={style.divider} />
-                      <Results key="results" />
                       <Divider key="divider-5" style={style.divider} />
+                      <Results key="results" />
+                      <Divider key="divider-6" style={style.divider} />
                       <Colorbar key="colorbar" />
                     </>
                   ) : null}
-                  <Divider key="divider-4" style={style.divider} />
+                  <Divider key="divider-7" style={style.divider} />
                   <Settings />
                 </div>
               ]

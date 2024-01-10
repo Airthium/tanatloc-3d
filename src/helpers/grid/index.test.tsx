@@ -33,6 +33,9 @@ describe('helpers/grid', () => {
       getWorldDirection: jest.fn()
     }
   }
+  const unit = {
+    unit: 'm'
+  }
   const display = {
     grid: true
   }
@@ -52,6 +55,7 @@ describe('helpers/grid', () => {
       .mockImplementationOnce(() => mainView)
       .mockImplementationOnce(() => display)
       .mockImplementationOnce(() => geometry)
+      .mockImplementationOnce(() => unit)
     const renderer = await ReactThreeTestRenderer.create(
       <Grid update={update} />
     )

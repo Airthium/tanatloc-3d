@@ -262,6 +262,9 @@ const AxisLabels: React.FunctionComponent<AxisLabelsProps> = ({
   division,
   offset
 }) => {
+  // Store
+  const { unit } = useStore((s) => s.unit)
+
   // Width
   const width = useMemo(() => getWidth(axis, size), [axis, size])
 
@@ -270,6 +273,9 @@ const AxisLabels: React.FunctionComponent<AxisLabelsProps> = ({
 
   // Depth
   const depth = useMemo(() => getDepth(axis, size), [axis, size])
+
+  // Multiplicator
+  const multiplicator = useMemo(() => (unit === 'm' ? 1 : 1e3), [unit])
 
   // Position
   const position = useMemo(() => {
@@ -323,7 +329,7 @@ const AxisLabels: React.FunctionComponent<AxisLabelsProps> = ({
           position={textPosition}
           fontSize={offset.value / 3}
         >
-          {toReadable(value)}
+          {toReadable(multiplicator * value)}
         </StaticText>
       )
     }

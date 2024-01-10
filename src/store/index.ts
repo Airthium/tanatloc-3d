@@ -13,6 +13,7 @@ import {
   defaultResult,
   defaultSectionView,
   defaultSettings,
+  defaultUnit,
   defaultZoomToSelection
 } from './defaults'
 
@@ -30,6 +31,9 @@ export interface Store {
     scene?: THREE.Scene
     camera?: THREE.PerspectiveCamera
     controls?: TrackballControlsProps
+  }
+  unit: {
+    unit: 'm' | 'mm'
   }
   display: {
     transparent: boolean
@@ -92,6 +96,7 @@ const useStore = create<Store>((set) => ({
   extra: defaultExtra,
   props: defaultProps,
   mainView: defaultMainView,
+  unit: defaultUnit,
   display: defaultDisplay,
   zoomToSelection: defaultZoomToSelection,
   sectionView: defaultSectionView,

@@ -1,5 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
+import Snapshot from '.'
+
 const mockSetState = jest.fn()
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
@@ -7,8 +9,6 @@ jest.mock('@store', () => {
   useStore.setState = () => mockSetState()
   return useStore
 })
-
-import Snapshot from '.'
 
 describe('header/snapshot', () => {
   const props = {}

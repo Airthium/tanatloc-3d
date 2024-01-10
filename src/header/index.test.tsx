@@ -10,6 +10,7 @@ jest.mock('@store', () => {
 
 const colorbarRole = 'Colorbar'
 jest.mock('./snapshot', () => () => <div />)
+jest.mock('./unit', () => () => <div />)
 jest.mock('./display', () => () => <div />)
 jest.mock('./zoom', () => () => <div />)
 jest.mock('./sectionView', () => () => <div />)

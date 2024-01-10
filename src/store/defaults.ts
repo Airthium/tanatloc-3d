@@ -35,6 +35,13 @@ export const defaultMainView = {
 }
 
 /**
+ * Default unit
+ */
+export const defaultUnit = {
+  unit: 'm' as 'm' | 'mm'
+}
+
+/**
  * Default display
  */
 export const defaultDisplay = {
