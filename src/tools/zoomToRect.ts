@@ -1,9 +1,6 @@
 import { TrackballControlsProps } from '@react-three/drei'
 import { Raycaster, Vector2 } from 'three'
 
-// TODO bug with mesh & result
-// Wrong position
-
 /**
  * Zoom to rect
  * @param rect Rect
@@ -48,7 +45,12 @@ const zoomToRect = (
 
   const raycaster = new Raycaster()
   raycaster.setFromCamera(raycasterCenter, camera)
-  const intersects = raycaster.intersectObjects(objects)
+  let intersects = raycaster.intersectObjects(objects)
+
+  // Exclude line segments geometries
+  intersects = intersects.filter(
+    (intersect) => intersect.object.type !== 'LineSegments'
+  )
 
   // Intersection point
   if (!intersects.length) return
