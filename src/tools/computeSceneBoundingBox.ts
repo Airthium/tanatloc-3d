@@ -8,10 +8,16 @@ import { Box3, Vector3 } from 'three'
  */
 const checkBoundingBox = (box: THREE.Box3): boolean => {
   const min = box.min
-  if (!isFinite(min.x) || !isFinite(min.y) || !isFinite(min.z)) return false
-
   const max = box.max
-  if (!isFinite(max.x) || !isFinite(max.y) || !isFinite(max.z)) return false
+  if (
+    !isFinite(min.x) ||
+    !isFinite(min.y) ||
+    !isFinite(min.z) ||
+    !isFinite(max.x) ||
+    !isFinite(max.y) ||
+    !isFinite(max.z)
+  )
+    return false
 
   return true
 }

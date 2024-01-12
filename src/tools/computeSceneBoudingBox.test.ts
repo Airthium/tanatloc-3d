@@ -18,4 +18,10 @@ describe('tools/computeSceneBoundingBox', () => {
     expect(box.min).toEqual(new Vector3(-1, -1, -1))
     expect(box.max).toEqual(new Vector3(1, 1, 1))
   })
+
+  test('empty', () => {
+    const box = computeSceneBoundingBox([])
+    expect(box.min).toEqual(new Vector3(0, 0, 0))
+    expect(box.max).toEqual(new Vector3(0, 0, 0))
+  })
 })

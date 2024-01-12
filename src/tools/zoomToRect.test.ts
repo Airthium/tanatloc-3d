@@ -51,7 +51,8 @@ describe('tools/zoomToRect', () => {
   beforeEach(() => {
     mockIntersectObjects.mockReset()
     mockIntersectObjects.mockImplementation(() => [
-      { point: new Vector3(0, 0, 0) }
+      { point: new Vector3(0, 0, 0), object: { type: 'LineSegments' } },
+      { point: new Vector3(0, 0, 0), object: { type: 'Mesh' } }
     ])
   })
 
