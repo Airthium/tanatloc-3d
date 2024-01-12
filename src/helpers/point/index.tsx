@@ -23,6 +23,7 @@ const buildLines = (boundingBox: THREE.Box3): ReactNode[] => {
         [-xLength / 2, 0, 0],
         [xLength / 2, 0, 0]
       ]}
+      segments
       color={0xff0000}
     />,
     <Line
@@ -31,6 +32,7 @@ const buildLines = (boundingBox: THREE.Box3): ReactNode[] => {
         [0, -yLength / 2, 0],
         [0, yLength / 2, 0]
       ]}
+      segments
       color={0xff0000}
     />,
     <Line
@@ -39,6 +41,7 @@ const buildLines = (boundingBox: THREE.Box3): ReactNode[] => {
         [0, 0, -zLength / 2],
         [0, 0, zLength / 2]
       ]}
+      segments
       color={0xff0000}
     />
   ]

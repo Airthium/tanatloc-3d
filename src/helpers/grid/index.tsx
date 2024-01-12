@@ -148,7 +148,7 @@ const getDepth = (axis: Axis, size: [number, number, number]): number => {
  * @returns AxisLine
  */
 const AxisLine: React.FunctionComponent<AxisLineProps> = ({ start, stop }) => (
-  <Line points={[start, stop]} color={lineColor} />
+  <Line points={[start, stop]} segments color={lineColor} />
 )
 
 /**
