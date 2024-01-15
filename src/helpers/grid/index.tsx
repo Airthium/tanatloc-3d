@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Line } from '@react-three/drei'
-import { Euler, Vector3 } from 'three'
+// import { Line } from '@react-three/drei'
+import { BufferGeometry, Euler, Vector3 } from 'three'
 
 import useStore from '@store'
 
@@ -65,7 +65,7 @@ const maxDivisions = 5
 /**
  * Line color
  */
-const lineColor = 0x888888
+// const lineColor = 0x888888
 
 /**
  * Get number of divisions
@@ -147,9 +147,18 @@ const getDepth = (axis: Axis, size: [number, number, number]): number => {
  * @param props Props
  * @returns AxisLine
  */
-const AxisLine: React.FunctionComponent<AxisLineProps> = ({ start, stop }) => (
-  <Line points={[start, stop]} segments color={lineColor} />
-)
+const AxisLine: React.FunctionComponent<AxisLineProps> = ({ start, stop }) => {
+  const geometry = new BufferGeometry().setFromPoints([
+    new Vector3(start[0], start[1], start[2]),
+    new Vector3(stop[0], stop[1], stop[2])
+  ])
+  return (
+    <lineSegments geometry={geometry}>
+      <lineBasicMaterial color="red" />
+    </lineSegments>
+  )
+  //   <Line points={[start, stop]} segments color={lineColor} />
+}
 
 /**
  * AxisGrid
