@@ -65,7 +65,7 @@ const maxDivisions = 5
 /**
  * Line color
  */
-// const lineColor = 0x888888
+const lineColor = 0x888888
 
 /**
  * Get number of divisions
@@ -154,10 +154,9 @@ const AxisLine: React.FunctionComponent<AxisLineProps> = ({ start, stop }) => {
   ])
   return (
     <lineSegments geometry={geometry}>
-      <lineBasicMaterial color="red" />
+      <lineBasicMaterial color={lineColor} />
     </lineSegments>
   )
-  //   <Line points={[start, stop]} segments color={lineColor} />
 }
 
 /**
