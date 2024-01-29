@@ -1,9 +1,9 @@
 {
   "name": "@airthium/tanatloc-3d",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "type": "module",
   "types": "index.d.ts",
-  "main": "dist/src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "depcheck": "node config/depcheck.js",
     "prettier": "prettier -l '**/*.{js,ts,json,md}'",
@@ -11,7 +11,7 @@
     "doc": "typedoc --options ./config/typedoc.config.js",
     "testw": "jest --config config/jest.config.js --watch",
     "test": "jest --config config/jest.config.js --silent",
-    "build": "swc --config-file config/.swcrc src/ --out-dir dist",
+    "build": "swc --config-file config/.swcrc src/ --out-dir dist --strip-leading-paths",
     "check": "reset && .github/workflows/check.sh"
   },
   "peerDependencies": {
