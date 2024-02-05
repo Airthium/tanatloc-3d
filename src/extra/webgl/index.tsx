@@ -137,7 +137,7 @@ const WebGLError: React.FunctionComponent<Tanatloc3DWebGLProps> = ({
         <Card
           title="How to enable WebGL"
           style={style.largeCard}
-          bodyStyle={style.largeCardBody}
+          styles={{ body: style.largeCardBody }}
         >
           <Card title="Windows" style={style.card}>
             <List dataSource={windowsDataSource} renderItem={renderItem} />
