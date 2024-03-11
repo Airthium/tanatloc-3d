@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "5.3.1",
-    "@react-three/drei": "9.99.5",
+    "@react-three/drei": "9.101.0",
     "@react-three/fiber": "8.15.19",
-    "antd": "5.15.0",
+    "antd": "5.15.2",
     "three": "0.162.0",
     "zustand": "4.5.2"
   },
@@ -36,15 +36,15 @@
     "@babel/preset-typescript": "7.23.3",
     "@react-three/test-renderer": "8.2.1",
     "@swc/cli": "0.3.10",
-    "@swc/core": "1.4.2",
+    "@swc/core": "1.4.6",
     "@testing-library/react": "14.2.1",
     "@types/jest": "29.5.12",
-    "@types/node": "20.11.24",
-    "@types/react": "18.2.61",
-    "@types/react-dom": "18.2.19",
-    "@types/three": "0.161.2",
-    "@typescript-eslint/eslint-plugin": "7.1.0",
-    "@typescript-eslint/parser": "7.1.0",
+    "@types/node": "20.11.25",
+    "@types/react": "18.2.64",
+    "@types/react-dom": "18.2.21",
+    "@types/three": "0.162.0",
+    "@typescript-eslint/eslint-plugin": "7.1.1",
+    "@typescript-eslint/parser": "7.1.1",
     "babel-jest": "29.7.0",
     "depcheck": "1.4.7",
     "eslint": "8.57.0",
@@ -57,8 +57,8 @@
     "prettier": "3.2.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "typedoc": "0.25.10",
-    "typescript": "5.3.3"
+    "typedoc": "0.25.12",
+    "typescript": "5.4.2"
   },
-  "packageManager": "yarn@4.1.0"
+  "packageManager": "yarn@4.1.1"
 }
