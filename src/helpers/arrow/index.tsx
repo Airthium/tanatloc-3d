@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { useEffect, useMemo, useRef } from 'react'
 import { Vector3 } from 'three'
 

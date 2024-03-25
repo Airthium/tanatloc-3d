@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Euler,

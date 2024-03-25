@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { create } from 'zustand'
 import { TrackballControlsProps } from '@react-three/drei'
 

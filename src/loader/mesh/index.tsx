@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { useMemo } from 'react'
 import { LineBasicMaterial, WireframeGeometry } from 'three'
 

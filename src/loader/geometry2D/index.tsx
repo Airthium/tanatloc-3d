@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Tanatloc3DSelection, Tanatloc3DSelectionValue } from '@index'

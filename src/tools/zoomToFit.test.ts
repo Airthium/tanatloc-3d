@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { Box3, Vector3 } from 'three'
 import { TrackballControlsProps } from '@react-three/drei'
 

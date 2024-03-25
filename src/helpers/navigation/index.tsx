@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ThreeEvent, useFrame } from '@react-three/fiber'
 import { OrthographicCamera, Text } from '@react-three/drei'

@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { TrackballControlsProps } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 

@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { useCallback } from 'react'
 import { Button, Dropdown, Tooltip } from 'antd'
 import { FundProjectionScreenOutlined } from '@ant-design/icons'

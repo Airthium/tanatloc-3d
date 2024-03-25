@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Line, OrthographicCamera, Text } from '@react-three/drei'
 import { Float32BufferAttribute } from 'three'

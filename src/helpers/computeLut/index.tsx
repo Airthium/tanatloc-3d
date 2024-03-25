@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { useEffect } from 'react'
 import { Float32BufferAttribute } from 'three'
 

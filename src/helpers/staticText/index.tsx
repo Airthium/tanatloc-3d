@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { useRef } from 'react'
 import { Vector3 } from 'three'
 import { useFrame } from '@react-three/fiber'

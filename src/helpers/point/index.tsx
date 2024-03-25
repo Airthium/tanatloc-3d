@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { Sphere as ThreeSphere } from 'three'
 import { Line, Sphere } from '@react-three/drei'
