@@ -20,9 +20,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "5.3.6",
-    "@react-three/drei": "9.105.3",
-    "@react-three/fiber": "8.16.1",
-    "antd": "5.16.1",
+    "@react-three/drei": "9.105.4",
+    "@react-three/fiber": "8.16.2",
+    "antd": "5.16.2",
     "three": "0.163.0",
     "zustand": "4.5.2"
   },
@@ -36,12 +36,12 @@
     "@babel/preset-typescript": "7.24.1",
     "@react-three/test-renderer": "8.2.1",
     "@swc/cli": "0.3.12",
-    "@swc/core": "1.4.13",
-    "@testing-library/react": "14.3.0",
+    "@swc/core": "1.4.14",
+    "@testing-library/react": "15.0.2",
     "@types/jest": "29.5.12",
-    "@types/node": "20.12.6",
-    "@types/react": "18.2.75",
-    "@types/react-dom": "18.2.24",
+    "@types/node": "20.12.7",
+    "@types/react": "18.2.78",
+    "@types/react-dom": "18.2.25",
     "@types/three": "0.163.0",
     "@typescript-eslint/eslint-plugin": "7.6.0",
     "@typescript-eslint/parser": "7.6.0",
@@ -58,7 +58,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typedoc": "0.25.13",
-    "typescript": "5.4.4"
+    "typescript": "5.4.5"
   },
   "packageManager": "yarn@4.1.1"
 }
