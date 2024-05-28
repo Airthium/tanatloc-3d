@@ -1,6 +1,6 @@
 # Tanatloc 3D
 
-3D interface of [Tanatloc](https://tanatloc.com/) with extrac omponents.
+3D interface of [Tanatloc](https://tanatloc.com/) with extra components.
 
 ## Usage
 
