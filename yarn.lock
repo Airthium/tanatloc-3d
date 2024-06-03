@@ -2154,8 +2154,8 @@ __metadata:
   linkType: hard
 
 "@rc-component/trigger@npm:^2.0.0, @rc-component/trigger@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "@rc-component/trigger@npm:2.1.1"
+  version: 2.2.0
+  resolution: "@rc-component/trigger@npm:2.2.0"
   dependencies:
     "@babel/runtime": "npm:^7.23.2"
     "@rc-component/portal": "npm:^1.1.0"
@@ -2166,7 +2166,7 @@ __metadata:
   peerDependencies:
     react: ">=16.9.0"
     react-dom: ">=16.9.0"
-  checksum: 10c0/c5de9d651b764c9d7b94d614df346246eb3a77a3ba5339b0107a3fa434a75c3a51198db0bca0cd596b1be296128052275af70bd3831f9f1bd6ea40d64a638342
+  checksum: 10c0/71881fceaa645ae906d765901c23b7c80d96bc6305e943ddc18f2226eb5524d3b61b7d46eae3ab9c6a0519376b7ee5c312df82eb1143942941ba2a56a675ccf6
   languageName: node
   linkType: hard
 
@@ -2729,16 +2729,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
-  version: 20.12.12
-  resolution: "@types/node@npm:20.12.12"
-  dependencies:
-    undici-types: "npm:~5.26.4"
-  checksum: 10c0/f374b763c744e8f16e4f38cf6e2c0eef31781ec9228c9e43a6f267880fea420fab0a238b59f10a7cb3444e49547c5e3785787e371fc242307310995b21988812
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:20.14.0":
+"@types/node@npm:*, @types/node@npm:20.14.0":
   version: 20.14.0
   resolution: "@types/node@npm:20.14.0"
   dependencies:
@@ -3551,18 +3542,18 @@ __metadata:
   linkType: hard
 
 "camera-controls@npm:^2.4.2":
-  version: 2.8.3
-  resolution: "camera-controls@npm:2.8.3"
+  version: 2.8.4
+  resolution: "camera-controls@npm:2.8.4"
   peerDependencies:
     three: ">=0.126.1"
-  checksum: 10c0/028869c9be58a308810c74b2834e9eda89bf6d886c09d221b5b70c42f94c7bfe94fa0ea0bd54ac2ff85c0ab6ac250bd7db88071eb15229e831635d7e0cb15400
+  checksum: 10c0/67f81383f43f8b5cb200eb648d55004460e19c5d60ebc14cc3ce081242d9cd488e90f01db89b06515d1b39e712a1dd77f5f0040ea5fa0716964a06c5b21f6f3e
   languageName: node
   linkType: hard
 
 "caniuse-lite@npm:^1.0.30001587":
-  version: 1.0.30001624
-  resolution: "caniuse-lite@npm:1.0.30001624"
-  checksum: 10c0/534fe35cacee745c08689a6a045ee1a9ca525b38f707746088b768bee06c71df5f13875787389648a134d82848d33a375e56590dde3cc86033d0350c2838f978
+  version: 1.0.30001627
+  resolution: "caniuse-lite@npm:1.0.30001627"
+  checksum: 10c0/67d39ca4bead791876c42220b4fe5bd22ba03dbec42f102f0ea9271be3df21bfdb6ba2b0f0dd9eb339eebfc96de3a42a3a5f3fc179ef47229ee5055301217572
   languageName: node
   linkType: hard
 
@@ -3897,14 +3888,14 @@ __metadata:
   linkType: hard
 
 "debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4":
-  version: 4.3.4
-  resolution: "debug@npm:4.3.4"
+  version: 4.3.5
+  resolution: "debug@npm:4.3.5"
   dependencies:
     ms: "npm:2.1.2"
   peerDependenciesMeta:
     supports-color:
       optional: true
-  checksum: 10c0/cedbec45298dd5c501d01b92b119cd3faebe5438c3917ff11ae1bff86a6c722930ac9c8659792824013168ba6db7c4668225d845c633fbdafbbf902a6389f736
+  checksum: 10c0/082c375a2bdc4f4469c99f325ff458adad62a3fc2c482d59923c260cb08152f34e2659f72b3767db8bb2f21ca81a60a42d1019605a412132d7b9f59363a005cc
   languageName: node
   linkType: hard
 
@@ -4072,9 +4063,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.4.668":
-  version: 1.4.783
-  resolution: "electron-to-chromium@npm:1.4.783"
-  checksum: 10c0/d112e5602e2ee7516ead648e2d2449027f1106147858442781ac475f9a3861a783cb6c8f4638316800f5eff2c4a1f046cd412704678c90479c5417bf204de572
+  version: 1.4.788
+  resolution: "electron-to-chromium@npm:1.4.788"
+  checksum: 10c0/62ad89f153a68b3d231f4e4e681ac0fc130b2f6ff4538fe835d712acdf253a46c8282919396177ddb028246d5f91fbc60b6b23d74d214e729345c585995e476d
   languageName: node
   linkType: hard
 
@@ -8229,17 +8220,17 @@ __metadata:
   linkType: hard
 
 "three-mesh-bvh@npm:^0.7.0":
-  version: 0.7.4
-  resolution: "three-mesh-bvh@npm:0.7.4"
+  version: 0.7.5
+  resolution: "three-mesh-bvh@npm:0.7.5"
   peerDependencies:
     three: ">= 0.151.0"
-  checksum: 10c0/39a020c79a6dc5e9f0053fa5a498daf5c7fe16674a30e014653a362470e9bec303b206096eeb55e94fa7621c6b1e25b3bfe50e044552b2860632290feffa3c3a
+  checksum: 10c0/f9225549c019b7146b31e0465bbcfb12fb2d97aacdd4ce0ed4670c56c2ae155205d0a43c350fad35da06f04caab9a46773a33cebc298a6c7404bee18a26f61b2
   languageName: node
   linkType: hard
 
 "three-stdlib@npm:^2.29.9":
-  version: 2.30.1
-  resolution: "three-stdlib@npm:2.30.1"
+  version: 2.30.3
+  resolution: "three-stdlib@npm:2.30.3"
   dependencies:
     "@types/draco3d": "npm:^1.4.0"
     "@types/offscreencanvas": "npm:^2019.6.4"
@@ -8249,7 +8240,7 @@ __metadata:
     potpack: "npm:^1.0.1"
   peerDependencies:
     three: ">=0.128.0"
-  checksum: 10c0/cebedeb3d2ee5c9b260c0945f6112017abc89160accb12fcac1a48f1fb4548cfd8340b8ecadecfe854ea756d3aebe7ac0fd511cb6c25c780e7a31b93a318d6fc
+  checksum: 10c0/24af128d722f6451a582907fa9718c76567eb566de61cc4172a06f15a887adbaab7ff75989296df74169576525e6868bc12db9d2c3aaa7361fb463cd5f1ec293
   languageName: node
   linkType: hard
 
