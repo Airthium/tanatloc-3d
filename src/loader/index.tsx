@@ -95,19 +95,21 @@ const PartLoader: React.FunctionComponent<PartLoaderProps> = ({ part }) => {
     zoomToFit(scene.children, camera, controls)
   }, [camera, controls, scene?.children, scene?.children.length, gltf])
 
+  // UUID
+  const uuid = useMemo(() => part.summary.uuid, [part])
+
+  // Extra
+  const name = useMemo(() => part.extra?.name, [part])
+
   /**
    * Render
    */
-  return gltf?.scene ? (
-    <mesh
-      type="Part"
-      uuid={part.summary.uuid}
-      userData={gltf.scene.userData}
-      name={part.extra?.name}
-    >
+  if (!gltf?.scene) return null
+  return (
+    <mesh type="Part" uuid={uuid} userData={gltf.scene.userData} name={name}>
       <Meshes scene={gltf.scene} />
     </mesh>
-  ) : null
+  )
 }
 
 export default PartLoader

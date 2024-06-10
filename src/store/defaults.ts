@@ -102,7 +102,7 @@ export const defaultSettings: Store['settings'] = {
   colors: {
     baseColor: '#d3d3d3',
     hoverColor: '#fad114',
-    selectColor: '#fa9814',
+    selectColor: '#eafa14',
     hoverSelectColor: '#fa5f14'
   },
   frameRate: {
