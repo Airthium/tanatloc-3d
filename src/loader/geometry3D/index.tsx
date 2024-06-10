@@ -22,33 +22,29 @@ export interface Geometry3DSolidProps {
   > & {
     children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
   }
-  index: number
   hover: Selection
   selected: Selection[]
   onPointerMove: (data: Selection) => void
-  onPointerLeave: (index: number) => void
+  onPointerLeave: (uuid: string) => void
   onClick: () => void
 }
 
 export interface Geometry3DFaceProps {
   solid: { hover?: boolean; selected?: boolean }
   child: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
-  index: number
   hover: Selection
   selected: Selection[]
   onPointerMove: (data: Selection) => void
-  onPointerLeave: (index: number) => void
+  onPointerLeave: (uuid: string) => void
   onClick: () => void
 }
 
 export interface Selection extends Tanatloc3DSelectionValue {
-  index: number
   distance: number
 }
 
 // Initial hover
 const initHover: Selection = {
-  index: -1,
   uuid: '',
   label: 0,
   distance: Infinity
@@ -58,36 +54,6 @@ const initHover: Selection = {
 const initSelected: Selection[] = []
 
 /**
- * Find index
- * @param children Children
- * @param type Type
- * @param uuid UUID
- * @returns Index
- */
-const findIndex = (
-  children: (Omit<
-    THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
-    'children'
-  > & {
-    children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
-  })[],
-  type: Tanatloc3DSelection['type'],
-  uuid: string
-): number => {
-  let searchIndex = -1
-  children.forEach((solid, index) => {
-    if (type === 'solids') {
-      if (solid.userData.uuid === uuid) searchIndex = index
-    } else if (type === 'faces') {
-      solid.children.forEach((face, index) => {
-        if (face.userData.uuid === uuid) searchIndex = index
-      })
-    }
-  })
-  return searchIndex
-}
-
-/**
  * Selection props to hover
  * @param children Children
  * @param selection Selection
@@ -95,30 +61,14 @@ const findIndex = (
  * @returns Selection
  */
 const propsToHover = (
-  children: (Omit<
-    THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
-    'children'
-  > & {
-    children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
-  })[],
   selection: Tanatloc3DSelection | undefined,
   distance: number
 ): Selection | undefined => {
   if (!selection?.highlighted) return
 
-  // UUID
-  const uuid = selection.highlighted.uuid
-
-  // Find index
-  const index = findIndex(children, selection.type, uuid)
-
-  // Check
-  if (index === -1) return
-
   // Hover
   return {
     ...selection.highlighted,
-    index,
     distance
   }
 }
@@ -131,12 +81,6 @@ const propsToHover = (
  * @returns Selected
  */
 const propsToSelected = (
-  children: (Omit<
-    THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
-    'children'
-  > & {
-    children: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>[]
-  })[],
   selection: Tanatloc3DSelection | undefined,
   distance: number
 ): Selection[] | undefined => {
@@ -145,19 +89,10 @@ const propsToSelected = (
   // Selected
   const selected: Selection[] = []
   selection.selected.forEach((s) => {
-    // UUID
-    const uuid = s.uuid
-
-    // Find index
-    const index = findIndex(children, selection.type, uuid)
-
-    // Check
-    if (index !== -1)
-      selected.push({
-        ...s,
-        index,
-        distance
-      })
+    selected.push({
+      ...s,
+      distance
+    })
   })
 
   return selected
@@ -171,7 +106,6 @@ const propsToSelected = (
 const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
   solid,
   child,
-  index,
   hover,
   selected,
   onPointerMove,
@@ -216,7 +150,7 @@ const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
     (event: ThreeEvent<PointerEvent>): void => {
       if (selection?.enabled) {
         if (selection.type === 'faces')
-          onPointerMove({ index, uuid, label, distance: event.distance })
+          onPointerMove({ uuid, label, distance: event.distance })
         else if (selection?.type === 'point') {
           const newPoint = event.intersections[0].point
           selection?.onPoint?.({ x: newPoint.x, y: newPoint.y, z: newPoint.z })
@@ -229,7 +163,6 @@ const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
       selection?.onPoint,
       uuid,
       label,
-      index,
       onPointerMove
     ]
   )
@@ -238,8 +171,8 @@ const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
-    if (selection?.enabled && selection.type === 'faces') onPointerLeave(index)
-  }, [selection?.enabled, selection?.type, index, onPointerLeave])
+    if (selection?.enabled && selection.type === 'faces') onPointerLeave(uuid)
+  }, [selection?.enabled, selection?.type, uuid, onPointerLeave])
 
   /**
    * On click
@@ -254,17 +187,17 @@ const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
     else if (solid.hover) return hoverColor
     else if (selection?.enabled && selection.type !== 'faces')
       return material.color
-    else if (selected.find((s) => s.index === index))
-      return hover.index === index ? hoverSelectColor : selectColor
-    else return hover.index === index ? hoverColor : material.color
+    else if (selected.find((s) => s.uuid === uuid))
+      return hover.uuid === uuid ? hoverSelectColor : selectColor
+    else return hover.uuid === uuid ? hoverColor : material.color
   }, [
     selection,
     hoverColor,
     selectColor,
     hoverSelectColor,
     material,
+    uuid,
     solid,
-    index,
     hover,
     selected
   ])
@@ -307,7 +240,6 @@ const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
  */
 const Geometry3DSolid: React.FunctionComponent<Geometry3DSolidProps> = ({
   child,
-  index,
   hover,
   selected,
   onPointerMove,
@@ -338,17 +270,17 @@ const Geometry3DSolid: React.FunctionComponent<Geometry3DSolidProps> = ({
   const onInternalPointerMove = useCallback(
     (event: ThreeEvent<PointerEvent>): void => {
       if (selection?.enabled && selection.type === 'solids')
-        onPointerMove({ index, uuid, label, distance: event.distance })
+        onPointerMove({ uuid, label, distance: event.distance })
     },
-    [selection?.enabled, selection?.type, uuid, label, index, onPointerMove]
+    [selection?.enabled, selection?.type, uuid, label, onPointerMove]
   )
 
   /**
    * On pointer leave
    */
   const onInternalPointerLeave = useCallback((): void => {
-    if (selection?.enabled && selection.type === 'solids') onPointerLeave(index)
-  }, [selection?.enabled, selection?.type, index, onPointerLeave])
+    if (selection?.enabled && selection.type === 'solids') onPointerLeave(uuid)
+  }, [selection?.enabled, selection?.type, uuid, onPointerLeave])
 
   /**
    * On click
@@ -360,18 +292,18 @@ const Geometry3DSolid: React.FunctionComponent<Geometry3DSolidProps> = ({
   // Hover
   const hoverSolid = useMemo(() => {
     return (
-      selection?.enabled && selection.type === 'solids' && hover.index === index
+      selection?.enabled && selection.type === 'solids' && hover.uuid === uuid
     )
-  }, [selection?.enabled, selection?.type, hover, index])
+  }, [selection?.enabled, selection?.type, uuid, hover])
 
   // Selected
   const selectedSolid = useMemo(() => {
     return (
       selection?.enabled &&
       selection.type === 'solids' &&
-      !!selected.find((s) => s.index === index)
+      !!selected.find((s) => s.uuid === uuid)
     )
-  }, [selection?.enabled, selection?.type, selected, index])
+  }, [selection?.enabled, selection?.type, uuid, selected])
 
   /**
    * Render
@@ -387,12 +319,11 @@ const Geometry3DSolid: React.FunctionComponent<Geometry3DSolidProps> = ({
       onPointerLeave={onInternalPointerLeave}
       onClick={onInternalClick}
     >
-      {children.map((subChild, subIndex) => (
+      {children.map((subChild) => (
         <Geometry3DFace
           key={subChild.uuid}
           solid={{ hover: hoverSolid, selected: selectedSolid }}
           child={subChild}
-          index={subIndex}
           hover={hover}
           selected={selected}
           onPointerMove={onPointerMove}
@@ -460,15 +391,15 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
    * On pointer move
    */
   const onPointerLeave = useCallback(
-    (index: number) => {
+    (uuid: string) => {
       if (!selectionable) return
 
-      if (index === hover.index) {
+      if (uuid === hover.uuid) {
         setHover(initHover)
         selection?.onHighlight?.()
       }
     },
-    [selectionable, hover.index, selection?.onHighlight]
+    [selectionable, hover.uuid, selection?.onHighlight]
   )
 
   /**
@@ -478,7 +409,7 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
     if (!selectionable) return
 
     let newSelected = []
-    const index = selected.findIndex((s) => s.index === hover.index)
+    const index = selected.findIndex((s) => s.uuid === hover.uuid)
     if (index === -1) newSelected = [...selected, hover]
     else
       newSelected = [...selected.slice(0, index), ...selected.slice(index + 1)]
@@ -493,16 +424,16 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
   useEffect(() => {
     const hover =
       (selectionable
-        ? propsToHover(children, selection, lastDistance.current)
+        ? propsToHover(selection, lastDistance.current)
         : undefined) ?? initHover
     setHover(hover)
 
     const selected =
       (selectionable
-        ? propsToSelected(children, selection, lastDistance.current)
+        ? propsToSelected(selection, lastDistance.current)
         : undefined) ?? initSelected
     setSelected(selected)
-  }, [selectionable, children, selection])
+  }, [selectionable, selection])
 
   // Disabled
   useEffect(() => {
@@ -523,7 +454,6 @@ const Geometry3D: React.FunctionComponent<Geometry3DProps> = ({ scene }) => {
         <Geometry3DSolid
           key={child.uuid}
           child={child}
-          index={index}
           hover={hover}
           selected={selected}
           onPointerMove={onPointerMove}
