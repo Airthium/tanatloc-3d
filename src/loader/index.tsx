@@ -96,10 +96,14 @@ const PartLoader: React.FunctionComponent<PartLoaderProps> = ({ part }) => {
   }, [camera, controls, scene?.children, scene?.children.length, gltf])
 
   // UUID
-  const uuid = useMemo(() => part.summary.uuid, [part])
+  const uuid = useMemo(() => {
+    return part.summary.uuid
+  }, [part])
 
   // Extra
-  const name = useMemo(() => part.extra?.name, [part])
+  const name = useMemo(() => {
+    return part.extra?.name
+  }, [part])
 
   /**
    * Render

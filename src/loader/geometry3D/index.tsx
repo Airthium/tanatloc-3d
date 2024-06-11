@@ -221,6 +221,7 @@ const Geometry3DFace: React.FunctionComponent<Geometry3DFaceProps> = ({
         color={materialColor}
         metalness={0.5}
         roughness={0.5}
+        depthWrite={false}
         transparent
         opacity={display.transparent ? 0.5 : 1}
         clippingPlanes={

@@ -115,7 +115,8 @@ const Canvas: React.FunctionComponent<Tanatloc3DCanvasProps> = ({
       frameloop="demand"
       gl={{
         preserveDrawingBuffer: true,
-        localClippingEnabled: true
+        localClippingEnabled: true,
+        logarithmicDepthBuffer: true
       }}
     >
       <FrameRate />

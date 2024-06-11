@@ -21,6 +21,7 @@ describe('Parts', () => {
       summary: { uuid: 'uuid2', type: 'mesh' }
     }
   ]
+  const parts0 = [parts[0]]
 
   beforeEach(() => {
     mockSetState.mockReset()
@@ -43,7 +44,7 @@ describe('Parts', () => {
 
     expect(mockSetState).toHaveBeenCalledTimes(2)
 
-    mockUseStore.mockImplementation(() => ({ parts: [parts[0]] }))
+    mockUseStore.mockImplementation(() => ({ parts: parts0 }))
     rerender(<Parts />)
 
     expect(mockSetState).toHaveBeenCalledTimes(4)

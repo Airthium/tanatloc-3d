@@ -186,6 +186,7 @@ const Geometry2DEdge: React.FunctionComponent<Geometry2DEdgeProps> = ({
         color={materialColor}
         metalness={0.5}
         roughness={0.5}
+        depthWrite={false}
         transparent
         opacity={display.transparent ? 0.5 : 1}
         clippingPlanes={
@@ -319,6 +320,7 @@ const Geometry2DFace: React.FunctionComponent<Geometry2DFaceProps> = ({
         color={materialColor}
         metalness={0.5}
         roughness={0.5}
+        depthWrite={false}
         transparent
         opacity={display.transparent ? 0.5 : 1}
         clippingPlanes={

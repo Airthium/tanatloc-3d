@@ -10,6 +10,8 @@ jest.mock('@store', () => {
 
 import MainStoreFiller from '.'
 
+jest.useFakeTimers()
+
 describe('store/mainStoreFiller', () => {
   const controls = {}
 
@@ -30,7 +32,8 @@ describe('store/mainStoreFiller', () => {
     )
     expect(renderer.scene.children.length).toBe(0)
 
-    await renderer.advanceFrames(1, 1)
+    await renderer.advanceFrames(2, 1)
+    jest.advanceTimersByTime(1_000)
 
     expect(mockSetState).toHaveBeenCalledTimes(1)
 
