@@ -11,7 +11,7 @@ import useStore from '@store'
 import MainStoreFiller from '@store/mainStoreFiller'
 
 import FrameRate from '@helpers/frameRate'
-import Navigation from '@helpers/navigation'
+import Navigation from '@helpers/navigation/index.new2'
 import Grid from '@helpers/grid'
 import ZoomToSelection from '@helpers/zoomToSelection'
 import SectionView from '@helpers/sectionView'
