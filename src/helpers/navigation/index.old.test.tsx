@@ -1,7 +1,7 @@
 import { Euler, Vector3 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import Navigation from '.'
+import Navigation from './index.old'
 
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
