@@ -143,18 +143,13 @@ const DrawFace: React.FunctionComponent<FaceProps> = ({
  * Faces
  * @returns Faces
  */
-const Faces = () => {
-  /**
-   * Render
-   */
-  return (
-    <group>
-      {faces.map((face) => (
-        <DrawFace key={face.name} {...face} />
-      ))}
-    </group>
-  )
-}
+const Faces = () => (
+  <group>
+    {faces.map((face) => (
+      <DrawFace key={face.name} {...face} />
+    ))}
+  </group>
+)
 
 /**
  * Corner
@@ -190,18 +185,13 @@ const DrawCorner: React.FunctionComponent<CornerProps> = ({
  * Corners
  * @returns Corners
  */
-const Corners = () => {
-  /**
-   * Render
-   */
-  return (
-    <group>
-      {corners.map((corner) => (
-        <DrawCorner key={corner.name} {...corner} />
-      ))}
-    </group>
-  )
-}
+const Corners = () => (
+  <group>
+    {corners.map((corner) => (
+      <DrawCorner key={corner.name} {...corner} />
+    ))}
+  </group>
+)
 
 /**
  * Oblique
@@ -237,21 +227,17 @@ const DrawOblique: React.FunctionComponent<ObliqueProps> = ({
  * Obliques
  * @returns Obliques
  */
-const Obliques = () => {
-  /**
-   * Render
-   */
-  return (
-    <group>
-      {obliques.map((oblique) => (
-        <DrawOblique key={oblique.name} {...oblique} />
-      ))}
-    </group>
-  )
-}
+const Obliques = () => (
+  <group>
+    {obliques.map((oblique) => (
+      <DrawOblique key={oblique.name} {...oblique} />
+    ))}
+  </group>
+)
 
 /**
  * View cube
+ * @param props Props
  * @returns ViewCube
  */
 const ViewCube: React.FunctionComponent<ViewCubeProps> = ({
@@ -499,7 +485,7 @@ const Navigation: React.FunctionComponent<NavigationProps> = ({ resize }) => {
    * Render
    */
   return (
-    <group type="Navigaton">
+    <group type="Navigation">
       <OrthographicCamera
         makeDefault
         left={-5 * aspectRatio * cubeSize}

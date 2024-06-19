@@ -1,7 +1,7 @@
 import { Euler, Vector3 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import Navigation from './index.old'
+import Navigation from '.'
 
 const mockUseStore = jest.fn()
 jest.mock('@store', () => {
@@ -29,6 +29,32 @@ describe('helpers/navigation', () => {
   const settings = {
     colors: {}
   }
+  const event = {
+    distance: 1,
+    object: {
+      type: 'Mesh',
+      material: {
+        color: 'color'
+      },
+      userData: {
+        lookAt: [1, 1, 1],
+        up: [1, 1, 1]
+      }
+    }
+  }
+  const event2 = {
+    distance: 1,
+    object: {
+      type: 'NotAMesh',
+      material: {
+        color: 'color'
+      },
+      userData: {
+        lookAt: [1, 1, 1],
+        up: [1, 1, 1]
+      }
+    }
+  }
 
   beforeEach(() => {
     mockUseStore.mockImplementation((callback) => {
@@ -37,7 +63,7 @@ describe('helpers/navigation', () => {
     })
   })
 
-  test('empty render', async () => {
+  test('render', async () => {
     const renderer = await ReactThreeTestRenderer.create(<Navigation />)
     const group = renderer.scene.children[0]
     expect(group.type).toBe('Navigation')
@@ -61,14 +87,13 @@ describe('helpers/navigation', () => {
 
     // Events
     const face1 = group.children[2]
-    const face2 = group.children[3]
 
-    await renderer.fireEvent(face1, 'pointerMove', { distance: 1 })
-    await renderer.fireEvent(face2, 'pointerMove', { distance: 2 })
-    await renderer.fireEvent(face1, 'click')
-    await renderer.fireEvent(face2, 'pointerLeave')
-    await renderer.fireEvent(face1, 'pointerLeave')
-    await renderer.fireEvent(face1, 'click')
+    await renderer.fireEvent(face1, 'pointerEnter', event)
+    await renderer.fireEvent(face1, 'pointerEnter', event2)
+    await renderer.fireEvent(face1, 'pointerDown', event)
+    await renderer.fireEvent(face1, 'pointerLeave', event2)
+    await renderer.fireEvent(face1, 'pointerLeave', event)
+    await renderer.fireEvent(face1, 'pointerDown', event)
 
     await renderer.unmount()
   })
@@ -88,14 +113,13 @@ describe('helpers/navigation', () => {
 
     // Events
     const face1 = group.children[2]
-    const face2 = group.children[3]
 
-    await renderer.fireEvent(face1, 'pointerMove', { distance: 1 })
-    await renderer.fireEvent(face2, 'pointerMove', { distance: 2 })
-    await renderer.fireEvent(face1, 'click')
-    await renderer.fireEvent(face2, 'pointerLeave')
-    await renderer.fireEvent(face1, 'pointerLeave')
-    await renderer.fireEvent(face1, 'click')
+    await renderer.fireEvent(face1, 'pointerEnter', event)
+    await renderer.fireEvent(face1, 'pointerEnter', event)
+    await renderer.fireEvent(face1, 'pointerDown', event)
+    await renderer.fireEvent(face1, 'pointerLeave', event)
+    await renderer.fireEvent(face1, 'pointerLeave', event)
+    await renderer.fireEvent(face1, 'pointerDown', event)
 
     await renderer.unmount()
   })
@@ -104,6 +128,7 @@ describe('helpers/navigation', () => {
     mockUseStore.mockImplementation(() => ({
       ...settings,
       ...geometry,
+      dimension: 2,
       ...mainView,
       camera: undefined
     }))
@@ -112,10 +137,6 @@ describe('helpers/navigation', () => {
     expect(group.type).toBe('Navigation')
 
     await renderer.advanceFrames(1, 1)
-
-    // Events
-    const face1 = group.children[2]
-    await renderer.fireEvent(face1, 'click')
 
     await renderer.unmount()
   })
