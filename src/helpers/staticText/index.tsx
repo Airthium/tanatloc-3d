@@ -10,6 +10,7 @@ import { Text } from '@react-three/drei'
 export interface StaticTextProps {
   position?: THREE.Vector3
   fontSize?: number
+  color?: any
   children?: string
 }
 
@@ -21,6 +22,7 @@ export interface StaticTextProps {
 const StaticText: React.FunctionComponent<StaticTextProps> = ({
   position = new Vector3(0, 0, 0),
   fontSize,
+  color,
   children = ''
 }) => {
   // Ref
@@ -35,7 +37,13 @@ const StaticText: React.FunctionComponent<StaticTextProps> = ({
    * Render
    */
   return (
-    <Text ref={ref} position={position} fontSize={fontSize} type="StaticText">
+    <Text
+      ref={ref}
+      color={color}
+      position={position}
+      fontSize={fontSize}
+      type="StaticText"
+    >
       {children}
     </Text>
   )

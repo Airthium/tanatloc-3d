@@ -65,6 +65,26 @@ const delta = 10
 // Zoom
 const zoom = 0.4
 
+const closestAxis = (vector: THREE.Vector3): [number, number, number] => {
+  vector.normalize()
+
+  const x = vector.x
+  const y = vector.y
+  const z = vector.z
+
+  const xn = Math.abs(x)
+  const yn = Math.abs(y)
+  const zn = Math.abs(z)
+
+  let up: [number, number, number] = [0, 1, 0]
+  if (xn >= yn && xn >= zn) up = [x > 0 ? 1 : -1, 0, 0]
+  else if (yn > xn && yn >= zn) up = [0, y > 0 ? 1 : -1, 0]
+  else if (zn > xn && zn > yn) up = [0, 0, z > 0 ? 1 : -1]
+
+  return up
+  //https://stackoverflow.com/questions/25825464/get-closest-cartesian-axis-aligned-vector-in-javascript
+}
+
 /**
  * Set camera
  * @param camera Camera
@@ -76,7 +96,7 @@ const setCamera = (
   camera: THREE.PerspectiveCamera,
   controls: TrackballControlsProps,
   lookAt: [number, number, number],
-  up: [number, number, number]
+  up?: [number, number, number]
 ) => {
   // Distance
   const target = controls.target as THREE.Vector3
@@ -90,6 +110,11 @@ const setCamera = (
 
   // New position
   const newPosition = target.clone().add(interval)
+
+  if (!up) {
+    // Up from camera
+    up = closestAxis(camera.up.clone())
+  }
 
   // Update
   camera.position.copy(newPosition)
@@ -105,8 +130,7 @@ const DrawFace: React.FunctionComponent<FaceProps> = ({
   name,
   size,
   position,
-  lookAt,
-  up
+  lookAt
 }) => {
   // Ref
   const ref = useRef<THREE.Group>(null)
@@ -128,7 +152,7 @@ const DrawFace: React.FunctionComponent<FaceProps> = ({
    */
   return (
     <group name="face" position={position} ref={ref}>
-      <mesh userData={{ lookAt, up }}>
+      <mesh userData={{ lookAt }}>
         <planeGeometry args={[size, size]} />
         <meshBasicMaterial color={baseColor} />
       </mesh>
@@ -159,8 +183,7 @@ const Faces = () => (
 const DrawCorner: React.FunctionComponent<CornerProps> = ({
   size,
   position,
-  lookAt,
-  up
+  lookAt
 }) => {
   // Store
   const {
@@ -172,7 +195,7 @@ const DrawCorner: React.FunctionComponent<CornerProps> = ({
    */
   return (
     <group name="corner" position={position}>
-      <mesh userData={{ lookAt, up }}>
+      <mesh userData={{ lookAt }}>
         <boxGeometry args={[size, size, size]} />
         <meshBasicMaterial color={baseColor} />
         <Edges lineWidth={1} color="gray" />
@@ -201,8 +224,7 @@ const Corners = () => (
 const DrawOblique: React.FunctionComponent<ObliqueProps> = ({
   size,
   position,
-  lookAt,
-  up
+  lookAt
 }) => {
   // Store
   const {
@@ -214,7 +236,7 @@ const DrawOblique: React.FunctionComponent<ObliqueProps> = ({
    */
   return (
     <group name="corner" position={position}>
-      <mesh userData={{ lookAt, up }}>
+      <mesh userData={{ lookAt }}>
         <boxGeometry args={[...size]} />
         <meshBasicMaterial color={baseColor} />
         <Edges lineWidth={1} color="gray" />
@@ -298,13 +320,12 @@ const ViewCube: React.FunctionComponent<ViewCubeProps> = ({
   const onPointerDown = useCallback(
     (event: ThreeEvent<PointerEvent>) => {
       const lookAt = current.current?.userData.lookAt
-      const up = current.current?.userData.up
 
       // Checks
-      if (!camera || !controls || !lookAt || !up) return
+      if (!camera || !controls || !lookAt) return
 
       // Set camera
-      setCamera(camera, controls, lookAt, up)
+      setCamera(camera, controls, lookAt)
 
       // Leave
       onPointerLeave(event)

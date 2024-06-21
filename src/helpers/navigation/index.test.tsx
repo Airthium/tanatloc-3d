@@ -37,8 +37,7 @@ describe('helpers/navigation', () => {
         color: 'color'
       },
       userData: {
-        lookAt: [1, 1, 1],
-        up: [1, 1, 1]
+        lookAt: [1, 1, 1]
       }
     }
   }
@@ -50,8 +49,7 @@ describe('helpers/navigation', () => {
         color: 'color'
       },
       userData: {
-        lookAt: [1, 1, 1],
-        up: [1, 1, 1]
+        lookAt: [1, 1, 1]
       }
     }
   }
@@ -139,5 +137,41 @@ describe('helpers/navigation', () => {
     await renderer.advanceFrames(1, 1)
 
     await renderer.unmount()
+  })
+
+  test('with store - camera', async () => {
+    const ups = [
+      [1, 0, 0],
+      [-1, 0, 0],
+      [0, 1, 0],
+      [0, -1, 0],
+      [0, 0, 1],
+      [0, 0, -1]
+    ]
+
+    for (const up of ups) {
+      mockUseStore.mockImplementation(() => ({
+        ...settings,
+        ...geometry,
+        ...mainView,
+        camera: {
+          ...mainView.camera,
+          up: new Vector3(...up)
+        }
+      }))
+      const renderer = await ReactThreeTestRenderer.create(<Navigation />)
+      const group = renderer.scene.children[0]
+      expect(group.type).toBe('Navigation')
+
+      await renderer.advanceFrames(1, 1)
+
+      // Events
+      const face1 = group.children[2]
+
+      await renderer.fireEvent(face1, 'pointerEnter', event)
+      await renderer.fireEvent(face1, 'pointerDown', event)
+
+      await renderer.unmount()
+    }
   })
 })
