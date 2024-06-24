@@ -35,12 +35,12 @@
     "@babel/preset-typescript": "7.24.7",
     "@eslint/js": "9.5.0",
     "@react-three/test-renderer": "8.2.1",
-    "@swc/cli": "0.3.12",
-    "@swc/core": "1.6.3",
+    "@swc/cli": "0.3.14",
+    "@swc/core": "1.6.5",
     "@testing-library/dom": "10.1.0",
     "@testing-library/react": "16.0.0",
     "@types/jest": "29.5.12",
-    "@types/node": "20.14.7",
+    "@types/node": "20.14.8",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@types/three": "0.165.0",
@@ -53,8 +53,8 @@
     "prettier": "3.3.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "typedoc": "0.25.13",
+    "typedoc": "0.26.1",
     "typescript": "5.5.2"
   },
-  "packageManager": "yarn@4.3.0"
+  "packageManager": "yarn@4.3.1"
 }
