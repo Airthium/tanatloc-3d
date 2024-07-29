@@ -25,7 +25,7 @@ const checkBoundingBox = (box: THREE.Box3): boolean => {
 
 /**
  * Compute scene bounding box
- * @param scene Scene
+ * @param children Scene children
  * @returns Bounding box
  */
 const computeSceneBoundingBox = (
