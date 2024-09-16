@@ -22,7 +22,7 @@
     "@ant-design/icons": "5.4.0",
     "@react-three/drei": "9.112.0",
     "@react-three/fiber": "8.17.7",
-    "antd": "5.20.5",
+    "antd": "5.20.6",
     "three": "0.168.0",
     "zustand": "4.5.5"
   },
@@ -36,10 +36,10 @@
     "@eslint/js": "9.10.0",
     "@react-three/test-renderer": "8.2.1",
     "@swc/cli": "0.4.0",
-    "@swc/core": "1.7.24",
+    "@swc/core": "1.7.26",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.0.1",
-    "@types/jest": "29.5.12",
+    "@types/jest": "29.5.13",
     "@types/node": "20.16.5",
     "@types/react": "18.3.5",
     "@types/react-dom": "18.3.0",
@@ -54,7 +54,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "typedoc": "0.26.7",
-    "typescript": "5.5.4"
+    "typescript": "5.6.2"
   },
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.5.0"
 }
