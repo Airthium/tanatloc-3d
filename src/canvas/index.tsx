@@ -69,7 +69,7 @@ const Canvas: React.FunctionComponent<Tanatloc3DCanvasProps> = ({
 
   // Check WebGL
   useEffect(() => {
-    if (WebGL.isWebGLAvailable()) setWebGLAvailable(true)
+    if (WebGL.isWebGL2Available()) setWebGLAvailable(true)
     else {
       setWebGLAvailable(false)
       notification.error({

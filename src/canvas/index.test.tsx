@@ -11,7 +11,7 @@ jest.mock('@react-three/drei', () => ({
   Hud: (props: any) => <div>{props.children}</div>,
   PerspectiveCamera: () => <div />,
   TrackballControls: (props: any) => (
-    <div
+    <button
       role={trackballControlsRole}
       onClick={props.onChange}
       onKeyUp={console.debug}
@@ -21,7 +21,7 @@ jest.mock('@react-three/drei', () => ({
 
 const mockIsWebGLAvailable = jest.fn()
 jest.mock('three/examples/jsm/capabilities/WebGL', () => ({
-  isWebGLAvailable: () => mockIsWebGLAvailable()
+  isWebGL2Available: () => mockIsWebGLAvailable()
 }))
 
 const mockUseStore = jest.fn()
