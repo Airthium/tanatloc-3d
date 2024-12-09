@@ -13,7 +13,13 @@
       "matchPackageNames": ["*"]
     }
   ],
-  "ignoreDeps": ["three", "react", "react-dom"],
+  "ignoreDeps": [
+    "three",
+    "react",
+    "react-dom",
+    "@types/react",
+    "@types/react-dom"
+  ],
   "lockFileMaintenance": {
     "enabled": false
   }
