@@ -62,7 +62,7 @@ const Meshes: React.FunctionComponent<MeshesProps> = ({ scene }) => {
  */
 const PartLoader: React.FunctionComponent<PartLoaderProps> = ({ part }) => {
   // Ref
-  const currentGLTF = useRef<GLTF>()
+  const currentGLTF = useRef<GLTF>(undefined)
 
   // State
   const [gltf, setGltf] = useState<GLTF>()

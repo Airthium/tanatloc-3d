@@ -269,8 +269,8 @@ const ViewCube: React.FunctionComponent<ViewCubeProps> = ({
   controls
 }) => {
   // Ref
-  const distance = useRef<number>()
-  const current = useRef<Mesh>()
+  const distance = useRef<number>(undefined)
+  const current = useRef<Mesh>(undefined)
 
   // Store
   const {
