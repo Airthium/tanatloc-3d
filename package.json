@@ -19,11 +19,11 @@
     "react-dom": ">=18.2.0"
   },
   "dependencies": {
-    "@ant-design/icons": "5.6.1",
+    "@ant-design/icons": "6.0.0",
     "@react-three/drei": "9.122.0",
     "@react-three/fiber": "8.18.0",
-    "antd": "5.24.4",
-    "three": "0.174.0",
+    "antd": "5.24.6",
+    "three": "0.175.0",
     "zustand": "5.0.3"
   },
   "devDependencies": {
@@ -32,29 +32,29 @@
     "@babel/plugin-syntax-jsx": "7.25.9",
     "@babel/preset-env": "7.26.9",
     "@babel/preset-react": "7.26.3",
-    "@babel/preset-typescript": "7.26.0",
-    "@eslint/js": "9.22.0",
+    "@babel/preset-typescript": "7.27.0",
+    "@eslint/js": "9.24.0",
     "@react-three/test-renderer": "8.2.4",
     "@swc/cli": "0.6.0",
-    "@swc/core": "1.11.10",
+    "@swc/core": "1.11.20",
     "@testing-library/dom": "10.4.0",
-    "@testing-library/react": "16.2.0",
+    "@testing-library/react": "16.3.0",
     "@types/jest": "29.5.14",
-    "@types/node": "22.13.10",
+    "@types/node": "22.14.1",
     "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
-    "@types/three": "0.174.0",
+    "@types/three": "0.175.0",
     "babel-jest": "29.7.0",
     "depcheck": "1.4.7",
-    "eslint": "9.22.0",
+    "eslint": "9.24.0",
     "jest": "29.7.0",
     "jest-canvas-mock": "2.5.2",
     "jest-environment-jsdom": "29.7.0",
     "prettier": "3.5.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "typedoc": "0.28.0",
-    "typescript": "5.8.2"
+    "typedoc": "0.28.2",
+    "typescript": "5.8.3"
   },
-  "packageManager": "yarn@4.7.0"
+  "packageManager": "yarn@4.9.0"
 }
