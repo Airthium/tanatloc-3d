@@ -17,8 +17,8 @@ export interface LightProps {
  */
 const Light: React.FunctionComponent<LightProps> = ({ update }) => {
   // State
-  const [positionRight, setPositionRight] = useState<THREE.Vector3>(null!)
-  const [positionLeft, setPositionLeft] = useState<THREE.Vector3>(null!)
+  const [positionRight, setPositionRight] = useState<THREE.Vector3>()
+  const [positionLeft, setPositionLeft] = useState<THREE.Vector3>()
 
   // Store
   const { camera, controls } = useStore((s) => s.mainView)

@@ -350,7 +350,7 @@ const SectionView: React.FunctionComponent = () => {
 
   // State
   const [position, setPosition] = useState<THREE.Vector3>()
-  const [scale, setScale] = useState<number>(null!)
+  const [scale, setScale] = useState<number>()
 
   const [hoverPlane, setHoverPlane] = useState<boolean>(false)
   const [hoverDome, setHoverDome] = useState<boolean>(false)
