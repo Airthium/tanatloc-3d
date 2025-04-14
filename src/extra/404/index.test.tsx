@@ -1,16 +1,16 @@
 import ReactThreeTestRenderer from '@react-three/test-renderer'
 
-import _404, { _404Render } from '.'
+import NotFound, { NotFoundRender } from '.'
 
 describe('extra/404', () => {
-  test('_404', async () => {
-    const renderer = await ReactThreeTestRenderer.create(<_404 />)
+  test('NotFound', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<NotFound />)
 
     await renderer.unmount()
   })
 
-  test('_404Render', async () => {
-    const renderer = await ReactThreeTestRenderer.create(<_404Render />)
+  test('NotFoundRender', async () => {
+    const renderer = await ReactThreeTestRenderer.create(<NotFoundRender />)
 
     await renderer.unmount()
   })

@@ -20,7 +20,7 @@ import Colorbar from '@helpers/colorbar'
 import Light from '@helpers/light'
 import Point from '@helpers/point'
 
-import { _404Render as NotFound } from '@extra/404'
+import { NotFoundRender as NotFound } from '@extra/404'
 import { BackgroundRender as Background } from '@extra/background'
 
 import Parts from './parts'

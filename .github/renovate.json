@@ -13,15 +13,7 @@
       "matchPackageNames": ["*"]
     }
   ],
-  "ignoreDeps": [
-    "react",
-    "react-dom",
-    "@types/react",
-    "@types/react-dom",
-    "@react-three/drei",
-    "@react-three/fiber",
-    "@react-three/test-renderer"
-  ],
+  "ignoreDeps": [],
   "lockFileMaintenance": {
     "enabled": false
   }

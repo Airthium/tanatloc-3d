@@ -43,7 +43,7 @@ jest.mock('@helpers/light', () => () => <div />)
 jest.mock('@helpers/point', () => () => <div />)
 
 jest.mock('@extra/404', () => ({
-  _404Render: () => <div />
+  NotFoundRender: () => <div />
 }))
 
 jest.mock('@extra/background', () => ({

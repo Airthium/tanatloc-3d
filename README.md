@@ -78,13 +78,13 @@ const View: React.FunctionComponent = () => {
 export default View
 ```
 
-Use the `extra._404` component in the 404 page.
+Use the `extra.NotFound` component in the 404 page.
 
 ```ts
 import dynamic from 'next/dynamic'
 
 const NotFoundCone = dynamic(
-  () => import('@airthium/tanatloc-3d').then((mod) => mod.default.extra._404),
+  () => import('@airthium/tanatloc-3d').then((mod) => mod.default.extra.NotFound),
   { ssr: false }
 )
 

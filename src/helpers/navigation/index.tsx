@@ -111,10 +111,8 @@ const setCamera = (
   // New position
   const newPosition = target.clone().add(interval)
 
-  if (!up) {
-    // Up from camera
-    up = closestAxis(camera.up.clone())
-  }
+  // Up from camera
+  up ??= closestAxis(camera.up.clone())
 
   // Update
   camera.position.copy(newPosition)
@@ -269,8 +267,8 @@ const ViewCube: React.FunctionComponent<ViewCubeProps> = ({
   controls
 }) => {
   // Ref
-  const distance = useRef<number>(undefined)
-  const current = useRef<Mesh>(undefined)
+  const distance = useRef<number>(null)
+  const current = useRef<Mesh>(null)
 
   // Store
   const {
@@ -307,7 +305,7 @@ const ViewCube: React.FunctionComponent<ViewCubeProps> = ({
       if (mesh.type === 'Mesh') {
         mesh.material.color = new THREE.Color(baseColor)
         distance.current = Infinity
-        current.current = undefined
+        current.current = null
       }
     },
     [baseColor]

@@ -124,11 +124,11 @@ const Renderer: React.FunctionComponent<
   Tanatloc3DRendererProps & { theme?: ThemeConfig }
 >
 
-const _404: React.FunctionComponent
+const NotFound: React.FunctionComponent
 
 const Background: React.FunctionComponent
 
 const WebGL: React.FunctionComponent<Tanatloc3DWebGLProps>
 
-const Tanatloc3D = { Canvas, Renderer, extra: { _404, Background, WebGL } }
+const Tanatloc3D = { Canvas, Renderer, extra: { NotFound, Background, WebGL } }
 export default Tanatloc3D

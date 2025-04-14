@@ -7,7 +7,7 @@ import useStore from '@store'
  * 404
  * @returns 404
  */
-const _404: React.FunctionComponent = () => {
+const NotFound: React.FunctionComponent = () => {
   // Update store
   useEffect(() => {
     useStore.setState({ extra: { notFound: true } })
@@ -27,7 +27,7 @@ const _404: React.FunctionComponent = () => {
  * 404 render
  * @returns 404Render
  */
-export const _404Render = () => {
+export const NotFoundRender = () => {
   // Orange material
   const orange = useMemo(
     () => <meshPhysicalMaterial side={2} color="orange" />,
@@ -79,4 +79,4 @@ export const _404Render = () => {
   )
 }
 
-export default _404
+export default NotFound
