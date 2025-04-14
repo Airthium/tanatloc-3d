@@ -30,20 +30,15 @@ const StaticText: React.FunctionComponent<StaticTextProps> = ({
 
   // Always front of camera
   useFrame(({ camera }) => {
-    ref.current.quaternion.copy(camera.quaternion)
+    if (ref.current && camera.quaternion)
+      ref.current.quaternion.copy(camera.quaternion)
   })
 
   /**
    * Render
    */
   return (
-    <Text
-      ref={ref}
-      color={color}
-      position={position}
-      fontSize={fontSize}
-      type="StaticText"
-    >
+    <Text ref={ref} color={color} position={position} fontSize={fontSize}>
       {children}
     </Text>
   )
