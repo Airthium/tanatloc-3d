@@ -8,9 +8,8 @@
     "strict": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "outDir": "./dist",
-    "baseUrl": "./",
     "paths": {
       "@extra/*": ["./src/extra/*"],
       "@index": ["./index.d.ts"],
@@ -22,7 +21,8 @@
       "@store": ["./src/store/index.js"],
       "@store/*": ["./src/store/*"],
       "@style/*": ["./src/style/*"]
-    }
+    },
+    "types": ["jest", "node"]
   },
   "include": ["./src", "index.d.ts", "types.d.ts"]
 }

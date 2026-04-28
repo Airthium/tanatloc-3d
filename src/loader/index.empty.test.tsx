@@ -11,7 +11,7 @@ jest.mock('@store', () => {
 })
 
 const mockGLTFLoad = jest.fn()
-jest.mock('three/examples/jsm/loaders/GLTFLoader', () => {
+jest.mock('three/addons/loaders/GLTFLoader.js', () => {
   class GLTFLoader {
     load(
       _url: string,

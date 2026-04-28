@@ -5,7 +5,7 @@ import {
   MeshBasicMaterial
 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
 
 import Result from '.'
 
@@ -17,7 +17,7 @@ jest.mock('@store', () => {
   return useStore
 })
 
-jest.mock('three/examples/jsm/math/Lut', () => {
+jest.mock('three/addons/math/Lut.js', () => {
   class Lut {
     colormap: string
     min: number

@@ -4,7 +4,7 @@ import { ThreeEvent } from '@react-three/fiber'
 
 import { Tanatloc3DSelection, Tanatloc3DSelectionValue } from '@index'
 
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
 
 import useStore from '@store'
 

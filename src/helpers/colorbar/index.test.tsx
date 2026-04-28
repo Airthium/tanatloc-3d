@@ -8,7 +8,7 @@ jest.mock('@store', () => {
   return useStore
 })
 
-jest.mock('three/examples/jsm/math/Lut', () => {
+jest.mock('three/addons/math/Lut.js', () => {
   class Lut {
     colormap: string
     min: number

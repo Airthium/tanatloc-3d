@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { useMemo } from 'react'
 import { LineBasicMaterial, WireframeGeometry } from 'three'
 
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
 
 import useStore from '@store'
 

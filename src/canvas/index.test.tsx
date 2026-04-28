@@ -20,7 +20,7 @@ jest.mock('@react-three/drei', () => ({
 }))
 
 const mockIsWebGLAvailable = jest.fn()
-jest.mock('three/examples/jsm/capabilities/WebGL', () => ({
+jest.mock('three/addons/capabilities/WebGL.js', () => ({
   isWebGL2Available: () => mockIsWebGLAvailable()
 }))
 
