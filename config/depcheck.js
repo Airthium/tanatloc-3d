@@ -7,8 +7,11 @@ const customTypescript = async (fileName, deps) => {
 
   try {
     if (basename(fileName) === 'package.json') {
-      const packageJson = (await import(fileName, { assert: { type: 'json' } }))
-        .default
+      const packageJson = (
+        await import(fileName, {
+          with: { type: 'json' }
+        })
+      ).default
 
       if (deps.includes('typescript')) {
         newDeps.push('typescript')
