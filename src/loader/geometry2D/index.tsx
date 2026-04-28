@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Tanatloc3DSelection, Tanatloc3DSelectionValue } from '@index'
 
-import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
+import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
 import useStore from '@store'
 import { ThreeEvent } from '@react-three/fiber'

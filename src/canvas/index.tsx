@@ -3,7 +3,7 @@ import { Canvas as R3FCanvas } from '@react-three/fiber'
 import { Hud, PerspectiveCamera, TrackballControls } from '@react-three/drei'
 import { Button, notification } from 'antd'
 
-import WebGL from 'three/addons/capabilities/WebGL.js'
+import WebGL from 'three/examples/jsm/capabilities/WebGL'
 
 import { Tanatloc3DCanvasProps } from '@index'
 
