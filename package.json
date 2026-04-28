@@ -1,6 +1,6 @@
 {
   "name": "@airthium/tanatloc-3d",
-  "version": "1.2.35-dirty",
+  "version": "1.2.36",
   "type": "module",
   "types": "index.d.ts",
   "main": "dist/index.js",
@@ -22,7 +22,7 @@
     "@ant-design/icons": "6.2.2",
     "@react-three/drei": "10.7.7",
     "@react-three/fiber": "9.6.0",
-    "antd": "6.3.7",
+    "antd": "5.29.3",
     "three": "0.184.0",
     "zustand": "5.0.12"
   },
