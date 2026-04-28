@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { useEffect } from 'react'
 import { Float32BufferAttribute } from 'three'
 
-import { Lut } from 'three/examples/jsm/math/Lut.js'
+import { Lut } from 'three/addons/math/Lut.js'
 
 import useStore, { Store } from '@store'
 

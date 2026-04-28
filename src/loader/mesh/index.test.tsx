@@ -5,7 +5,7 @@ import {
   MeshBasicMaterial
 } from 'three'
 import ReactThreeTestRenderer from '@react-three/test-renderer'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
+import { GLTF } from 'three/addons/loaders/GLTFLoader.js'
 
 import Mesh from '.'
 
